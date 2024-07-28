@@ -1,7 +1,15 @@
 {
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.16.1",
+    "drizzle-orm-mysql": "^0.16.2",
     "express": "^4.19.2",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.23.0"
   }
 }

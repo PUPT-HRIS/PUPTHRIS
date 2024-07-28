@@ -1,21 +1,35 @@
-require('dotenv').config();
 const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const employeeRoutes = require('./routes/employeeRoutes');
+const educationRoutes = require('./routes/educationRoutes');
+const familybackgroundRoutes = require('./routes/familybackgroundRoutes');
+const civilserviceeligibilityRoutes = require('./routes/civilserviceeligibilityRoutes');
+const workexperienceRoutes = require('./routes/workexperienceRoutes');
+const voluntaryworkRoutes = require('./routes/voluntaryworkRoutes');
+const learningdevelopmentRoutes = require('./routes/learningdevelopmentRoutes');
+const otherinformationRoutes = require('./routes/otherinformationRoutes');
+const childrenRoutes = require('./routes/childrenRoutes');
+
+dotenv.config();
+
 const app = express();
-const db = require('./config/db.config');
+const port = process.env.PORT || 3000;
 
-app.use(express.json());
+app.use(cors());
+app.use(bodyParser.json());
 
-app.get('/test-db', (req, res) => {
-  db.query('SELECT 1 + 1 AS solution', (err, results) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-    } else {
-      res.json({ solution: results[0].solution });
-    }
-  });
-});
+app.use('/api/employees', employeeRoutes);
+app.use('/api/education', educationRoutes);
+app.use('/api/family', familybackgroundRoutes);
+app.use('/api/civilservice', civilserviceeligibilityRoutes);
+app.use('/api/workexperience', workexperienceRoutes);
+app.use('/api/voluntarywork', voluntaryworkRoutes);
+app.use('/api/learningdevelopment', learningdevelopmentRoutes);
+app.use('/api/otherinformation', otherinformationRoutes);
+app.use('/api/children', childrenRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
 });
