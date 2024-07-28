@@ -7,6 +7,7 @@ const educationRoutes = require('./routes/educationRoutes');
 const familybackgroundRoutes = require('./routes/familybackgroundRoutes');
 const civilserviceeligibilityRoutes = require('./routes/civilserviceeligibilityRoutes');
 const workexperienceRoutes = require('./routes/workexperienceRoutes');
+const voluntaryworkRoutes = require('./routes/voluntaryworkRoutes');
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use('/api/education', educationRoutes);
 app.use('/api/family', familybackgroundRoutes);
 app.use('/api/civilservice', civilserviceeligibilityRoutes);
 app.use('/api/workexperience', workexperienceRoutes);
+app.use('/api/voluntarywork', voluntaryworkRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
