@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const employeeRoutes = require('./routes/employeeRoutes');
 const educationRoutes = require('./routes/educationRoutes');
+const familybackgroundRoutes = require('./routes/familybackgroundRoutes');
 
 dotenv.config();
 
@@ -13,9 +14,9 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
- 
 app.use('/api/employees', employeeRoutes);
 app.use('/api/education', educationRoutes);
+app.use('/api/family', familybackgroundRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
