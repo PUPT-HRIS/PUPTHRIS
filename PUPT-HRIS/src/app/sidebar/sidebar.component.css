@@ -1,5 +1,38 @@
 ul.menu li a.active {
-    background-color: #1c1b1b; 
-    color: #ffffff; 
-    border-radius: 0.5rem; 
-  }
+  background-color: #1c1b1b; 
+  color: #ffffff; 
+  border-radius: 0.5rem; 
+}
+
+.flex-grow {
+  flex: 1;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
+
+.logo {
+  width: 50px; /* Adjust size as needed */
+  height: auto;
+}
+
+.ml-4 {
+  margin-left: 1rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem; /* Adjust size as needed */
+}
+
+.font-bold {
+  font-weight: bold;
+}
