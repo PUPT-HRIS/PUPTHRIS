@@ -9,3 +9,21 @@ exports.addWorkExperience = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.updateWorkExperience = async (req, res) => {
+  try {
+    const workExperienceId = req.params.id;
+    const updatedData = req.body;
+    const result = await WorkExperience.update(updatedData, {
+      where: { WorkExperienceID: workExperienceId }
+    });
+    if (result[0] === 0) {
+      res.status(404).send('Work experience record not found');
+    } else {
+      res.status(200).send('Work experience updated successfully');
+    }
+  } catch (err) {
+    console.error('Error updating work experience:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};

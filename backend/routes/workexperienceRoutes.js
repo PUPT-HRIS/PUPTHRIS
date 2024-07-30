@@ -4,5 +4,6 @@ const workexperienceController = require('../controllers/workexperienceControlle
 const router = express.Router();
 
 router.post('/add', workexperienceController.addWorkExperience);
+router.patch('/update/:id', workexperienceController.updateWorkExperience);
 
 module.exports = router;
