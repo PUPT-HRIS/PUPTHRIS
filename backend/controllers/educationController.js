@@ -12,3 +12,21 @@ exports.addEducation = async (req, res) => {
     }
   }
 };
+
+exports.updateEducation = async (req, res) => {
+  try {
+    const educationId = req.params.id;
+    const updatedData = req.body;
+    const result = await Education.update(updatedData, {
+      where: { EducationID: educationId }
+    });
+    if (result[0] === 0) {
+      res.status(404).send('Education record not found');
+    } else {
+      res.status(200).send('Education updated successfully');
+    }
+  } catch (err) {
+    console.error('Error updating education:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
