@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <div class="drawer lg:drawer-open">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col items-center justify-center">
@@ -12,27 +14,27 @@
         <!-- Sidebar content here -->
         <li>
           <a id="dashboard" class="sidebar-link" (click)="setActive('dashboard')"
-            [class.active]="activeItem === 'dashboard'">Dashboard</a>
+            [class.active]="activeItem === 'dashboard'"><i class="fa fa-th-large mr-3" aria-hidden="true"></i>Dashboard</a>
         </li>
         <li>
           <a id="employees" class="sidebar-link" (click)="setActive('employees')"
-            [class.active]="activeItem === 'employees'">Employees</a>
+            [class.active]="activeItem === 'employees'"><i class="fas fa-users mr-3"></i>Employees</a>
         </li>
         <li>
           <a id="print-pds" class="sidebar-link" (click)="setActive('print-pds')"
-            [class.active]="activeItem === 'print-pds'">Print PDS</a>
+            [class.active]="activeItem === 'print-pds'"><i class="fas fa-print mr-3"></i>Print PDS</a>
         </li>
         <li>
           <a id="my-profile" class="sidebar-link" (click)="setActive('my-profile')"
-            [class.active]="activeItem === 'my-profile'">My Profile</a>
+            [class.active]="activeItem === 'my-profile'"><i class="fas fa-user mr-3"></i>My Profile</a>
         </li>
         <li>
           <a id="settings" class="sidebar-link" (click)="setActive('settings')"
-            [class.active]="activeItem === 'settings'">Settings</a>
+            [class.active]="activeItem === 'settings'"><i class="fas fa-cog mr-3"></i>Settings</a>
         </li>
         <li>
           <a id="logout" class="sidebar-link" (click)="setActive('logout')"
-            [class.active]="activeItem === 'logout'">Logout</a>
+            [class.active]="activeItem === 'logout'"><i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
         </li>
       </ul>
     </div>
