@@ -4,5 +4,6 @@ const civilserviceeligibilityController = require('../controllers/civilserviceel
 const router = express.Router();
 
 router.post('/add', civilserviceeligibilityController.addCivilServiceEligibility);
+router.patch('/update/:id', civilserviceeligibilityController.updateCivilServiceEligibility);
 
 module.exports = router;
