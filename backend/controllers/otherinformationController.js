@@ -27,3 +27,18 @@ exports.updateOtherInformation = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.getOtherInformation = async (req, res) => {
+  try {
+    const otherInformationId = req.params.id;
+    const otherInformation = await OtherInformation.findOne({ where: { OtherInformationID: otherInformationId } });
+    if (otherInformation) {
+      res.status(200).json(otherInformation);
+    } else {
+      res.status(404).send('Other Information record not found');
+    }
+  } catch (error) {
+    console.error('Error getting other information:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};

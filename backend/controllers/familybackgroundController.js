@@ -27,3 +27,18 @@ exports.updateFamilyBackground = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.getFamilyBackground = async (req, res) => {
+  try {
+    const backgroundId = req.params.id;
+    const familyBackground = await FamilyBackground.findOne({ where: { FamilyBackgroundID: backgroundId } });
+    if (familyBackground) {
+      res.status(200).json(familyBackground);
+    } else {
+      res.status(404).send('Family Background record not found');
+    }
+  } catch (error) {
+    console.error('Error getting family background:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};

@@ -27,3 +27,18 @@ exports.updateLearningDevelopment = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.getLearningDevelopment = async (req, res) => {
+  try {
+    const learningDevelopmentId = req.params.id;
+    const learningDevelopment = await LearningDevelopment.findOne({ where: { LearningDevelopmentID: learningDevelopmentId } });
+    if (learningDevelopment) {
+      res.status(200).json(learningDevelopment);
+    } else {
+      res.status(404).send('Learning Development record not found');
+    }
+  } catch (error) {
+    console.error('Error getting learning development:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};

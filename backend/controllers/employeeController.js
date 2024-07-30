@@ -31,3 +31,19 @@ exports.updateEmployee = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.getEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const employee = await Employee.findOne({ where: { EmployeeID: id } });
+
+    if (employee) {
+      res.status(200).json(employee);
+    } else {
+      res.status(404).send('Employee not found');
+    }
+  } catch (error) {
+    console.error('Error getting employee:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
