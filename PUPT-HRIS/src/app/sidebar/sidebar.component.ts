@@ -8,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
+  activeItem: string = 'dashboard';
 
+  setActive(item: string) {
+    this.activeItem = item;
+  }
 }

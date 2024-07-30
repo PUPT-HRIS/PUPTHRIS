@@ -1,0 +1,5 @@
+ul.menu li a.active {
+    background-color: #1c1b1b; 
+    color: #ffffff; 
+    border-radius: 0.5rem; 
+  }
