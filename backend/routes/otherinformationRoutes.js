@@ -4,5 +4,7 @@ const otherinformationController = require('../controllers/otherinformationContr
 const router = express.Router();
 
 router.post('/add', otherinformationController.addOtherInformation);
+router.patch('/update/:id', otherinformationController.updateOtherInformation);
+
 
 module.exports = router;

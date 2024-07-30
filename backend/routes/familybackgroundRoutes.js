@@ -4,5 +4,6 @@ const familybackgroundController = require('../controllers/familybackgroundContr
 const router = express.Router();
 
 router.post('/add', familybackgroundController.addFamilyBackground);
+router.patch('/update/:id', familybackgroundController.updateFamilyBackground);
 
 module.exports = router;

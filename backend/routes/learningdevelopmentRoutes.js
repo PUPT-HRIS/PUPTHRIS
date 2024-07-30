@@ -4,5 +4,6 @@ const learningdevelopmentController = require('../controllers/learningdevelopmen
 const router = express.Router();
 
 router.post('/add', learningdevelopmentController.addLearningDevelopment);
+router.patch('/update/:id', learningdevelopmentController.updateLearningDevelopment);
 
 module.exports = router;

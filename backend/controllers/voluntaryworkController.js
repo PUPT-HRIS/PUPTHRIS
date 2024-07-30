@@ -9,3 +9,21 @@ exports.addVoluntaryWork = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.updateVoluntaryWork = async (req, res) => {
+  try {
+    const voluntaryWorkId = req.params.id;
+    const updatedData = req.body;
+    const result = await VoluntaryWork.update(updatedData, {
+      where: { VoluntaryWorkID: voluntaryWorkId }
+    });
+    if (result[0] === 0) {
+      res.status(404).send('Voluntary work record not found');
+    } else {
+      res.status(200).send('Voluntary work updated successfully');
+    }
+  } catch (err) {
+    console.error('Error updating voluntary work:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
