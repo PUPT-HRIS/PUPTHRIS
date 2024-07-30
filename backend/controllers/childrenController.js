@@ -28,3 +28,18 @@ exports.updateChild = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.getChild = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const child = await Children.findOne({ where: { ChildrenID: id } });
+    if (child) {
+      res.status(200).json(child);
+    } else {
+      res.status(404).send('Child not found');
+    }
+  } catch (error) {
+    console.error('Error getting child:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};

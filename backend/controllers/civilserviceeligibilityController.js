@@ -27,3 +27,18 @@ exports.updateCivilServiceEligibility = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.getCivilServiceEligibility = async (req, res) => {
+  try {
+    const eligibilityId = req.params.id;
+    const civilServiceEligibility = await CivilServiceEligibility.findOne({ where: { CivilServiceEligibilityID: eligibilityId } });
+    if (civilServiceEligibility) {
+      res.status(200).json(civilServiceEligibility);
+    } else {
+      res.status(404).send('Civil Service Eligibility record not found');
+    }
+  } catch (error) {
+    console.error('Error getting civil service eligibility:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};

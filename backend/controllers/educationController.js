@@ -30,3 +30,18 @@ exports.updateEducation = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.getEducation = async (req, res) => {
+  try {
+    const educationId = req.params.id;
+    const education = await Education.findOne({ where: { EducationID: educationId } });
+    if (education) {
+      res.status(200).json(education);
+    } else {
+      res.status(404).send('Education record not found');
+    }
+  } catch (error) {
+    console.error('Error getting education:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
