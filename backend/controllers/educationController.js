@@ -12,3 +12,36 @@ exports.addEducation = async (req, res) => {
     }
   }
 };
+
+exports.updateEducation = async (req, res) => {
+  try {
+    const educationId = req.params.id;
+    const updatedData = req.body;
+    const result = await Education.update(updatedData, {
+      where: { EducationID: educationId }
+    });
+    if (result[0] === 0) {
+      res.status(404).send('Education record not found');
+    } else {
+      res.status(200).send('Education updated successfully');
+    }
+  } catch (err) {
+    console.error('Error updating education:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+exports.getEducation = async (req, res) => {
+  try {
+    const educationId = req.params.id;
+    const education = await Education.findOne({ where: { EducationID: educationId } });
+    if (education) {
+      res.status(200).json(education);
+    } else {
+      res.status(404).send('Education record not found');
+    }
+  } catch (error) {
+    console.error('Error getting education:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
