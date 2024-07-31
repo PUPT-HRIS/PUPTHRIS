@@ -21,7 +21,7 @@ ul.menu li a.active {
 }
 
 .logo {
-  width: 50px; /* Adjust size as needed */
+  width: 50px; 
   height: auto;
 }
 
@@ -30,9 +30,27 @@ ul.menu li a.active {
 }
 
 .text-2xl {
-  font-size: 1.5rem; /* Adjust size as needed */
+  font-size: 1.5rem; 
 }
 
 .font-bold {
   font-weight: bold;
 }
+
+/* Highlight active link */
+.sidebar-link.active {
+  background-color: #1c1b1b; /* Adjust as needed */
+  color: #ffffff; /* Adjust as needed */
+}
+
+/* Subcategory highlight */
+ul ul a.active {
+  background-color: #1c1b1b; /* Adjust as needed */
+  color: #ffffff; /* Adjust as needed */
+}
+
+/* Highlight parent item */
+li.active > a {
+  background-color: #1c1b1b; /* Adjust as needed */
+}
+
