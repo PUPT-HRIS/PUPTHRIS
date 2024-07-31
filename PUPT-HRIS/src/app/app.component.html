@@ -1,0 +1,14 @@
+<div class="drawer lg:drawer-open">
+  <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col">
+    <app-navbar></app-navbar>
+    <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">Open Sidebar</label>
+    <router-outlet></router-outlet> <!-- Moved here, to the main app component -->
+  </div>
+  <div class="drawer-side">
+    <label for="my-drawer-2" class="drawer-overlay"></label>
+    <ul class="menu bg-red-900 text-base-content text-white text-xl space-y-6 min-h-full w-80 p-6">
+      <app-sidebar></app-sidebar> <!-- Sidebar remains in the app component -->
+    </ul>
+  </div>
+</div>
