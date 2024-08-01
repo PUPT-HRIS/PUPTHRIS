@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { PersonalInfoService, Employee } from '../../services/personal-info.service';
+import { PersonalInfoService,} from '../../services/personal-info.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Employee } from '../../model/employee.model';
 
 @Component({
   selector: 'app-personal-info',
