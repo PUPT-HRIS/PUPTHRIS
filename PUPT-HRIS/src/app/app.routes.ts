@@ -9,6 +9,7 @@ import { CivilComponent } from './pages/civil/civil.component';
 import { LearningComponent } from './pages/learning/learning.component';
 import { WorkexperienceComponent } from './pages/workexperience/workexperience.component';
 import { VoluntaryworkComponent } from './pages/voluntarywork/voluntarywork.component';
+import { OtherinformationComponent } from './pages/otherinformation/otherinformation.component';
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent }, 
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'civil-service-eligibility', component: CivilComponent },
   { path: 'work-experience', component: WorkexperienceComponent },
   { path: 'voluntary-works', component: VoluntaryworkComponent },
+  { path: 'other-information', component: OtherinformationComponent },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard' }
 ];
