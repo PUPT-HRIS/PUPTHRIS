@@ -5,6 +5,7 @@ import { PersonalInfoComponent } from './pages/personal-info/personal-info.compo
 import { EducationComponent } from './pages/education/education.component';
 import { FamilyComponent } from './pages/family/family.component';
 import { ChildrenComponent } from './pages/children/children.component';
+import { CivilComponent } from './pages/civil/civil.component';
 
 
 export const routes: Routes = [
@@ -14,6 +15,7 @@ export const routes: Routes = [
   { path: 'educational-background', component: EducationComponent },
   { path: 'family-background', component: FamilyComponent },
   { path: 'children', component: ChildrenComponent },
+  { path: 'civil-service-eligibility', component: CivilComponent },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard' }
 ];
