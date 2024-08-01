@@ -4,6 +4,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PersonalInfoComponent } from './pages/personal-info/personal-info.component';
 import { EducationComponent } from './pages/education/education.component';
 import { FamilyComponent } from './pages/family/family.component';
+import { ChildrenComponent } from './pages/children/children.component';
+
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent }, 
@@ -11,6 +13,7 @@ export const routes: Routes = [
   { path: 'personal-info', component: PersonalInfoComponent },
   { path: 'educational-background', component: EducationComponent },
   { path: 'family-background', component: FamilyComponent },
+  { path: 'children', component: ChildrenComponent },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard' }
 ];
