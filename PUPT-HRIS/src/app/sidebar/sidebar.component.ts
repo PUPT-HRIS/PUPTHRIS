@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,6 +13,8 @@ import { RouterModule } from '@angular/router';
 export class SidebarComponent {
   activeItem: string = '';
   isProfileDropdownOpen: boolean = false;
+
+  constructor(private router: Router) {}
 
   get isProfileActive(): boolean {
     return this.activeItem.startsWith('my-profile') || this.isProfileDropdownOpen;
@@ -28,5 +31,10 @@ export class SidebarComponent {
     } else if (this.activeItem === 'my-profile') {
       this.activeItem = ''; // Remove 'my-profile' highlight if dropdown is closed
     }
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 }
