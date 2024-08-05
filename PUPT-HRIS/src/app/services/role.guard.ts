@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
+export class RoleGuard implements CanActivate {
   constructor(private router: Router) {}
 
-  canActivate(): boolean {
+  canActivate(route: ActivatedRouteSnapshot): boolean {
+    const expectedRoles = route.data['expectedRoles'];
     const token = localStorage.getItem('token');
+
     if (!token) {
       this.router.navigate(['/login']);
       return false;
@@ -18,8 +20,8 @@ export class AuthGuard implements CanActivate {
     const decodedToken: any = jwtDecode(token);
     const role = decodedToken.role;
 
-    if (!role) {
-      this.router.navigate(['/login']);
+    if (!expectedRoles.includes(role)) {
+      this.router.navigate(['/dashboard']);
       return false;
     }
 

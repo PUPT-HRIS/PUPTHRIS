@@ -14,6 +14,7 @@ import { OtherinformationComponent } from './pages/otherinformation/otherinforma
 import { NewAccountComponent } from './pages/new-account/new-account.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './services/auth.guard';
+import { RoleGuard } from './services/role.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -23,17 +24,17 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'employees', component: EmployeesComponent },
-      { path: 'personal-info', component: PersonalInfoComponent },
-      { path: 'educational-background', component: EducationComponent },
-      { path: 'family-background', component: FamilyComponent },
-      { path: 'children', component: ChildrenComponent },
-      { path: 'learning-development', component: LearningComponent },
-      { path: 'civil-service-eligibility', component: CivilComponent },
-      { path: 'work-experience', component: WorkexperienceComponent },
-      { path: 'voluntary-works', component: VoluntaryworkComponent },
-      { path: 'other-information', component: OtherinformationComponent },
-      { path: 'new-account', component: NewAccountComponent },
+      { path: 'employees', component: EmployeesComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
+      { path: 'personal-info', component: PersonalInfoComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'educational-background', component: EducationComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'family-background', component: FamilyComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'children', component: ChildrenComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'learning-development', component: LearningComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'civil-service-eligibility', component: CivilComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'work-experience', component: WorkexperienceComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'voluntary-works', component: VoluntaryworkComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'other-information', component: OtherinformationComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'new-account', component: NewAccountComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ]
   },

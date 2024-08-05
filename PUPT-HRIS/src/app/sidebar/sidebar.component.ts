@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { Router } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,11 +10,20 @@ import { Router } from '@angular/router';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   activeItem: string = '';
   isProfileDropdownOpen: boolean = false;
+  role: string | null = null;
 
   constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      this.role = decodedToken.role;
+    }
+  }
 
   get isProfileActive(): boolean {
     return this.activeItem.startsWith('my-profile') || this.isProfileDropdownOpen;
@@ -29,7 +38,7 @@ export class SidebarComponent {
     if (this.isProfileDropdownOpen) {
       this.activeItem = 'my-profile';
     } else if (this.activeItem === 'my-profile') {
-      this.activeItem = ''; // Remove 'my-profile' highlight if dropdown is closed
+      this.activeItem = '';
     }
   }
 

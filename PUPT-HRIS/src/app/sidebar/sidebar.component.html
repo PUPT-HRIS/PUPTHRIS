@@ -5,24 +5,24 @@
     <div class="logo-section flex items-center p-6">
       <img src="assets/PUPLogo.svg" alt="Logo" class="logo">
       <h1 class="text-xl font-bold text-white ml-4">PUP TAGUIG HR INFO SYSTEM</h1>
-      </div>  
+    </div>  
     <!-- Sidebar content here --> 
     <li>
       <a id="dashboard" class="sidebar-link" routerLink="/dashboard" (click)="setActive('dashboard')"
       [class.active]="activeItem === 'dashboard'"><i class="fa fa-th-large mr-3" aria-hidden="true"></i>Dashboard</a>
     </li>
     
-    <li>
+    <li *ngIf="role === 'admin'">
       <a id="employees" class="sidebar-link" routerLink="/employees" (click)="setActive('employees')"
       [class.active]="activeItem === 'employees'"><i class="fas fa-users mr-3"></i>Employees</a>
     </li>
 
-    <li>
+    <li *ngIf="role === 'faculty' || role === 'staff' || role === 'admin'">
       <a id="print-pds" class="sidebar-link" routerLink="/print-pds" (click)="setActive('print-pds')"
       [class.active]="activeItem === 'print-pds'"><i class="fas fa-print mr-3"></i>Print PDS</a>
     </li>
 
-    <li>
+    <li *ngIf="role === 'admin'">
       <a id="new-account" class="sidebar-link" routerLink="/new-account" (click)="setActive('new-account')"
       [class.active]="activeItem === 'new-account'"><i class="fas fa-print mr-3"></i>New Account</a>
     </li>
