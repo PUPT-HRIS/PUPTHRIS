@@ -17,14 +17,14 @@
             <img src="assets/PUPLogo.svg" alt="PUP Logo" class="w-16 h-16">
             <h1 class="text-4xl font-bold ml-4">Sign In</h1>
           </div>
-          <form>
+          <form (submit)="login()">
             <div class="form-control mb-4">
               <label class="label">
                 <span class="label-text text-lg">
-                  <i class="fas fa-user"></i> Username
+                  <i class="fas fa-user"></i> Fcode
                 </span>
               </label>
-              <input type="text" placeholder="Input your Username..." class="input input-bordered w-full">
+              <input type="text" name="fcode" [(ngModel)]="fcode" placeholder="Input your Fcode..." class="input input-bordered w-full">
             </div>
             <div class="form-control mb-6">
               <label class="label">
@@ -32,7 +32,7 @@
                   <i class="fas fa-lock"></i> Password
                 </span>
               </label>
-              <input type="password" placeholder="Input your Password..." class="input input-bordered w-full">
+              <input type="password" name="password" [(ngModel)]="password" placeholder="Input your Password..." class="input input-bordered w-full">
             </div>
             <button type="submit" class="btn btn-block text-white">Log In</button>
             <div class="flex justify-center pt-4 mb-4">

@@ -1,3 +1,4 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { EmployeesComponent } from './pages/employees/employees.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
@@ -11,20 +12,23 @@ import { WorkexperienceComponent } from './pages/workexperience/workexperience.c
 import { VoluntaryworkComponent } from './pages/voluntarywork/voluntarywork.component';
 import { OtherinformationComponent } from './pages/otherinformation/otherinformation.component';
 import { NewAccountComponent } from './pages/new-account/new-account.component';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './services/auth.guard';
 
 export const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent }, 
-  { path: 'employees', component: EmployeesComponent },
-  { path: 'personal-info', component: PersonalInfoComponent },
-  { path: 'educational-background', component: EducationComponent },
-  { path: 'family-background', component: FamilyComponent },
-  { path: 'children', component: ChildrenComponent },
-  { path: 'learning-development', component: LearningComponent },
-  { path: 'civil-service-eligibility', component: CivilComponent },
-  { path: 'work-experience', component: WorkexperienceComponent },
-  { path: 'voluntary-works', component: VoluntaryworkComponent },
-  { path: 'other-information', component: OtherinformationComponent },
-  { path: 'new-account', component: NewAccountComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'employees', component: EmployeesComponent, canActivate: [AuthGuard] },
+  { path: 'personal-info', component: PersonalInfoComponent, canActivate: [AuthGuard] },
+  { path: 'educational-background', component: EducationComponent, canActivate: [AuthGuard] },
+  { path: 'family-background', component: FamilyComponent, canActivate: [AuthGuard] },
+  { path: 'children', component: ChildrenComponent, canActivate: [AuthGuard] },
+  { path: 'learning-development', component: LearningComponent, canActivate: [AuthGuard] },
+  { path: 'civil-service-eligibility', component: CivilComponent, canActivate: [AuthGuard] },
+  { path: 'work-experience', component: WorkexperienceComponent, canActivate: [AuthGuard] },
+  { path: 'voluntary-works', component: VoluntaryworkComponent, canActivate: [AuthGuard] },
+  { path: 'other-information', component: OtherinformationComponent, canActivate: [AuthGuard] },
+  { path: 'new-account', component: NewAccountComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard' }
 ];
