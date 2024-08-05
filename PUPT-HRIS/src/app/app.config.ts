@@ -5,6 +5,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { importProvidersFrom } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuthGuard } from './services/auth.guard';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,5 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
     importProvidersFrom(ReactiveFormsModule),
+    AuthGuard
   ]
 };
