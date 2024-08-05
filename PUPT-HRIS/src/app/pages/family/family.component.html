@@ -1,1 +1,80 @@
-<p>family works!</p>
+<div class="container">
+  <h1>Family Background</h1>
+
+  <div *ngIf="familyData">
+    <p><strong>Spouse Name:</strong> {{ familyData?.SpouseFirstName }} {{ familyData?.SpouseMiddleName }} {{ familyData?.SpouseLastName }}</p>
+    <p><strong>Spouse Occupation:</strong> {{ familyData?.SpouseOccupation }}</p>
+    <p><strong>Spouse Employer Name:</strong> {{ familyData?.SpouseEmployerName }}</p>
+    <p><strong>Spouse Business Address:</strong> {{ familyData?.SpouseBusinessAddress }}</p>
+    <p><strong>Spouse Telephone Number:</strong> {{ familyData?.SpouseTelephoneNumber }}</p>
+    <p><strong>Father's Name:</strong> {{ familyData?.FatherFirstName }} {{ familyData?.FatherMiddleName }} {{ familyData?.FatherLastName }}</p>
+    <p><strong>Mother's Name:</strong> {{ familyData?.MotherFirstName }} {{ familyData?.MotherMiddleName }} {{ familyData?.MotherLastName }}</p>
+    <!-- Add more fields as needed -->
+    <button (click)="toggleForm()">Edit</button>
+  </div>
+
+  <div *ngIf="!familyData">
+    <p>No family background information available.</p>
+    <button (click)="toggleForm()">Add Info</button>
+  </div>
+
+  <div *ngIf="isEditing">
+    <form [formGroup]="familyForm" (ngSubmit)="onSubmit()">
+      <div>
+        <label for="SpouseLastName">Spouse Last Name</label>
+        <input id="SpouseLastName" formControlName="SpouseLastName">
+      </div>
+      <div>
+        <label for="SpouseFirstName">Spouse First Name</label>
+        <input id="SpouseFirstName" formControlName="SpouseFirstName">
+      </div>
+      <div>
+        <label for="SpouseMiddleName">Spouse Middle Name</label>
+        <input id="SpouseMiddleName" formControlName="SpouseMiddleName">
+      </div>
+      <div>
+        <label for="SpouseOccupation">Spouse Occupation</label>
+        <input id="SpouseOccupation" formControlName="SpouseOccupation">
+      </div>
+      <div>
+        <label for="SpouseEmployerName">Spouse Employer Name</label>
+        <input id="SpouseEmployerName" formControlName="SpouseEmployerName">
+      </div>
+      <div>
+        <label for="SpouseBusinessAddress">Spouse Business Address</label>
+        <input id="SpouseBusinessAddress" formControlName="SpouseBusinessAddress">
+      </div>
+      <div>
+        <label for="SpouseTelephoneNumber">Spouse Telephone Number</label>
+        <input id="SpouseTelephoneNumber" formControlName="SpouseTelephoneNumber">
+      </div>
+      <div>
+        <label for="FatherLastName">Father Last Name</label>
+        <input id="FatherLastName" formControlName="FatherLastName">
+      </div>
+      <div>
+        <label for="FatherFirstName">Father First Name</label>
+        <input id="FatherFirstName" formControlName="FatherFirstName">
+      </div>
+      <div>
+        <label for="FatherMiddleName">Father Middle Name</label>
+        <input id="FatherMiddleName" formControlName="FatherMiddleName">
+      </div>
+      <div>
+        <label for="MotherLastName">Mother Last Name</label>
+        <input id="MotherLastName" formControlName="MotherLastName">
+      </div>
+      <div>
+        <label for="MotherFirstName">Mother First Name</label>
+        <input id="MotherFirstName" formControlName="MotherFirstName">
+      </div>
+      <div>
+        <label for="MotherMiddleName">Mother Middle Name</label>
+        <input id="MotherMiddleName" formControlName="MotherMiddleName">
+      </div>
+      <!-- Add more fields as needed -->
+      <button type="submit">{{ familyData ? 'Update' : 'Add' }}</button>
+      <button type="button" (click)="toggleForm()">Cancel</button>
+    </form>
+  </div>
+</div>
