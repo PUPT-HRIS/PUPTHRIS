@@ -1,139 +1,150 @@
-<form [formGroup]="newAccountForm" (ngSubmit)="onSubmit()">
-  <div class="form-control">
-    <label class="label" for="Fcode">
-      <span class="label-text">Fcode</span>
-    </label>
-    <input
-      type="text"
-      id="Fcode"
-      formControlName="Fcode"
-      placeholder="Enter Fcode"
-      class="input input-bordered input-primary w-full max-w-xs"
-    />
+<form [formGroup]="newAccountForm" (ngSubmit)="onSubmit()" class="bg-base-200 rounded-lg shadow-lg max-w-6xl mx-auto mt-3">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h2 class="text-xl font-bold">Create New Account</h2>
+  </div>
+  
+  <div class="grid grid-cols-2 gap-6 p-6">
+    <div class="form-control w-full">
+      <label class="label" for="Fcode">
+        <span class="label-text font-bold">Fcode</span>
+      </label>
+      <input
+        type="text"
+        id="Fcode"
+        formControlName="Fcode"
+        placeholder="Enter Fcode"
+        class="input input-bordered w-full"
+      />
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label" for="Surname">
+        <span class="label-text font-bold">Surname</span>
+      </label>
+      <input
+        type="text"
+        id="Surname"
+        formControlName="Surname"
+        placeholder="Enter Surname"
+        class="input input-bordered w-full"
+      />
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label" for="FirstName">
+        <span class="label-text font-bold">First Name</span>
+      </label>
+      <input
+        type="text"
+        id="FirstName"
+        formControlName="FirstName"
+        placeholder="Enter First Name"
+        class="input input-bordered w-full"
+      />
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label" for="MiddleName">
+        <span class="label-text font-bold">Middle Name</span>
+      </label>
+      <input
+        type="text"
+        id="MiddleName"
+        formControlName="MiddleName"
+        placeholder="Enter Middle Name"
+        class="input input-bordered w-full"
+      />
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label" for="NameExtension">
+        <span class="label-text font-bold">Name Extension</span>
+      </label>
+      <input
+        type="text"
+        id="NameExtension"
+        formControlName="NameExtension"
+        placeholder="Enter Name Extension"
+        class="input input-bordered w-full"
+      />
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label" for="Email">
+        <span class="label-text font-bold">Email</span>
+      </label>
+      <input
+        type="email"
+        id="Email"
+        formControlName="Email"
+        placeholder="Enter Email"
+        class="input input-bordered w-full"
+      />
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label" for="EmploymentType">
+        <span class="label-text font-bold">Employment Type</span>
+      </label>
+      <select
+        id="EmploymentType"
+        formControlName="EmploymentType"
+        class="select select-bordered w-full"
+      >
+        <option value="" disabled selected>- Please Select Option -</option>
+        <option value="fulltime">Fulltime</option>
+        <option value="parttime">Part-time</option>
+        <option value="temporary">Temporary</option>
+      </select>
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label" for="Password">
+        <span class="label-text font-bold">Password</span>
+      </label>
+      <input
+        type="password"
+        id="Password"
+        formControlName="Password"
+        placeholder="Enter Password"
+        class="input input-bordered w-full"
+      />
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label" for="Role">
+        <span class="label-text font-bold">Role</span>
+      </label>
+      <select
+        id="Role"
+        formControlName="Role"
+        class="select select-bordered w-full"
+      >
+        <option value="" disabled selected>- Please Select Option -</option>
+        <option value="faculty">Faculty</option>
+        <option value="staff">Staff</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+
+    <div class="form-control w-full">
+      <label class="label" for="Department">
+        <span class="label-text font-bold">Department</span>
+      </label>
+      <select
+        id="Department"
+        formControlName="Department"
+        class="select select-bordered w-full"
+      >
+        <option value="" disabled selected>- Please Select Option -</option>
+        <option value="math">Math</option>
+        <option value="IT">IT</option>
+        <option value="english">English</option>
+      </select>
+    </div>
   </div>
 
-  <div class="form-control">
-    <label class="label" for="Surname">
-      <span class="label-text">Surname</span>
-    </label>
-    <input
-      type="text"
-      id="Surname"
-      formControlName="Surname"
-      placeholder="Enter Surname"
-      class="input input-bordered input-primary w-full max-w-xs"
-    />
+  <div class="flex justify-end p-4">
+    <button type="submit" class="btn bg-black text-white">Create Account</button>
   </div>
-
-  <div class="form-control">
-    <label class="label" for="FirstName">
-      <span class="label-text">First Name</span>
-    </label>
-    <input
-      type="text"
-      id="FirstName"
-      formControlName="FirstName"
-      placeholder="Enter First Name"
-      class="input input-bordered input-primary w-full max-w-xs"
-    />
-  </div>
-
-  <div class="form-control">
-    <label class="label" for="MiddleName">
-      <span class="label-text">Middle Name</span>
-    </label>
-    <input
-      type="text"
-      id="MiddleName"
-      formControlName="MiddleName"
-      placeholder="Enter Middle Name"
-      class="input input-bordered input-primary w-full max-w-xs"
-    />
-  </div>
-
-  <div class="form-control">
-    <label class="label" for="NameExtension">
-      <span class="label-text">Name Extension</span>
-    </label>
-    <input
-      type="text"
-      id="NameExtension"
-      formControlName="NameExtension"
-      placeholder="Enter Name Extension"
-      class="input input-bordered input-primary w-full max-w-xs"
-    />
-  </div>
-
-  <div class="form-control">
-    <label class="label" for="Email">
-      <span class="label-text">Email</span>
-    </label>
-    <input
-      type="email"
-      id="Email"
-      formControlName="Email"
-      placeholder="Enter Email"
-      class="input input-bordered input-primary w-full max-w-xs"
-    />
-  </div>
-
-  <div class="form-control">
-    <label class="label" for="EmploymentType">
-      <span class="label-text">Employment Type</span>
-    </label>
-    <select
-      id="EmploymentType"
-      formControlName="EmploymentType"
-      class="select select-bordered select-primary w-full max-w-xs"
-    >
-      <option value="fulltime">Fulltime</option>
-      <option value="parttime">Part-time</option>
-      <option value="temporary">Temporary</option>
-    </select>
-  </div>
-
-  <div class="form-control">
-    <label class="label" for="Password">
-      <span class="label-text">Password</span>
-    </label>
-    <input
-      type="password"
-      id="Password"
-      formControlName="Password"
-      placeholder="Enter Password"
-      class="input input-bordered input-primary w-full max-w-xs"
-    />
-  </div>
-
-  <div class="form-control">
-    <label class="label" for="Role">
-      <span class="label-text">Role</span>
-    </label>
-    <select
-      id="Role"
-      formControlName="Role"
-      class="select select-bordered select-primary w-full max-w-xs"
-    >
-      <option value="faculty">Faculty</option>
-      <option value="staff">Staff</option>
-      <option value="admin">Admin</option>
-    </select>
-  </div>
-
-  <div class="form-control">
-    <label class="label" for="Department">
-      <span class="label-text">Department</span>
-    </label>
-    <select
-      id="Department"
-      formControlName="Department"
-      class="select select-bordered select-primary w-full max-w-xs"
-    >
-      <option value="math">Math</option>
-      <option value="IT">IT</option>
-      <option value="english">English</option>
-    </select>
-  </div>
-
-  <button type="submit" class="btn btn-primary mt-4">Create Account</button>
 </form>
