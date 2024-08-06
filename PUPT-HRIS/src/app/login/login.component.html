@@ -1,1 +1,46 @@
-<p>login works!</p>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="min-h-screen bg-red-700 flex items-center justify-center">
+  <div class="flex flex-1 items-center justify-center bg-red-700 max-w-5xl">
+    <div class="flex-1 flex items-center justify-center bg-red-700 p-6">
+      <div class="bg-white rounded-lg shadow-lg p-4 w-full h-full flex items-center justify-center">
+        <div>
+          <img src="assets/loginAsset.svg" alt="PUP Campus" class="max-w-full h-auto rounded-lg">
+          <p class="text-center font-bold mt-4">Polytechnic University of the Philippines - Taguig</p>
+        </div>
+      </div>
+    </div>
+    <div class="flex-1 flex items-center justify-center bg-red-700 p-4">
+      <div class="bg-white rounded-lg shadow-lg p-20 w-full h-full flex items-center justify-center">
+        <div class="w-full">
+          <div class="flex items-center justify-center mb-6">
+            <img src="assets/PUPLogo.svg" alt="PUP Logo" class="w-16 h-16">
+            <h1 class="text-4xl font-bold ml-4">Sign In</h1>
+          </div>
+          <form (submit)="login()">
+            <div class="form-control mb-4">
+              <label class="label">
+                <span class="label-text text-lg">
+                  <i class="fas fa-user"></i> Fcode
+                </span>
+              </label>
+              <input type="text" name="fcode" [(ngModel)]="fcode" placeholder="Input your Fcode..." class="input input-bordered w-full">
+            </div>
+            <div class="form-control mb-6">
+              <label class="label">
+                <span class="label-text text-lg">
+                  <i class="fas fa-lock"></i> Password
+                </span>
+              </label>
+              <input type="password" name="password" [(ngModel)]="password" placeholder="Input your Password..." class="input input-bordered w-full">
+            </div>
+            <button type="submit" class="btn btn-block text-white">Log In</button>
+            <div class="flex justify-center pt-4 mb-4">
+              <a href="#" class="text-blue-500 hover:underline">Forgot Password?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
