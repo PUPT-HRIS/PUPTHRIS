@@ -28,17 +28,17 @@ exports.updateLearningDevelopment = async (req, res) => {
   }
 };
 
-exports.getLearningDevelopment = async (req, res) => {
+exports.getLearningDevelopments = async (req, res) => {
   try {
-    const learningDevelopmentId = req.params.id;
-    const learningDevelopment = await LearningDevelopment.findOne({ where: { LearningDevelopmentID: learningDevelopmentId } });
-    if (learningDevelopment) {
-      res.status(200).json(learningDevelopment);
+    const employeeId = req.params.employeeId;
+    const learningDevelopments = await LearningDevelopment.findAll({ where: { EmployeeID: employeeId } });
+    if (learningDevelopments) {
+      res.status(200).json(learningDevelopments);
     } else {
-      res.status(404).send('Learning Development record not found');
+      res.status(404).send('Learning Development records not found');
     }
   } catch (error) {
-    console.error('Error getting learning development:', error);
+    console.error('Error getting learning developments:', error);
     res.status(500).send('Internal Server Error');
   }
 };

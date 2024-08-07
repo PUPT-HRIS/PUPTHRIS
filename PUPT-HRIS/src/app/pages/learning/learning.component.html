@@ -1,1 +1,87 @@
-<p>learning works!</p>
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Learning and Development</h1>
+  </div>
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <div *ngIf="learningData.length > 0" class="p-6 space-y-6">
+      <div class="overflow-x-auto">
+        <table class="table table-zebra w-full border-separate border-spacing-0">
+          <thead>
+            <tr class="bg-red-900 text-white">
+              <th class="p-4">#</th>
+              <th class="p-4">Title</th>
+              <th class="p-4">Inclusive Dates From</th>
+              <th class="p-4">Inclusive Dates To</th>
+              <th class="p-4">Number Of Hours</th>
+              <th class="p-4">Type</th>
+              <th class="p-4">Conducted/Sponsored By</th>
+              <th class="p-4 w-36">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let learning of learningData; let i = index">
+              <th class="p-4">{{ i + 1 }}</th>
+              <td class="p-4">{{ learning.TitleOfLearningDevelopment }}</td>
+              <td class="p-4">{{ learning.InclusiveDatesFrom | date }}</td>
+              <td class="p-4">{{ learning.InclusiveDatesTo | date }}</td>
+              <td class="p-4">{{ learning.NumberOfHours }}</td>
+              <td class="p-4">{{ learning.TypeOfLD }}</td>
+              <td class="p-4">{{ learning.ConductedSponsoredBy }}</td>
+              <td class="p-4">
+                <button (click)="editLearning(learning.LearningDevelopmentID!)" class="btn btn-sm btn-primary">Edit</button>
+                <button (click)="deleteLearning(learning.LearningDevelopmentID!)" class="btn btn-sm btn-error">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="learningData.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No learning and development information available.</p>
+      </div>
+    </div>
+    <div class="flex justify-end p-6">
+      <button class="btn bg-black text-white" (click)="addNewLearning()">Add Info</button>
+    </div>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="learningForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div class="form-control w-full">
+            <label for="TitleOfLearningDevelopment" class="label-text font-bold text-lg">Title of Learning Development</label>
+            <input id="TitleOfLearningDevelopment" formControlName="TitleOfLearningDevelopment" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="InclusiveDatesFrom" class="label-text font-bold text-lg">Inclusive Dates From</label>
+            <input id="InclusiveDatesFrom" formControlName="InclusiveDatesFrom" class="input input-bordered w-full" type="date">
+          </div>
+          <div class="form-control w-full">
+            <label for="InclusiveDatesTo" class="label-text font-bold text-lg">Inclusive Dates To</label>
+            <input id="InclusiveDatesTo" formControlName="InclusiveDatesTo" class="input input-bordered w-full" type="date">
+          </div>
+          <div class="form-control w-full">
+            <label for="NumberOfHours" class="label-text font-bold text-lg">Number of Hours</label>
+            <input id="NumberOfHours" formControlName="NumberOfHours" class="input input-bordered w-full" type="number">
+          </div>
+          <div class="form-control w-full">
+            <label for="TypeOfLD" class="label-text font-bold text-lg">Type</label>
+            <input id="TypeOfLD" formControlName="TypeOfLD" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="ConductedSponsoredBy" class="label-text font-bold text-lg">Conducted/Sponsored By</label>
+            <input id="ConductedSponsoredBy" formControlName="ConductedSponsoredBy" class="input input-bordered w-full">
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn bg-black text-white mr-4">{{ currentLearningId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn bg-gray-600 text-white" (click)="resetForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>
