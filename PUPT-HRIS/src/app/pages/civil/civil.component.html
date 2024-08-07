@@ -1,1 +1,90 @@
-<p>civil works!</p>
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Civil Service Eligibilities</h1>
+  </div>
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <div *ngIf="civilServiceData.length > 0" class="p-6 space-y-6">
+      <div class="overflow-x-auto">
+        <table class="table table-zebra w-full border-separate border-spacing-0">
+          <thead>
+            <tr class="bg-red-900 text-white">
+              <th class="p-4">#</th>
+              <th class="p-4">Career Service</th>
+              <th class="p-4">Rating</th>
+              <th class="p-4">Date Of Examination</th>
+              <th class="p-4">Place Of Examination</th>
+              <th class="p-4">License Number</th>
+              <th class="p-4">License Validity Date</th>
+              <th class="p-4 w-36">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let eligibility of civilServiceData; let i = index">
+              <th class="p-4">{{ i + 1 }}</th>
+              <td class="p-4">{{ eligibility.CareerService }}</td>
+              <td class="p-4">{{ eligibility.Rating }}</td>
+              <td class="p-4">{{ eligibility.DateOfExamination | date }}</td>
+              <td class="p-4">{{ eligibility.PlaceOfExamination }}</td>
+              <td class="p-4">{{ eligibility.LicenseNumber }}</td>
+              <td class="p-4">{{ eligibility.LicenseValidityDate | date }}</td>
+              <td class="p-4">
+                <button (click)="editEligibility(eligibility.CivilServiceEligibilityID!)" class="btn btn-sm btn-primary">Edit</button>
+                <button (click)="deleteEligibility(eligibility.CivilServiceEligibilityID!)" class="btn btn-sm btn-error">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn bg-black text-white" (click)="addNewEligibility()">Add New</button>
+      </div>
+    </div>
+
+    <div *ngIf="civilServiceData.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No civil service eligibility information available.</p>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn bg-black text-white" (click)="addNewEligibility()">Add Info</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="civilServiceForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div class="form-control w-full">
+            <label for="CareerService" class="label-text font-bold text-lg">Career Service</label>
+            <input id="CareerService" formControlName="CareerService" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="Rating" class="label-text font-bold text-lg">Rating</label>
+            <input id="Rating" formControlName="Rating" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="DateOfExamination" class="label-text font-bold text-lg">Date Of Examination</label>
+            <input id="DateOfExamination" formControlName="DateOfExamination" class="input input-bordered w-full" type="date">
+          </div>
+          <div class="form-control w-full">
+            <label for="PlaceOfExamination" class="label-text font-bold text-lg">Place Of Examination</label>
+            <input id="PlaceOfExamination" formControlName="PlaceOfExamination" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="LicenseNumber" class="label-text font-bold text-lg">License Number</label>
+            <input id="LicenseNumber" formControlName="LicenseNumber" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="LicenseValidityDate" class="label-text font-bold text-lg">License Validity Date</label>
+            <input id="LicenseValidityDate" formControlName="LicenseValidityDate" class="input input-bordered w-full" type="date">
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn bg-black text-white mr-4">{{ currentEligibilityId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn bg-gray-600 text-white" (click)="resetForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>
