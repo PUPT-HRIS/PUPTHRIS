@@ -43,3 +43,18 @@ exports.getChild = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.getChildrenByEmployeeId = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const children = await Children.findAll({ where: { EmployeeID: employeeId } });
+    if (children.length > 0) {
+      res.status(200).json(children);
+    } else {
+      res.status(404).send('No children found for this employee');
+    }
+  } catch (error) {
+    console.error('Error getting children:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
