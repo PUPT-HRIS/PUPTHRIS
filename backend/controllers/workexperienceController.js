@@ -6,7 +6,7 @@ exports.addWorkExperience = async (req, res) => {
     res.status(201).json(newWorkExperience);
   } catch (error) {
     console.error('Error adding work experience:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -18,13 +18,13 @@ exports.updateWorkExperience = async (req, res) => {
       where: { WorkExperienceID: workExperienceId }
     });
     if (result[0] === 0) {
-      res.status(404).send('Work experience record not found');
+      res.status(404).json({ error: 'Work experience record not found' });
     } else {
-      res.status(200).send('Work experience updated successfully');
+      res.status(200).json({ message: 'Work experience updated successfully' });
     }
   } catch (err) {
     console.error('Error updating work experience:', err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -35,10 +35,25 @@ exports.getWorkExperience = async (req, res) => {
     if (workExperience) {
       res.status(200).json(workExperience);
     } else {
-      res.status(404).send('Work experience record not found');
+      res.status(404).json({ error: 'Work experience record not found' });
     }
   } catch (error) {
     console.error('Error getting work experience:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.getWorkExperiencesByEmployee = async (req, res) => {
+  try {
+    const employeeId = req.params.employeeId;
+    const workExperiences = await WorkExperience.findAll({ where: { EmployeeID: employeeId } });
+    if (workExperiences) {
+      res.status(200).json(workExperiences);
+    } else {
+      res.status(404).json({ error: 'No work experience records found' });
+    }
+  } catch (error) {
+    console.error('Error getting work experiences:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
