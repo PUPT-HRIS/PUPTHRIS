@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
-import { EmployeesComponent } from './pages/employees/employees.component';
+import { EmployeeComponent } from './pages/employees/employees.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PersonalInfoComponent } from './pages/personal-info/personal-info.component';
 import { EducationComponent } from './pages/education/education.component';
@@ -24,7 +24,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'employees', component: EmployeesComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
+      { path: 'employees', component: EmployeeComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
       { path: 'personal-info', component: PersonalInfoComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'educational-background', component: EducationComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'family-background', component: FamilyComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
