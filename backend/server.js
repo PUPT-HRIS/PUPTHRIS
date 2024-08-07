@@ -32,7 +32,7 @@ app.use('/api/learningdevelopment', learningdevelopmentRoutes);
 app.use('/api/otherinformation', otherinformationRoutes);
 app.use('/api/children', childrenRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from '../../environments/environment'; 
+import { environment } from '../../environments/environment';
 import { Employee } from '../model/employee.model';
 
 @Injectable({
@@ -31,7 +31,7 @@ export class PersonalInfoService {
     );
   }
 
-  private handleError(error: any): Observable<never> {
+  private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);
     return throwError(error.message || 'Server error');
   }
