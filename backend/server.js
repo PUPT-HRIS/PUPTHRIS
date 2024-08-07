@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const employeeRoutes = require('./routes/employeeRoutes');
-const educationRoutes = require('./routes/educationRoutes');
+const educationRoutes = require('./routes/educationRoutes'); // Ensure this line is correct
 const familybackgroundRoutes = require('./routes/familybackgroundRoutes');
 const civilserviceeligibilityRoutes = require('./routes/civilserviceeligibilityRoutes');
 const workexperienceRoutes = require('./routes/workexperienceRoutes');
@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 
 app.use('/api/employees', employeeRoutes);
 app.use('/api/education', educationRoutes);
-app.use('/api/family', familybackgroundRoutes);
+app.use('/api/familybackground', familybackgroundRoutes);
 app.use('/api/civilservice', civilserviceeligibilityRoutes);
 app.use('/api/workexperience', workexperienceRoutes);
 app.use('/api/voluntarywork', voluntaryworkRoutes);

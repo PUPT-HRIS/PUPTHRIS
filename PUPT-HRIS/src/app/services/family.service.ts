@@ -9,7 +9,7 @@ import { FamilyBackground } from '../model/family-background.model';
   providedIn: 'root'
 })
 export class FamilyService {
-  private apiUrl = `${environment.apiBaseUrl}/family`;
+  private apiUrl = `${environment.apiBaseUrl}/familybackground`;
 
   constructor(private http: HttpClient) { }
 
