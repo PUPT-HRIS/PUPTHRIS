@@ -4,4 +4,5 @@ export interface User {
   Name: string;
   InstructorStatus: string;
   Department: string;
+  EmploymentType: string;
 }
