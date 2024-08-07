@@ -4,6 +4,8 @@ import { FamilyService } from '../../services/family.service';
 import { FamilyBackground } from '../../model/family-background.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-family',
@@ -16,8 +18,17 @@ export class FamilyComponent implements OnInit {
   familyForm: FormGroup;
   familyData: FamilyBackground | null = null;
   isEditing: boolean = false;
+  employeeId: number;
 
-  constructor(private fb: FormBuilder, private familyService: FamilyService) {
+  constructor(private fb: FormBuilder, private familyService: FamilyService, private authService: AuthService) {
+    const token = this.authService.getToken();
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      this.employeeId = decoded.userId;
+    } else {
+      this.employeeId = 0;
+    }
+
     this.familyForm = this.fb.group({
       SpouseLastName: [''],
       SpouseFirstName: [''],
@@ -40,8 +51,7 @@ export class FamilyComponent implements OnInit {
   }
 
   loadFamilyBackground(): void {
-    const employeeId = 2; // Replace with actual employee ID
-    this.familyService.getFamilyBackground(employeeId).subscribe(
+    this.familyService.getFamilyBackground(this.employeeId).subscribe(
       data => {
         this.familyData = data;
         if (this.familyData) {
@@ -59,8 +69,9 @@ export class FamilyComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const familyBackground = { ...this.familyForm.value, EmployeeID: this.employeeId };
     if (this.familyData) {
-      this.familyService.updateFamilyBackground(this.familyData.FamilyBackgroundID!, this.familyForm.value).subscribe(
+      this.familyService.updateFamilyBackground(this.familyData.FamilyBackgroundID!, familyBackground).subscribe(
         response => {
           console.log('Family background updated successfully', response);
           this.loadFamilyBackground();
@@ -71,7 +82,7 @@ export class FamilyComponent implements OnInit {
         }
       );
     } else {
-      this.familyService.addFamilyBackground(this.familyForm.value).subscribe(
+      this.familyService.addFamilyBackground(familyBackground).subscribe(
         response => {
           console.log('Family background added successfully', response);
           this.loadFamilyBackground();
