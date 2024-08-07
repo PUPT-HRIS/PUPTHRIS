@@ -42,7 +42,7 @@
         <p class="text-lg">No personal information available.</p>
       </div>
       <div class="flex justify-end">
-        <button class="btn bg-black text-white" (click)="edit()">Add Info</button>
+        <button class="btn btn-add-info bg-black text-white" (click)="edit()">Add Info</button>
       </div>
     </div>
   </ng-container>
@@ -78,14 +78,22 @@
           <div class="form-control w-full">
             <label for="Gender" class="label-text font-bold text-lg">Gender</label>
             <select id="Gender" formControlName="Gender" class="select select-bordered">
+              <option value="" disabled selected>- Please select an Option -</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
-            </select>
+            </select>            
           </div>
           <div class="form-control w-full">
             <label for="CivilStatus" class="label-text font-bold text-lg">Civil Status</label>
-            <input id="CivilStatus" formControlName="CivilStatus" class="input input-bordered w-full">
+            <select id="CivilStatus" formControlName="CivilStatus" class="select select-bordered">
+              <option value="" disabled selected>- Please select an Option -</option>
+              <option value="Single">Single</option>
+              <option value="Married">Married</option>
+              <option value="Widowed">Widowed</option>
+              <option value="Separated">Separated</option>
+              <option value="Divorced">Divorced</option>
+            </select>
           </div>
           <div class="form-control w-full">
             <label for="Height" class="label-text font-bold text-lg">Height</label>
@@ -157,9 +165,9 @@
           </div>
         </div>
         <div class="flex justify-end mt-6">
-          <button type="submit" class="btn bg-black text-white mr-4">Save</button>
-          <button type="button" class="btn bg-gray-600 text-white" (click)="cancelEdit()">Cancel</button>
-        </div>
+          <button type="submit" class="btn btn-save mr-4">Save</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
+        </div>        
       </form>
     </div>
   </ng-template>
