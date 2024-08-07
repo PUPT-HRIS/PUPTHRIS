@@ -11,7 +11,7 @@ const Education = sequelize.define('Education', {
     type: DataTypes.INTEGER,
     references: {
       model: 'employee',
-      key: 'EmployeeID', 
+      key: 'EmployeeID',
     },
   },
   Level: {

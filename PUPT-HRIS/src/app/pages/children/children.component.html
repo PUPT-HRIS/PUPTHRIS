@@ -1,1 +1,63 @@
-<p>children works!</p>
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Children</h1>
+  </div>
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <div *ngIf="childrenData.length > 0" class="p-6 space-y-6">
+      <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+          <thead>
+            <tr class="bg-red-900 text-white">
+              <th>#</th>
+              <th>Child Name</th>
+              <th>Birth Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let child of childrenData; let i = index">
+              <th>{{ i + 1 }}</th>
+              <td>{{ child.ChildName }}</td>
+              <td>{{ child.BirthDate | date }}</td>
+              <td>
+                <button class="btn btn-primary btn-sm" (click)="editChild(child)">Edit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex justify-end mt-4">
+        <button class="btn bg-black text-white" (click)="toggleForm()">Add Child</button>
+      </div>
+    </div>
+
+    <div *ngIf="childrenData.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No children information available.</p>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn bg-black text-white" (click)="toggleForm()">Add Child</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="childrenForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="form-control w-full">
+          <label for="ChildName" class="label-text font-bold text-lg">Child Name</label>
+          <input id="ChildName" formControlName="ChildName" class="input input-bordered w-full">
+        </div>
+        <div class="form-control w-full">
+          <label for="BirthDate" class="label-text font-bold text-lg">Birth Date</label>
+          <input id="BirthDate" type="date" formControlName="BirthDate" class="input input-bordered w-full">
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn bg-black text-white mr-4">{{ currentChildId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn bg-gray-600 text-white" (click)="toggleForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

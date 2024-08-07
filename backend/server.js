@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 
 app.use('/api/employees', employeeRoutes);
 app.use('/api/education', educationRoutes);
-app.use('/api/family', familybackgroundRoutes);
+app.use('/api/familybackground', familybackgroundRoutes);
 app.use('/api/civilservice', civilserviceeligibilityRoutes);
 app.use('/api/workexperience', workexperienceRoutes);
 app.use('/api/voluntarywork', voluntaryworkRoutes);
@@ -32,7 +32,7 @@ app.use('/api/learningdevelopment', learningdevelopmentRoutes);
 app.use('/api/otherinformation', otherinformationRoutes);
 app.use('/api/children', childrenRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);

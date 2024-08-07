@@ -20,7 +20,8 @@ exports.updateFamilyBackground = async (req, res) => {
     if (result[0] === 0) {
       res.status(404).send('Family Background record not found');
     } else {
-      res.status(200).send('Family Background updated successfully');
+      const updatedFamilyBackground = await FamilyBackground.findOne({ where: { FamilyBackgroundID: backgroundId } });
+      res.status(200).json(updatedFamilyBackground);
     }
   } catch (err) {
     console.error('Error updating family background:', err);
@@ -30,8 +31,8 @@ exports.updateFamilyBackground = async (req, res) => {
 
 exports.getFamilyBackground = async (req, res) => {
   try {
-    const backgroundId = req.params.id;
-    const familyBackground = await FamilyBackground.findOne({ where: { FamilyBackgroundID: backgroundId } });
+    const employeeId = req.params.employeeId;
+    const familyBackground = await FamilyBackground.findOne({ where: { EmployeeID: employeeId } });
     if (familyBackground) {
       res.status(200).json(familyBackground);
     } else {

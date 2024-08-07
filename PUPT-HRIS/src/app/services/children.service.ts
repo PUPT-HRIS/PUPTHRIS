@@ -3,30 +3,30 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Employee } from '../model/employee.model';
+import { Children } from '../model/children.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PersonalInfoService {
-  private apiUrl = `${environment.apiBaseUrl}/employees`;
+export class ChildrenService {
+  private apiUrl = `${environment.apiBaseUrl}/children`;
 
   constructor(private http: HttpClient) { }
 
-  getEmployee(id: number): Observable<Employee> {
-    return this.http.get<Employee>(`${this.apiUrl}/${id}`).pipe(
+  getChildren(employeeId: number): Observable<Children[]> {
+    return this.http.get<Children[]>(`${this.apiUrl}/employee/${employeeId}`).pipe(
       catchError(this.handleError)
     );
   }
 
-  addEmployee(employee: Employee): Observable<Employee> {
-    return this.http.post<Employee>(`${this.apiUrl}/add`, employee).pipe(
+  addChild(child: Children): Observable<Children> {
+    return this.http.post<Children>(`${this.apiUrl}/add`, child).pipe(
       catchError(this.handleError)
     );
   }
 
-  updateEmployee(id: number, employee: Employee): Observable<Employee> {
-    return this.http.patch<Employee>(`${this.apiUrl}/update/${id}`, employee).pipe(
+  updateChild(id: number, child: Children): Observable<Children> {
+    return this.http.patch<Children>(`${this.apiUrl}/update/${id}`, child).pipe(
       catchError(this.handleError)
     );
   }

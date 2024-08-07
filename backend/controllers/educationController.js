@@ -23,7 +23,8 @@ exports.updateEducation = async (req, res) => {
     if (result[0] === 0) {
       res.status(404).send('Education record not found');
     } else {
-      res.status(200).send('Education updated successfully');
+      const updatedEducation = await Education.findOne({ where: { EducationID: educationId } });
+      res.status(200).json(updatedEducation); // Return updated data
     }
   } catch (err) {
     console.error('Error updating education:', err);
@@ -42,6 +43,21 @@ exports.getEducation = async (req, res) => {
     }
   } catch (error) {
     console.error('Error getting education:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+exports.getEducationByEmployee = async (req, res) => {
+  try {
+    const employeeId = req.params.employeeId;
+    const educationRecords = await Education.findAll({ where: { EmployeeID: employeeId } });
+    if (educationRecords) {
+      res.status(200).json(educationRecords);
+    } else {
+      res.status(404).send('No education records found for this employee');
+    }
+  } catch (error) {
+    console.error('Error getting education records:', error);
     res.status(500).send('Internal Server Error');
   }
 };
