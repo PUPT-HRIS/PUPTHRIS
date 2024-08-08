@@ -8,6 +8,9 @@
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="workExperienceData.length > 0" class="p-6 space-y-6">
       <div class="overflow-x-auto px-10">
+        <div class="flex-1 mb-2">
+          <a class="text-lg font-normal">You are currently viewing the list/s of Work Experience/s.</a>
+        </div>
         <table class="table table-zebra w-full border-separate border-spacing-0">
           <thead>
             <tr class="bg-maroon text-white">
