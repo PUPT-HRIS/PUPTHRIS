@@ -7,6 +7,9 @@
 
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="educationData.length > 0" class="p-6 space-y-6">
+      <div class="flex justify-end mb-4">
+        <button class="btn btn-add-info bg-black text-white" (click)="toggleForm()">Add Info</button>
+      </div>
       <div class="overflow-x-auto px-10">
         <div class="flex-1 mb-2">
           <a class="text-lg font-normal">You are currently viewing the lists of Education.</a>
