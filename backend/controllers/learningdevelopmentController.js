@@ -18,13 +18,13 @@ exports.updateLearningDevelopment = async (req, res) => {
       where: { LearningDevelopmentID: learningDevelopmentId }
     });
     if (result[0] === 0) {
-      res.status(404).send('Learning Development record not found');
+      res.status(404).json({ message: 'Learning development record not found' });
     } else {
-      res.status(200).send('Learning Development updated successfully');
+      res.status(200).json({ message: 'Learning development updated successfully' });
     }
   } catch (err) {
     console.error('Error updating learning development:', err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 

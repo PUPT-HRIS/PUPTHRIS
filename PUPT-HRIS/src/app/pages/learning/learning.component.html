@@ -7,6 +7,9 @@
 
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="learningData.length > 0" class="p-6 space-y-6">
+      <div class="flex justify-end mb-4">
+        <button class="btn bg-black text-white" (click)="addNewLearning()">Add Info</button>
+      </div>
       <div class="overflow-x-auto">
         <table class="table table-zebra w-full border-separate border-spacing-0">
           <thead>
