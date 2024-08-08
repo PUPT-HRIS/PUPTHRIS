@@ -78,8 +78,8 @@ export class LearningComponent implements OnInit {
       this.learningService.addLearningDevelopment(formData).subscribe(
         response => {
           console.log('Learning development added successfully', response);
-          this.loadLearningDevelopments(); // Reload data
-          this.resetForm(); // Reset form and switch back to display mode
+          this.loadLearningDevelopments();
+          this.resetForm();
         },
         error => {
           console.error('Error adding learning development', error);

@@ -42,3 +42,20 @@ exports.getLearningDevelopments = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.deleteLearningDevelopment = async (req, res) => {
+  try {
+    const learningDevelopmentId = req.params.id;
+    const result = await LearningDevelopment.destroy({
+      where: { LearningDevelopmentID: learningDevelopmentId }
+    });
+    if (result === 0) {
+      res.status(404).json({ message: 'Learning development record not found' });
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    console.error('Error deleting learning development:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
