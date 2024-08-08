@@ -8,7 +8,7 @@
       <div class="overflow-x-auto">
         <table class="table table-zebra w-full border-separate border-spacing-0">
           <thead>
-            <tr class="bg-red-900 text-white">
+            <tr class="bg-maroon text-white">
               <th class="p-4">#</th>
               <th class="p-4">Title</th>
               <th class="p-4">Inclusive Dates From</th>
@@ -42,9 +42,9 @@
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <p class="text-lg">No learning and development information available.</p>
       </div>
-    </div>
-    <div class="flex justify-end p-6">
-      <button class="btn bg-black text-white" (click)="addNewLearning()">Add Info</button>
+      <div class="flex justify-end">
+        <button class="btn bg-black text-white" (click)="addNewLearning()">Add Info</button>
+      </div>
     </div>
   </ng-container>
 
@@ -78,8 +78,8 @@
           </div>
         </div>
         <div class="flex justify-end mt-6">
-          <button type="submit" class="btn bg-black text-white mr-4">{{ currentLearningId ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn bg-gray-600 text-white" (click)="resetForm()">Cancel</button>
+          <button type="submit" class="btn btn-save mr-4">{{ currentLearningId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
         </div>
       </form>
     </div>

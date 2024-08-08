@@ -47,7 +47,7 @@
         <p class="text-lg">No work experience information available.</p>
       </div>
       <div class="flex justify-end">
-        <button class="btn bg-black text-white" (click)="addNewExperience()">Add Info</button>
+        <button class="btn btn-add-info bg-black text-white" (click)="addNewExperience()">Add Info</button>
       </div>
     </div>
   </ng-container>
@@ -90,8 +90,8 @@
           </div>
         </div>
         <div class="flex justify-end mt-6">
-          <button type="submit" class="btn bg-black text-white mr-4">{{ currentExperienceId ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn bg-gray-600 text-white" (click)="resetForm()">Cancel</button>
+          <button type="submit" class="btn btn-save mr-4">{{ currentExperienceId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
         </div>
       </form>
     </div>

@@ -6,21 +6,21 @@
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="childrenData.length > 0" class="p-6 space-y-6">
       <div class="overflow-x-auto">
-        <table class="table table-zebra w-full">
+        <table class="table table-zebra w-full border-separate border-spacing-0">
           <thead>
-            <tr class="bg-red-900 text-white">
-              <th>#</th>
-              <th>Child Name</th>
-              <th>Birth Date</th>
-              <th>Actions</th>
+            <tr class="bg-maroon text-white">
+              <th class="p-4">#</th>
+              <th class="p-4">Child Name</th>
+              <th class="p-4">Birth Date</th>
+              <th class="p-4">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let child of childrenData; let i = index">
-              <th>{{ i + 1 }}</th>
-              <td>{{ child.ChildName }}</td>
-              <td>{{ child.BirthDate | date }}</td>
-              <td>
+              <th class="p-4">{{ i + 1 }}</th>
+              <td class="p-4">{{ child.ChildName }}</td>
+              <td class="p-4">{{ child.BirthDate | date }}</td>
+              <td class="p-4">
                 <button class="btn btn-primary btn-sm" (click)="editChild(child)">Edit</button>
               </td>
             </tr>
@@ -28,7 +28,7 @@
         </table>
       </div>
       <div class="flex justify-end mt-4">
-        <button class="btn bg-black text-white" (click)="toggleForm()">Add Child</button>
+        <button class="btn btn-add-info bg-black text-white" (click)="toggleForm()">Add Child</button>
       </div>
     </div>
 
@@ -37,7 +37,7 @@
         <p class="text-lg">No children information available.</p>
       </div>
       <div class="flex justify-end">
-        <button class="btn bg-black text-white" (click)="toggleForm()">Add Child</button>
+        <button class="btn btn-add-info bg-black text-white" (click)="toggleForm()">Add Child</button>
       </div>
     </div>
   </ng-container>
@@ -54,8 +54,8 @@
           <input id="BirthDate" type="date" formControlName="BirthDate" class="input input-bordered w-full">
         </div>
         <div class="flex justify-end mt-6">
-          <button type="submit" class="btn bg-black text-white mr-4">{{ currentChildId ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn bg-gray-600 text-white" (click)="toggleForm()">Cancel</button>
+          <button type="submit" class="btn btn-save mr-4">{{ currentChildId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-cancel" (click)="toggleForm()">Cancel</button>
         </div>
       </form>
     </div>

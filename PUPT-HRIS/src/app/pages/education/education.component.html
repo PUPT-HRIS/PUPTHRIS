@@ -1,103 +1,102 @@
 <div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
-    <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
-      <h1 class="text-2xl font-bold">Education</h1>
-    </div>
-  
-    <ng-container *ngIf="!isEditing; else editForm">
-      <div *ngIf="educationData.length > 0" class="p-6 space-y-6">
-        <div class="overflow-x-auto px-10">
-          <div class="flex-1 mb-2">
-            <a class="text-lg font-normal">You are currently viewing the lists of Education.</a>
-          </div>
-          <table class="table table-zebra w-full border-separate border-spacing-0">
-            <!-- head -->
-            <thead>
-              <tr class="bg-red-900 text-white">
-                <th class="p-4">#</th>
-                <th class="p-4">Level</th>
-                <th class="p-4">Name Of School</th>
-                <th class="p-4">Course</th>
-                <th class="p-4">From</th>
-                <th class="p-4">To</th>
-                <th class="p-4">Units Earned</th>
-                <th class="p-4">Year Graduated</th>
-                <th class="p-4">Honors</th>
-                <th class="p-4 w-36">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let education of educationData; let i = index">
-                <th class="p-4">{{ i + 1 }}</th>
-                <td class="p-4">{{ education.Level }}</td>
-                <td class="p-4">{{ education.NameOfSchool }}</td>
-                <td class="p-4">{{ education.BasicEducationDegreeCourse }}</td>
-                <td class="p-4">{{ education.PeriodOfAttendanceFrom | date }}</td>
-                <td class="p-4">{{ education.PeriodOfAttendanceTo | date }}</td>
-                <td class="p-4">{{ education.HighestLevelUnitsEarned }}</td>
-                <td class="p-4">{{ education.YearGraduated }}</td>
-                <td class="p-4">{{ education.AcademicHonors }}</td>
-                <td class="p-4">
-                  <button class="btn btn-primary btn-sm" (click)="toggleForm(education.EducationID)">Edit</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-  
-      <div *ngIf="educationData.length === 0" class="p-6 space-y-6">
-        <div class="p-6 bg-white rounded-lg shadow-lg">
-          <p class="text-lg">No education information available.</p>
-        </div>
-        <div class="flex justify-end">
-          <button class="btn bg-black text-white" (click)="toggleForm()">Add Info</button>
-        </div>
-      </div>
-    </ng-container>
-  
-    <ng-template #editForm>
-      <div class="p-6">
-        <form [formGroup]="educationForm" (ngSubmit)="onSubmit()" class="space-y-6">
-          <div class="grid grid-cols-2 gap-6">
-            <div class="form-control w-full">
-              <label for="Level" class="label-text font-bold text-lg">Level</label>
-              <input id="Level" formControlName="Level" class="input input-bordered w-full">
-            </div>
-            <div class="form-control w-full">
-              <label for="NameOfSchool" class="label-text font-bold text-lg">Name Of School</label>
-              <input id="NameOfSchool" formControlName="NameOfSchool" class="input input-bordered w-full">
-            </div>
-            <div class="form-control w-full">
-              <label for="BasicEducationDegreeCourse" class="label-text font-bold text-lg">Basic Education Degree Course</label>
-              <input id="BasicEducationDegreeCourse" formControlName="BasicEducationDegreeCourse" class="input input-bordered w-full">
-            </div>
-            <div class="form-control w-full">
-              <label for="PeriodOfAttendanceFrom" class="label-text font-bold text-lg">Period Of Attendance From</label>
-              <input id="PeriodOfAttendanceFrom" formControlName="PeriodOfAttendanceFrom" class="input input-bordered w-full" type="date">
-            </div>
-            <div class="form-control w-full">
-              <label for="PeriodOfAttendanceTo" class="label-text font-bold text-lg">Period Of Attendance To</label>
-              <input id="PeriodOfAttendanceTo" formControlName="PeriodOfAttendanceTo" class="input input-bordered w-full" type="date">
-            </div>
-            <div class="form-control w-full">
-              <label for="HighestLevelUnitsEarned" class="label-text font-bold text-lg">Highest Level Units Earned</label>
-              <input id="HighestLevelUnitsEarned" formControlName="HighestLevelUnitsEarned" class="input input-bordered w-full">
-            </div>
-            <div class="form-control w-full">
-              <label for="YearGraduated" class="label-text font-bold text-lg">Year Graduated</label>
-              <input id="YearGraduated" formControlName="YearGraduated" class="input input-bordered w-full">
-            </div>
-            <div class="form-control w-full">
-              <label for="AcademicHonors" class="label-text font-bold text-lg">Academic Honors</label>
-              <input id="AcademicHonors" formControlName="AcademicHonors" class="input input-bordered w-full">
-            </div>
-          </div>
-          <div class="flex justify-end mt-6">
-            <button type="submit" class="btn bg-black text-white mr-4">{{ currentEducationId ? 'Update' : 'Add' }}</button>
-            <button type="button" class="btn bg-gray-600 text-white" (click)="toggleForm()">Cancel</button>
-          </div>
-        </form>
-      </div>
-    </ng-template>
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Education</h1>
   </div>
-  
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <div *ngIf="educationData.length > 0" class="p-6 space-y-6">
+      <div class="overflow-x-auto px-10">
+        <div class="flex-1 mb-2">
+          <a class="text-lg font-normal">You are currently viewing the lists of Education.</a>
+        </div>
+        <table class="table table-zebra w-full border-separate border-spacing-0">
+          <!-- head -->
+          <thead>
+            <tr class="bg-maroon text-white">
+              <th class="p-4">#</th>
+              <th class="p-4">Level</th>
+              <th class="p-4">Name Of School</th>
+              <th class="p-4">Course</th>
+              <th class="p-4">From</th>
+              <th class="p-4">To</th>
+              <th class="p-4">Units Earned</th>
+              <th class="p-4">Year Graduated</th>
+              <th class="p-4">Honors</th>
+              <th class="p-4 w-36">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let education of educationData; let i = index">
+              <th class="p-4">{{ i + 1 }}</th>
+              <td class="p-4">{{ education.Level }}</td>
+              <td class="p-4">{{ education.NameOfSchool }}</td>
+              <td class="p-4">{{ education.BasicEducationDegreeCourse }}</td>
+              <td class="p-4">{{ education.PeriodOfAttendanceFrom | date }}</td>
+              <td class="p-4">{{ education.PeriodOfAttendanceTo | date }}</td>
+              <td class="p-4">{{ education.HighestLevelUnitsEarned }}</td>
+              <td class="p-4">{{ education.YearGraduated }}</td>
+              <td class="p-4">{{ education.AcademicHonors }}</td>
+              <td class="p-4">
+                <button class="btn btn-primary btn-sm" (click)="toggleForm(education.EducationID)">Edit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="educationData.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No education information available.</p>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn btn-add-info bg-black text-white" (click)="toggleForm()">Add Info</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="educationForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div class="form-control w-full">
+            <label for="Level" class="label-text font-bold text-lg">Level</label>
+            <input id="Level" formControlName="Level" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="NameOfSchool" class="label-text font-bold text-lg">Name Of School</label>
+            <input id="NameOfSchool" formControlName="NameOfSchool" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="BasicEducationDegreeCourse" class="label-text font-bold text-lg">Basic Education Degree Course</label>
+            <input id="BasicEducationDegreeCourse" formControlName="BasicEducationDegreeCourse" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="PeriodOfAttendanceFrom" class="label-text font-bold text-lg">Period Of Attendance From</label>
+            <input id="PeriodOfAttendanceFrom" formControlName="PeriodOfAttendanceFrom" class="input input-bordered w-full" type="date">
+          </div>
+          <div class="form-control w-full">
+            <label for="PeriodOfAttendanceTo" class="label-text font-bold text-lg">Period Of Attendance To</label>
+            <input id="PeriodOfAttendanceTo" formControlName="PeriodOfAttendanceTo" class="input input-bordered w-full" type="date">
+          </div>
+          <div class="form-control w-full">
+            <label for="HighestLevelUnitsEarned" class="label-text font-bold text-lg">Highest Level Units Earned</label>
+            <input id="HighestLevelUnitsEarned" formControlName="HighestLevelUnitsEarned" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="YearGraduated" class="label-text font-bold text-lg">Year Graduated</label>
+            <input id="YearGraduated" formControlName="YearGraduated" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="AcademicHonors" class="label-text font-bold text-lg">Academic Honors</label>
+            <input id="AcademicHonors" formControlName="AcademicHonors" class="input input-bordered w-full">
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn btn-save mr-4">{{ currentEducationId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-cancel" (click)="toggleForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>
