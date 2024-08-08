@@ -1,4 +1,3 @@
-// src/models/userModel.js
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 

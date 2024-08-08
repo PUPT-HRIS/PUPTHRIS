@@ -7,77 +7,26 @@
     <thead>
       <tr class="bg-red-900 text-white">
         <th class="p-4">#</th>
+        <th class="p-4">Fcode</th>
         <th class="p-4">Name</th>
-        <th class="p-4">Position</th>
-        <th class="p-4">Office</th>
-        <th class="p-4">Age</th>
-        <th class="p-4">Start Date</th>
-        <th class="p-4">Salary</th>
+        <th class="p-4">Instructor Status</th>
+        <th class="p-4">Department</th>
+        <th class="p-4">Employment Type</th>
         <th class="p-4 w-36">Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th class="p-4">1</th>
-        <td class="p-4">Jane Doe</td>
-        <td class="p-4">Software Engineer</td>
-        <td class="p-4">New York</td>
-        <td class="p-4">28</td>
-        <td class="p-4">2019-01-12</td>
-        <td class="p-4">$120,000</td>
+      <tr *ngFor="let user of users; let i = index">
+        <th class="p-4">{{ i + 1 }}</th>
+        <td class="p-4">{{ user.Fcode }}</td>
+        <td class="p-4">{{ user.Name }}</td>
+        <td class="p-4">{{ user.InstructorStatus }}</td>
+        <td class="p-4">{{ user.Department }}</td>
+        <td class="p-4">{{ user.EmploymentType }}</td>
         <td class="p-4">
           <button class="btn btn-primary btn-sm">View Info</button>
         </td>
       </tr>
-      <tr>
-        <th class="p-4">1</th>
-        <td class="p-4">Jane Doe</td>
-        <td class="p-4">Software Engineer</td>
-        <td class="p-4">New York</td>
-        <td class="p-4">28</td>
-        <td class="p-4">2019-01-12</td>
-        <td class="p-4">$120,000</td>
-        <td class="p-4">
-          <button class="btn btn-primary btn-sm">View Info</button>
-        </td>
-      </tr>
-      <tr>
-        <th class="p-4">1</th>
-        <td class="p-4">Jane Doe</td>
-        <td class="p-4">Software Engineer</td>
-        <td class="p-4">New York</td>
-        <td class="p-4">28</td>
-        <td class="p-4">2019-01-12</td>
-        <td class="p-4">$120,000</td>
-        <td class="p-4">
-          <button class="btn btn-primary btn-sm">View Info</button>
-        </td>
-      </tr>
-      <tr>
-        <th class="p-4">1</th>
-        <td class="p-4">Jane Doe</td>
-        <td class="p-4">Software Engineer</td>
-        <td class="p-4">New York</td>
-        <td class="p-4">28</td>
-        <td class="p-4">2019-01-12</td>
-        <td class="p-4">$120,000</td>
-        <td class="p-4">
-          <button class="btn btn-primary btn-sm">View Info</button>
-        </td>
-      </tr>
-      <tr>
-        <th class="p-4">1</th>
-        <td class="p-4">Jane Doe</td>
-        <td class="p-4">Software Engineer</td>
-        <td class="p-4">New York</td>
-        <td class="p-4">28</td>
-        <td class="p-4">2019-01-12</td>
-        <td class="p-4">$120,000</td>
-        <td class="p-4">
-          <button class="btn btn-primary btn-sm">View Info</button>
-        </td>
-      </tr>
-      <!-- More rows as needed -->
     </tbody>
   </table>
 </div>
