@@ -7,7 +7,10 @@
 
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="civilServiceData.length > 0" class="p-6 space-y-6">
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto px-10">
+        <div class="flex-1 mb-2">
+          <a class="text-lg font-normal">You are currently viewing the list/s of Civil Service Eligibilities.</a>
+        </div>
         <table class="table table-zebra w-full border-separate border-spacing-0">
           <thead>
             <tr class="bg-maroon text-white">
@@ -22,7 +25,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let eligibility of civilServiceData; let i = index">
+            <tr *ngFor="let eligibility of civilServiceData; let i = index" class="hover:bg-gray-100">
               <th class="p-4">{{ i + 1 }}</th>
               <td class="p-4">{{ eligibility.CareerService }}</td>
               <td class="p-4">{{ eligibility.Rating }}</td>
@@ -31,15 +34,17 @@
               <td class="p-4">{{ eligibility.LicenseNumber }}</td>
               <td class="p-4">{{ eligibility.LicenseValidityDate | date }}</td>
               <td class="p-4">
-                <button (click)="editEligibility(eligibility.CivilServiceEligibilityID!)" class="btn btn-sm btn-primary">Edit</button>
-                <button (click)="deleteEligibility(eligibility.CivilServiceEligibilityID!)" class="btn btn-sm btn-error">Delete</button>
+                <div class="btn-container">
+                  <button (click)="editEligibility(eligibility.CivilServiceEligibilityID!)" class="btn btn-sm btn-edit">Edit</button>
+                  <button (click)="deleteEligibility(eligibility.CivilServiceEligibilityID!)" class="btn btn-sm btn-delete">Delete</button>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="flex justify-end mt-4">
-        <button class="btn btn-add-info bg-black text-white" (click)="addNewEligibility()">Add New</button>
+      <div class="mt-4 px-10">
+        <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewEligibility()">Add New</button>
       </div>
     </div>
 
@@ -47,8 +52,8 @@
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <p class="text-lg">No civil service eligibility information available.</p>
       </div>
-      <div class="flex justify-end">
-        <button class="btn btn-add-info bg-black text-white" (click)="addNewEligibility()">Add Info</button>
+      <div class="mt-4">
+        <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewEligibility()">Add Info</button>
       </div>
     </div>
   </ng-container>
