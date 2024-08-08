@@ -1,3 +1,5 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h1 class="text-2xl font-bold">Other Information</h1>
@@ -8,7 +10,7 @@
     <div class="p-6 bg-white rounded-lg shadow-lg">
       <div class="flex justify-between items-center">
         <h2 class="text-xl font-bold">Special Skills</h2>
-        <button class="btn bg-black text-white" (click)="isEditingSkill = !isEditingSkill">{{ isEditingSkill ? 'Cancel' : 'Add Skill' }}</button>
+        <button *ngIf="!isEditingSkill" class="btn btn-add bg-black text-white" (click)="isEditingSkill = true">Add Skill</button>
       </div>
       <ng-container *ngIf="isEditingSkill; else displaySkills">
         <form [formGroup]="specialSkillsForm" (ngSubmit)="onSubmitSkill()" class="space-y-6 mt-4">
@@ -17,7 +19,8 @@
             <input id="Skill" formControlName="Skill" type="text" class="input input-bordered w-full" />
           </div>
           <div class="flex justify-end mt-6">
-            <button type="submit" class="btn bg-black text-white">{{ currentSkillId ? 'Update Skill' : 'Add Skill' }}</button>
+            <button type="submit" class="btn bg-black btn-add text-white mr-4">{{ currentSkillId ? 'Update Skill' : 'Add Skill' }}</button>
+            <button type="button" class="btn bg-maroon btn-cancel text-white" (click)="isEditingSkill = false">Cancel</button>
           </div>
         </form>
       </ng-container>
@@ -36,7 +39,7 @@
     <div class="p-6 bg-white rounded-lg shadow-lg">
       <div class="flex justify-between items-center">
         <h2 class="text-xl font-bold">Non-Academic Distinctions</h2>
-        <button class="btn bg-black text-white" (click)="isEditingDistinction = !isEditingDistinction">{{ isEditingDistinction ? 'Cancel' : 'Add Distinction' }}</button>
+        <button *ngIf="!isEditingDistinction" class="btn btn-add bg-black text-white" (click)="isEditingDistinction = true">Add Distinction</button>
       </div>
       <ng-container *ngIf="isEditingDistinction; else displayDistinctions">
         <form [formGroup]="nonAcademicForm" (ngSubmit)="onSubmitDistinction()" class="space-y-6 mt-4">
@@ -45,7 +48,8 @@
             <input id="Distinction" formControlName="Distinction" type="text" class="input input-bordered w-full" />
           </div>
           <div class="flex justify-end mt-6">
-            <button type="submit" class="btn bg-black text-white">{{ currentDistinctionId ? 'Update Distinction' : 'Add Distinction' }}</button>
+            <button type="submit" class="btn bg-black btn-add text-white mr-4">{{ currentDistinctionId ? 'Update Distinction' : 'Add Distinction' }}</button>
+            <button type="button" class="btn bg-maroon btn-cancel text-white" (click)="isEditingDistinction = false">Cancel</button>
           </div>
         </form>
       </ng-container>
@@ -64,7 +68,7 @@
     <div class="p-6 bg-white rounded-lg shadow-lg">
       <div class="flex justify-between items-center">
         <h2 class="text-xl font-bold">Memberships</h2>
-        <button class="btn bg-black text-white" (click)="isEditingMembership = !isEditingMembership">{{ isEditingMembership ? 'Cancel' : 'Add Membership' }}</button>
+        <button *ngIf="!isEditingMembership" class="btn btn-add bg-black text-white" (click)="isEditingMembership = true">Add Membership</button>
       </div>
       <ng-container *ngIf="isEditingMembership; else displayMemberships">
         <form [formGroup]="membershipForm" (ngSubmit)="onSubmitMembership()" class="space-y-6 mt-4">
@@ -73,7 +77,8 @@
             <input id="Association" formControlName="Association" type="text" class="input input-bordered w-full" />
           </div>
           <div class="flex justify-end mt-6">
-            <button type="submit" class="btn bg-black text-white">{{ currentMembershipId ? 'Update Membership' : 'Add Membership' }}</button>
+            <button type="submit" class="btn bg-black btn-add text-white mr-4">{{ currentMembershipId ? 'Update Membership' : 'Add Membership' }}</button>
+            <button type="button" class="btn bg-maroon btn-cancel text-white" (click)="isEditingMembership = false">Cancel</button>
           </div>
         </form>
       </ng-container>
