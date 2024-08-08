@@ -1,3 +1,7 @@
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
 ul.menu li a.active {
   background-color: #1c1b1b; 
   color: #ffffff; 
