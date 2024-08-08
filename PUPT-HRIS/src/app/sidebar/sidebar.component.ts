@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
 @Component({
@@ -15,7 +15,13 @@ export class SidebarComponent implements OnInit {
   isProfileDropdownOpen: boolean = false;
   role: string | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.setActiveItemBasedOnRoute(event.urlAfterRedirects);
+      }
+    });
+  }
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
@@ -23,6 +29,9 @@ export class SidebarComponent implements OnInit {
       const decodedToken: any = jwtDecode(token);
       this.role = decodedToken.role;
     }
+
+    // Set active item based on the initial route
+    this.setActiveItemBasedOnRoute(this.router.url);
   }
 
   get isProfileActive(): boolean {
@@ -37,7 +46,50 @@ export class SidebarComponent implements OnInit {
     this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
     if (this.isProfileDropdownOpen) {
       this.activeItem = 'my-profile';
-    } else if (this.activeItem === 'my-profile') {
+    } else if (this.activeItem.startsWith('my-profile')) {
+      this.activeItem = '';
+    }
+  }
+
+  setActiveItemBasedOnRoute(url: string) {
+    if (url.includes('dashboard')) {
+      this.activeItem = 'dashboard';
+    } else if (url.includes('employees')) {
+      this.activeItem = 'employees';
+    } else if (url.includes('print-pds')) {
+      this.activeItem = 'print-pds';
+    } else if (url.includes('new-account')) {
+      this.activeItem = 'new-account';
+    } else if (url.includes('personal-info')) {
+      this.activeItem = 'my-profile-personal-info';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('educational-background')) {
+      this.activeItem = 'my-profile-educational-background';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('family-background')) {
+      this.activeItem = 'my-profile-family-background';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('children')) {
+      this.activeItem = 'my-profile-children';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('civil-service-eligibility')) {
+      this.activeItem = 'my-profile-civil-service-eligibility';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('learning-development')) {
+      this.activeItem = 'my-profile-learning-development';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('work-experience')) {
+      this.activeItem = 'my-profile-work-experience';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('voluntary-works')) {
+      this.activeItem = 'my-profile-voluntary-works';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('other-information')) {
+      this.activeItem = 'my-profile-other-information';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('settings')) {
+      this.activeItem = 'settings';
+    } else {
       this.activeItem = '';
     }
   }

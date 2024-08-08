@@ -1,3 +1,7 @@
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
 ul.menu li a.active {
   background-color: #1c1b1b; 
   color: #ffffff; 
@@ -53,4 +57,5 @@ ul ul a.active {
 li.active > a {
   background-color: #1c1b1b; /* Adjust as needed */
 }
+
 
