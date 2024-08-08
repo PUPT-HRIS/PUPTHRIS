@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 
-const VoluntaryWork = sequelize.define('voluntarywork', {
+const VoluntaryWork = sequelize.define('VoluntaryWork', {
   VoluntaryWorkID: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

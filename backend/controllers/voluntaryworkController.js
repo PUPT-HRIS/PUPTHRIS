@@ -6,7 +6,7 @@ exports.addVoluntaryWork = async (req, res) => {
     res.status(201).json(newVoluntaryWork);
   } catch (error) {
     console.error('Error adding voluntary work:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -18,13 +18,13 @@ exports.updateVoluntaryWork = async (req, res) => {
       where: { VoluntaryWorkID: voluntaryWorkId }
     });
     if (result[0] === 0) {
-      res.status(404).send('Voluntary work record not found');
+      res.status(404).json({ error: 'Voluntary work record not found' });
     } else {
-      res.status(200).send('Voluntary work updated successfully');
+      res.status(200).json({ message: 'Voluntary work updated successfully' });
     }
   } catch (err) {
     console.error('Error updating voluntary work:', err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -35,10 +35,21 @@ exports.getVoluntaryWork = async (req, res) => {
     if (voluntaryWork) {
       res.status(200).json(voluntaryWork);
     } else {
-      res.status(404).send('Voluntary work record not found');
+      res.status(404).json({ error: 'Voluntary work record not found' });
     }
   } catch (error) {
     console.error('Error getting voluntary work:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.getVoluntaryWorks = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const voluntaryWorks = await VoluntaryWork.findAll({ where: { EmployeeID: employeeId } });
+    res.status(200).json(voluntaryWorks);
+  } catch (error) {
+    console.error('Error getting voluntary works:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
