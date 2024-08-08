@@ -1,1 +1,86 @@
-<p>voluntarywork works!</p>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Voluntary Works</h1>
+  </div>
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <div *ngIf="voluntaryWorkData.length > 0" class="p-6 space-y-6">
+      <div class="flex justify-end mb-4">
+        <button class="btn bg-black text-white" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="table table-zebra w-full border-separate border-spacing-0">
+          <thead>
+            <tr class="bg-red-900 text-white">
+              <th class="p-4">#</th>
+              <th class="p-4">Organization Name & Address</th>
+              <th class="p-4">Inclusive Dates From</th>
+              <th class="p-4">Inclusive Dates To</th>
+              <th class="p-4">Number Of Hours</th>
+              <th class="p-4">Position / Nature Of Work</th>
+              <th class="p-4 w-36">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let voluntaryWork of voluntaryWorkData; let i = index">
+              <th class="p-4">{{ i + 1 }}</th>
+              <td class="p-4">{{ voluntaryWork.OrganizationNameAddress }}</td>
+              <td class="p-4">{{ voluntaryWork.InclusiveDatesFrom | date }}</td>
+              <td class="p-4">{{ voluntaryWork.InclusiveDatesTo | date }}</td>
+              <td class="p-4">{{ voluntaryWork.NumberOfHours }}</td>
+              <td class="p-4">{{ voluntaryWork.PositionNatureOfWork }}</td>
+              <td class="p-4">
+                <button (click)="editVoluntaryWork(voluntaryWork.VoluntaryWorkID!)" class="btn btn-primary btn-sm">Edit</button>
+                <button (click)="deleteVoluntaryWork(voluntaryWork.VoluntaryWorkID!)" class="btn btn-error btn-sm">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="voluntaryWorkData.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No voluntary work information available.</p>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn bg-black text-white" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="voluntaryWorkForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div class="form-control w-full">
+            <label for="OrganizationNameAddress" class="label-text font-bold text-lg">Organization Name & Address</label>
+            <input id="OrganizationNameAddress" formControlName="OrganizationNameAddress" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="InclusiveDatesFrom" class="label-text font-bold text-lg">Inclusive Dates From</label>
+            <input id="InclusiveDatesFrom" formControlName="InclusiveDatesFrom" class="input input-bordered w-full" type="date">
+          </div>
+          <div class="form-control w-full">
+            <label for="InclusiveDatesTo" class="label-text font-bold text-lg">Inclusive Dates To</label>
+            <input id="InclusiveDatesTo" formControlName="InclusiveDatesTo" class="input input-bordered w-full" type="date">
+          </div>
+          <div class="form-control w-full">
+            <label for="NumberOfHours" class="label-text font-bold text-lg">Number Of Hours</label>
+            <input id="NumberOfHours" formControlName="NumberOfHours" class="input input-bordered w-full" type="number">
+          </div>
+          <div class="form-control w-full">
+            <label for="PositionNatureOfWork" class="label-text font-bold text-lg">Position / Nature Of Work</label>
+            <input id="PositionNatureOfWork" formControlName="PositionNatureOfWork" class="input input-bordered w-full">
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn bg-black text-white mr-4">{{ currentVoluntaryWorkId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn bg-gray-600 text-white" (click)="resetForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

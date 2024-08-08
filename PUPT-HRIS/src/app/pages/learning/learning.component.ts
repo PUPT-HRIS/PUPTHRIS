@@ -5,7 +5,7 @@ import { LearningDevelopment } from '../../model/learning-development.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-learning',
@@ -67,8 +67,8 @@ export class LearningComponent implements OnInit {
       this.learningService.updateLearningDevelopment(this.currentLearningId, formData).subscribe(
         response => {
           console.log('Learning development updated successfully', response);
-          this.loadLearningDevelopments();
-          this.resetForm();
+          this.loadLearningDevelopments(); // Reload data
+          this.resetForm(); // Reset form and switch back to display mode
         },
         error => {
           console.error('Error updating learning development', error);
@@ -78,8 +78,8 @@ export class LearningComponent implements OnInit {
       this.learningService.addLearningDevelopment(formData).subscribe(
         response => {
           console.log('Learning development added successfully', response);
-          this.loadLearningDevelopments();
-          this.resetForm();
+          this.loadLearningDevelopments(); // Reload data
+          this.resetForm(); // Reset form and switch back to display mode
         },
         error => {
           console.error('Error adding learning development', error);

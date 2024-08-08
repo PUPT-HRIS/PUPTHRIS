@@ -5,7 +5,7 @@ import { Children } from '../../model/children.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-children',
@@ -85,6 +85,20 @@ export class ChildrenComponent implements OnInit {
         },
         error => {
           console.error('Error adding child', error);
+        }
+      );
+    }
+  }
+
+  deleteChild(id: number): void {
+    if (confirm('Are you sure you want to delete this child?')) {
+      this.childrenService.deleteChild(id).subscribe(
+        response => {
+          console.log('Child deleted successfully', response);
+          this.loadChildren();
+        },
+        error => {
+          console.error('Error deleting child', error);
         }
       );
     }

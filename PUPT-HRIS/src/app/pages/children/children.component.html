@@ -24,6 +24,7 @@
               <td class="p-4">{{ child.BirthDate | date }}</td>
               <td class="p-4">
                 <button class="btn btn-primary btn-sm" (click)="editChild(child)">Edit</button>
+                <button class="btn btn-error btn-sm" (click)="child.ChildrenID !== undefined && deleteChild(child.ChildrenID)">Delete</button>
               </td>
             </tr>
           </tbody>

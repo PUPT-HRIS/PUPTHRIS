@@ -99,4 +99,18 @@ export class EducationComponent implements OnInit {
       );
     }
   }
+
+  deleteEducation(id: number): void {
+    if (confirm('Are you sure you want to delete this record?')) {
+      this.educationService.deleteEducation(id).subscribe(
+        response => {
+          console.log('Education deleted successfully', response);
+          this.loadEducation();
+        },
+        error => {
+          console.error('Error deleting education', error);
+        }
+      );
+    }
+  }
 }

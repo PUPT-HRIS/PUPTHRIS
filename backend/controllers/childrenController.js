@@ -58,3 +58,18 @@ exports.getChildrenByEmployeeId = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.deleteChild = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await Children.destroy({ where: { ChildrenID: id } });
+    if (result) {
+      res.status(200).json({ message: 'Child deleted successfully' });
+    } else {
+      res.status(404).json({ error: 'Child not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting child:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

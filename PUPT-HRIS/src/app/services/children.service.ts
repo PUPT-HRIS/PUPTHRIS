@@ -31,6 +31,12 @@ export class ChildrenService {
     );
   }
 
+  deleteChild(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/delete/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);
     return throwError(error.message || 'Server error');

@@ -61,3 +61,18 @@ exports.getEducationByEmployee = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.deleteEducation = async (req, res) => {
+  try {
+    const educationId = req.params.id;
+    const result = await Education.destroy({ where: { EducationID: educationId } });
+    if (result === 0) {
+      res.status(404).json({ error: 'Education record not found' });
+    } else {
+      res.status(200).json({ message: 'Education record deleted successfully' });
+    }
+  } catch (error) {
+    console.error('Error deleting education record:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

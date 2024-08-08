@@ -46,3 +46,20 @@ exports.getCivilServiceEligibilitiesByEmployee = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.deleteCivilServiceEligibility = async (req, res) => {
+  try {
+    const eligibilityId = req.params.id;
+    const result = await CivilServiceEligibility.destroy({
+      where: { CivilServiceEligibilityID: eligibilityId, EmployeeID: req.user.userId }
+    });
+    if (result === 0) {
+      res.status(404).send('Civil Service Eligibility record not found');
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    console.error('Error deleting civil service eligibility:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};

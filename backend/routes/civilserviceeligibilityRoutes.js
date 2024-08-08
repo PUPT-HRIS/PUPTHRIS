@@ -7,5 +7,6 @@ const router = express.Router();
 router.post('/add', authenticateJWT, civilserviceeligibilityController.addCivilServiceEligibility);
 router.patch('/update/:id', authenticateJWT, civilserviceeligibilityController.updateCivilServiceEligibility);
 router.get('/employee', authenticateJWT, civilserviceeligibilityController.getCivilServiceEligibilitiesByEmployee);
+router.delete('/delete/:id', authenticateJWT, civilserviceeligibilityController.deleteCivilServiceEligibility);
 
 module.exports = router;
