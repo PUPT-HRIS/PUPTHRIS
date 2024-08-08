@@ -7,5 +7,6 @@ router.post('/add', voluntaryworkController.addVoluntaryWork);
 router.patch('/update/:id', voluntaryworkController.updateVoluntaryWork);
 router.get('/:id', voluntaryworkController.getVoluntaryWork);
 router.get('/employee/:employeeId', voluntaryworkController.getVoluntaryWorks);
+router.delete('/delete/:id', voluntaryworkController.deleteVoluntaryWork);
 
 module.exports = router;
