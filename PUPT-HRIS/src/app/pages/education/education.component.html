@@ -42,8 +42,9 @@
               <td class="p-4">{{ education.YearGraduated }}</td>
               <td class="p-4">{{ education.AcademicHonors }}</td>
               <td class="p-4">
-                <button class="btn btn-primary btn-sm" (click)="toggleForm(education.EducationID)">Edit</button>
-              </td>
+                <button class="btn btn-primary btn-sm" (click)="education.EducationID && toggleForm(education.EducationID)">Edit</button>
+                <button class="btn btn-error btn-sm" (click)="education.EducationID && deleteEducation(education.EducationID)">Delete</button>
+              </td>              
             </tr>
           </tbody>
         </table>
