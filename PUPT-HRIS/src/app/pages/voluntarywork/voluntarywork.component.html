@@ -7,13 +7,13 @@
 
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="voluntaryWorkData.length > 0" class="p-6 space-y-6">
-      <div class="flex justify-end mb-4">
-        <button class="btn bg-black text-white" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
-      </div>
-      <div class="overflow-x-auto">
+      <div class="overflow-auto">
+        <div class="flex-1 mb-2">
+          <a class="text-lg font-normal">You are currently viewing the list/s of Voluntary Work/s.</a>
+        </div>
         <table class="table table-zebra w-full border-separate border-spacing-0">
           <thead>
-            <tr class="bg-red-900 text-white">
+            <tr class="bg-maroon text-white">
               <th class="p-4">#</th>
               <th class="p-4">Organization Name & Address</th>
               <th class="p-4">Inclusive Dates From</th>
@@ -32,12 +32,17 @@
               <td class="p-4">{{ voluntaryWork.NumberOfHours }}</td>
               <td class="p-4">{{ voluntaryWork.PositionNatureOfWork }}</td>
               <td class="p-4">
-                <button (click)="editVoluntaryWork(voluntaryWork.VoluntaryWorkID!)" class="btn btn-primary btn-sm">Edit</button>
-                <button (click)="deleteVoluntaryWork(voluntaryWork.VoluntaryWorkID!)" class="btn btn-error btn-sm">Delete</button>
+                <div class="btn-container">
+                  <button (click)="editVoluntaryWork(voluntaryWork.VoluntaryWorkID!)" class="btn btn-primary btn-sm">Edit</button>
+                  <button (click)="deleteVoluntaryWork(voluntaryWork.VoluntaryWorkID!)" class="btn btn-error btn-sm">Delete</button>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="mt-6">
+        <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
       </div>
     </div>
 
@@ -46,7 +51,7 @@
         <p class="text-lg">No voluntary work information available.</p>
       </div>
       <div class="flex justify-end">
-        <button class="btn bg-black text-white" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
+        <button class="btn bg-black text-white w-full" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
       </div>
     </div>
   </ng-container>
@@ -77,8 +82,8 @@
           </div>
         </div>
         <div class="flex justify-end mt-6">
-          <button type="submit" class="btn bg-black text-white mr-4">{{ currentVoluntaryWorkId ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn bg-gray-600 text-white" (click)="resetForm()">Cancel</button>
+          <button type="submit" class="btn btn-add bg-black text-white mr-4">{{ currentVoluntaryWorkId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-cancel bg-maroon text-white" (click)="resetForm()">Cancel</button>
         </div>
       </form>
     </div>

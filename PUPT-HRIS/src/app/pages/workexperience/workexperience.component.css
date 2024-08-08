@@ -4,126 +4,181 @@
 
 /* Container styling */
 .form-container {
-    background-color: #f9f9f9; /* Light background for contrast */
-    border-radius: 0.5rem; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    padding: 2rem;
-    max-width: 800px; /* Limit width */
-    margin: 2rem auto; /* Center horizontally with margin */
-  }
-  
-  /* Heading */
-  .bg-maroon {
-    background-color: #800000; /* Maroon background */
-  }
-  
-  .text-white {
-    color: #ffffff; /* White text */
-  }
-  
-  /* Heading */
-  h2 {
-    font-size: 1.5rem;
-    color: #333; /* Dark text color */
-    margin-bottom: 1rem;
-  }
-  
-  /* Form controls */
-  .form-control {
-    margin-bottom: 1.5rem; /* Space between fields */
-  }
-  
-  /* Label text */
-  .label-text {
-    color: #555; /* Slightly darker text for labels */
-    font-weight: 500; /* Medium weight for labels */
-  }
-  
-  /* Input fields */
-  .input-bordered {
-    border: 1px solid #ddd; /* Light border */
-    border-radius: 0.375rem; /* Slightly rounded corners */
-    padding: 0.75rem; /* Padding for better spacing */
-    transition: border-color 0.3s ease; /* Smooth border color transition */
-  }
-  
-  .input-bordered:focus {
-    border-color: #3b82f6; /* Change this to your desired color */
-    outline: none; /* Remove default outline */
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
-  }
-  
-  /* Select fields */
-  .select-bordered {
-    border: 1px solid #ddd; /* Light border */
-    border-radius: 0.375rem; /* Slightly rounded corners */
-    padding: 0.75rem; /* Padding for better spacing */
-    transition: border-color 0.3s ease; /* Smooth border color transition */
-  }
-  
-  .select-bordered:focus {
-    border-color: #3b82f6; /* Change this to your desired color */
-    outline: none; /* Remove default outline */
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
-  }
-  
-  /* Buttons */
-  .btn-save {
-    background-color: #000; /* Black background */
-    border-color: #000; /* Black border */
-    color: #fff; /* White text */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
-  }
-  
-  .btn-save:hover {
-    background-color: #222222; /* Slightly lighter black on hover */
-    transform: translateY(-1px); /* Slight lift effect */
-  }
-  
-  .btn-cancel {
-    background-color: #800000; /* Red background */
-    border-color: #800000; /* Red border */
-    color: #fff; /* White text */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
-  }
-  
-  .btn-cancel:hover {
-    background-color: #9f0303; /* Slightly lighter red on hover */
-    transform: translateY(-1px); /* Slight lift effect */
-  }
-  
-  /* Add Info button */
-  .btn-add-info {
-    background-color: #000; /* Black background */
-    border-color: #000; /* Black border */
-    color: #fff; /* White text */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
-  }
-  
-  .btn-add-info:hover {
-    background-color: #333; /* Slightly lighter black on hover */
-    transform: translateY(-1px); /* Slight lift effect */
-  }
-  
-  /* Flex container for buttons */
-  .flex-end {
-    display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
-  }
-  
-  /* Grid layout for display fields */
-  .grid {
-    display: grid;
-    gap: 1rem; /* Space between grid items */
-  }
-  
+  background-color: #f9f9f9; /* Light background for contrast */
+  border-radius: 0.5rem; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 2rem;
+  max-width: 800px; /* Limit width */
+  margin: 2rem auto; /* Center horizontally with margin */
+}
+
+/* Heading */
+.bg-maroon {
+  background-color: #800000; /* Maroon background */
+}
+
+.text-white {
+  color: #ffffff; /* White text */
+}
+
+/* Heading */
+h2 {
+  font-size: 1.5rem;
+  color: #333; /* Dark text color */
+  margin-bottom: 1rem;
+}
+
+/* Form controls */
+.form-control {
+  margin-bottom: 1.5rem; /* Space between fields */
+}
+
+/* Label text */
+.label-text {
+  color: #555; /* Slightly darker text for labels */
+  font-weight: 500; /* Medium weight for labels */
+}
+
+/* Input fields */
+.input-bordered {
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 0.375rem; /* Slightly rounded corners */
+  padding: 0.75rem; /* Padding for better spacing */
+  transition: border-color 0.3s ease; /* Smooth border color transition */
+}
+
+.input-bordered:focus {
+  border-color: #3b82f6; /* Change this to your desired color */
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
+}
+
+/* Select fields */
+.select-bordered {
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 0.375rem; /* Slightly rounded corners */
+  padding: 0.75rem; /* Padding for better spacing */
+  transition: border-color 0.3s ease; /* Smooth border color transition */
+}
+
+.select-bordered:focus {
+  border-color: #3b82f6; /* Change this to your desired color */
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.btn-edit {
+  background-color: #3b82f6; /* Blue background */
+  color: #ffffff; /* White text */
+}
+
+.btn-edit:hover {
+  background-color: #2563eb; /* Darker blue on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+.btn-delete {
+  background-color: #ef4444; /* Red background */
+  color: #ffffff; /* White text */
+}
+
+.btn-delete:hover {
+  background-color: #dc2626; /* Darker red on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+.btn-save {
+  background-color: #000; /* Black background */
+  border-color: #000; /* Black border */
+  color: #fff; /* White text */
+}
+
+.btn-save:hover {
+  background-color: #222222; /* Slightly lighter black on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+.btn-cancel {
+  background-color: #800000; /* Red background */
+  border-color: #800000; /* Red border */
+  color: #fff; /* White text */
+}
+
+.btn-cancel:hover {
+  background-color: #9f0303; /* Slightly lighter red on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+/* Add Info button */
+.btn-add-info {
+  background-color: #000; /* Black background */
+  border-color: #000; /* Black border */
+  color: #fff; /* White text */
+  width: 100%; /* Full width */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.btn-add-info:hover {
+  background-color: #333; /* Slightly lighter black on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+/* Flex container for buttons */
+.flex-end {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+}
+
+/* Grid layout for display fields */
+.grid {
+  display: grid;
+  gap: 1rem; /* Space between grid items */
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+}
+
+@media (max-width: 768px) {
   .grid-cols-2 {
-    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+    grid-template-columns: 1fr; /* Stack columns on small screens */
   }
-  
-  @media (max-width: 768px) {
-    .grid-cols-2 {
-      grid-template-columns: 1fr; /* Stack columns on small screens */
-    }
-  }
-  
+}
+
+/* Zebra striping for table rows */
+.table tbody tr:nth-child(odd) {
+  background-color: #ececec; /* Light gray background for odd rows */
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #ffffff; /* White background for even rows */
+}
+
+/* Consistent button size and spacing */
+.btn-container {
+  display: flex;
+  gap: 0.5rem; /* Space between buttons */
+}
+
+.btn-container .btn {
+  flex: 1; /* Make both buttons the same width */
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem; /* Adjusted padding for smaller buttons */
+}
