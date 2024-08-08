@@ -46,7 +46,7 @@ export class SidebarComponent implements OnInit {
     this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
     if (this.isProfileDropdownOpen) {
       this.activeItem = 'my-profile';
-    } else if (this.activeItem === 'my-profile') {
+    } else if (this.activeItem.startsWith('my-profile')) {
       this.activeItem = '';
     }
   }
@@ -61,31 +61,31 @@ export class SidebarComponent implements OnInit {
     } else if (url.includes('new-account')) {
       this.activeItem = 'new-account';
     } else if (url.includes('personal-info')) {
-      this.activeItem = 'personal-info';
+      this.activeItem = 'my-profile-personal-info';
       this.isProfileDropdownOpen = true;
     } else if (url.includes('educational-background')) {
-      this.activeItem = 'educational-background';
+      this.activeItem = 'my-profile-educational-background';
       this.isProfileDropdownOpen = true;
     } else if (url.includes('family-background')) {
-      this.activeItem = 'family-background';
+      this.activeItem = 'my-profile-family-background';
       this.isProfileDropdownOpen = true;
     } else if (url.includes('children')) {
-      this.activeItem = 'children';
+      this.activeItem = 'my-profile-children';
       this.isProfileDropdownOpen = true;
     } else if (url.includes('civil-service-eligibility')) {
-      this.activeItem = 'civil-service-eligibility';
+      this.activeItem = 'my-profile-civil-service-eligibility';
       this.isProfileDropdownOpen = true;
     } else if (url.includes('learning-development')) {
-      this.activeItem = 'learning-development';
+      this.activeItem = 'my-profile-learning-development';
       this.isProfileDropdownOpen = true;
     } else if (url.includes('work-experience')) {
-      this.activeItem = 'work-experience';
+      this.activeItem = 'my-profile-work-experience';
       this.isProfileDropdownOpen = true;
     } else if (url.includes('voluntary-works')) {
-      this.activeItem = 'voluntary-works';
+      this.activeItem = 'my-profile-voluntary-works';
       this.isProfileDropdownOpen = true;
     } else if (url.includes('other-information')) {
-      this.activeItem = 'other-information';
+      this.activeItem = 'my-profile-other-information';
       this.isProfileDropdownOpen = true;
     } else if (url.includes('settings')) {
       this.activeItem = 'settings';

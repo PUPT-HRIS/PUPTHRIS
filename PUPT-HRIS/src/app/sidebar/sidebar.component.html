@@ -32,29 +32,28 @@
       [class.active]="activeItem.startsWith('my-profile')">
       <i class="fas fa-user mr-3"></i>My Profile
       <i [ngClass]="isProfileDropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="ml-auto"></i>
-          </a>
-          <ul *ngIf="isProfileDropdownOpen" class="ml-6 mt-2 space-y-4 text-lg">
-            <li><a routerLink="/personal-info" (click)="setActive('personal-info')"
-              [class.active]="activeItem === 'personal-info'">Personal Information</a></li>
-            <li><a routerLink="/educational-background" (click)="setActive('educational-background')"
-              [class.active]="activeItem === 'educational-background'">Educational Background</a></li>
-            <li><a routerLink="/family-background" (click)="setActive('family-background')"
-              [class.active]="activeItem === 'family-background'">Family Background</a></li>
-            <li><a routerLink="/children" (click)="setActive('children')"
-              [class.active]="activeItem === 'children'">Children</a></li>
-            <li><a routerLink="/civil-service-eligibility" (click)="setActive('civil-service-eligibility')"
-              [class.active]="activeItem === 'civil-service-eligibility'">Civil Service Eligibility</a></li>
-            <li><a routerLink="/learning-development" (click)="setActive('learning-development')"
-              [class.active]="activeItem === 'learning-development'">Learning Development</a></li>
-            <li><a routerLink="/work-experience" (click)="setActive('work-experience')"
-              [class.active]="activeItem === 'work-experience'">Work Experience/s</a></li>
-            <li><a routerLink="/voluntary-works" (click)="setActive('voluntary-works')"
-              [class.active]="activeItem === 'voluntary-works'">Voluntary Work/s</a></li>
-            <li><a routerLink="/other-information" (click)="setActive('other-information')"
-              [class.active]="activeItem === 'other-information'">Other Information</a></li>
-          </ul>
-        </li>
-
+      </a>
+      <ul *ngIf="isProfileDropdownOpen" class="ml-6 mt-2 space-y-4 text-lg">
+        <li><a routerLink="/personal-info" (click)="setActive('my-profile-personal-info')"
+          [class.active]="activeItem === 'my-profile-personal-info'">Personal Information</a></li>
+        <li><a routerLink="/educational-background" (click)="setActive('my-profile-educational-background')"
+          [class.active]="activeItem === 'my-profile-educational-background'">Educational Background</a></li>
+        <li><a routerLink="/family-background" (click)="setActive('my-profile-family-background')"
+          [class.active]="activeItem === 'my-profile-family-background'">Family Background</a></li>
+        <li><a routerLink="/children" (click)="setActive('my-profile-children')"
+          [class.active]="activeItem === 'my-profile-children'">Children</a></li>
+        <li><a routerLink="/civil-service-eligibility" (click)="setActive('my-profile-civil-service-eligibility')"
+          [class.active]="activeItem === 'my-profile-civil-service-eligibility'">Civil Service Eligibility</a></li>
+        <li><a routerLink="/learning-development" (click)="setActive('my-profile-learning-development')"
+          [class.active]="activeItem === 'my-profile-learning-development'">Learning Development</a></li>
+        <li><a routerLink="/work-experience" (click)="setActive('my-profile-work-experience')"
+          [class.active]="activeItem === 'my-profile-work-experience'">Work Experience/s</a></li>
+        <li><a routerLink="/voluntary-works" (click)="setActive('my-profile-voluntary-works')"
+          [class.active]="activeItem === 'my-profile-voluntary-works'">Voluntary Work/s</a></li>
+        <li><a routerLink="/other-information" (click)="setActive('my-profile-other-information')"
+          [class.active]="activeItem === 'my-profile-other-information'">Other Information</a></li>
+      </ul>
+    </li>
         <!-- Spacer div -->
     <div class="flex-grow"></div>
 
