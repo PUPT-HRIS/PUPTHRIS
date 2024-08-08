@@ -39,3 +39,20 @@ exports.getMembershipsByEmployee = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.deleteMembership = async (req, res) => {
+  try {
+    const membershipId = req.params.id;
+    const result = await Membership.destroy({
+      where: { MembershipID: membershipId }
+    });
+    if (result === 0) {
+      res.status(404).json({ error: 'Membership record not found' });
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    console.error('Error deleting membership:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
