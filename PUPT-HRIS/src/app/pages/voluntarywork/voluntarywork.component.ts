@@ -4,7 +4,7 @@ import { VoluntaryWorkService } from '../../services/voluntarywork.service';
 import { VoluntaryWork } from '../../model/voluntary-work.model';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-voluntarywork',
@@ -57,12 +57,10 @@ export class VoluntaryWorkComponent implements OnInit {
     );
   }
 
-  toggleForm(): void {
-    this.isEditing = !this.isEditing;
-    if (!this.isEditing) {
-      this.voluntaryWorkForm.reset();
-      this.currentVoluntaryWorkId = null;
-    }
+  resetForm(): void {
+    this.voluntaryWorkForm.reset();
+    this.currentVoluntaryWorkId = null;
+    this.isEditing = false;
   }
 
   onSubmit(): void {
@@ -116,12 +114,7 @@ export class VoluntaryWorkComponent implements OnInit {
   }
 
   addNewVoluntaryWork(): void {
-    this.toggleForm();
-  }
-
-  resetForm(): void {
-    this.voluntaryWorkForm.reset();
-    this.currentVoluntaryWorkId = null;
-    this.isEditing = false;
+    this.resetForm();
+    this.isEditing = true;
   }
 }

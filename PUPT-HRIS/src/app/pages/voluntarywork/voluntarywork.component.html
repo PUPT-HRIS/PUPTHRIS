@@ -1,3 +1,5 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h1 class="text-2xl font-bold">Voluntary Works</h1>
@@ -5,6 +7,9 @@
 
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="voluntaryWorkData.length > 0" class="p-6 space-y-6">
+      <div class="flex justify-end mb-4">
+        <button class="btn bg-black text-white" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
+      </div>
       <div class="overflow-x-auto">
         <table class="table table-zebra w-full border-separate border-spacing-0">
           <thead>
@@ -73,7 +78,7 @@
         </div>
         <div class="flex justify-end mt-6">
           <button type="submit" class="btn bg-black text-white mr-4">{{ currentVoluntaryWorkId ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn bg-gray-600 text-white" (click)="toggleForm()">Cancel</button>
+          <button type="button" class="btn bg-gray-600 text-white" (click)="resetForm()">Cancel</button>
         </div>
       </form>
     </div>
