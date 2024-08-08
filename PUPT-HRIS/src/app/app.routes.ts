@@ -10,7 +10,7 @@ import { CivilComponent } from './pages/civil/civil.component';
 import { LearningComponent } from './pages/learning/learning.component';
 import { WorkExperienceComponent } from './pages/workexperience/workexperience.component';
 import { VoluntaryWorkComponent } from './pages/voluntarywork/voluntarywork.component';
-import { OtherinformationComponent } from './pages/otherinformation/otherinformation.component';
+import { OtherInformationComponent } from './pages/otherinformation/otherinformation.component';
 import { NewAccountComponent } from './pages/new-account/new-account.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './services/auth.guard';
@@ -33,7 +33,7 @@ export const routes: Routes = [
       { path: 'civil-service-eligibility', component: CivilComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'work-experience', component: WorkExperienceComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'voluntary-works', component: VoluntaryWorkComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
-      { path: 'other-information', component: OtherinformationComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'other-information', component: OtherInformationComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'new-account', component: NewAccountComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ]

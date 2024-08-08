@@ -1,8 +1,8 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 
-const OtherInformation = sequelize.define('otherinformation', {
-  OtherInformationID: {
+const NonAcademic = sequelize.define('nonacademics', {
+  NonAcademicID: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
@@ -14,18 +14,12 @@ const OtherInformation = sequelize.define('otherinformation', {
       key: 'EmployeeID',
     },
   },
-  SpecialSkillsHobbies: {
-    type: DataTypes.STRING(255),
-  },
-  NonAcademicDistinctions: {
-    type: DataTypes.STRING(255),
-  },
-  MembershipInAssociation: {
+  Distinction: {
     type: DataTypes.STRING(255),
   },
 }, {
-  tableName: 'otherinformation',
+  tableName: 'nonacademics',
   timestamps: false,
 });
 
-module.exports = OtherInformation;
+module.exports = NonAcademic;

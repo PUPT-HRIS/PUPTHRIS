@@ -9,10 +9,13 @@ const civilserviceeligibilityRoutes = require('./routes/civilserviceeligibilityR
 const workexperienceRoutes = require('./routes/workexperienceRoutes');
 const voluntaryworkRoutes = require('./routes/voluntaryworkRoutes');
 const learningdevelopmentRoutes = require('./routes/learningdevelopmentRoutes');
-const otherinformationRoutes = require('./routes/otherinformationRoutes');
 const childrenRoutes = require('./routes/childrenRoutes');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
+
+const specialSkillRoutes = require('./routes/specialSkillRoutes');
+const nonAcademicRoutes = require('./routes/nonacademicRoutes');
+const membershipRoutes = require('./routes/membershipRoutes');
 
 dotenv.config();
 
@@ -29,10 +32,13 @@ app.use('/api/civilservice', civilserviceeligibilityRoutes);
 app.use('/api/workexperience', workexperienceRoutes);
 app.use('/api/voluntarywork', voluntaryworkRoutes);
 app.use('/api/learningdevelopment', learningdevelopmentRoutes);
-app.use('/api/otherinformation', otherinformationRoutes);
 app.use('/api/children', childrenRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
+
+app.use('/api/specialskills', specialSkillRoutes);
+app.use('/api/nonacademic', nonAcademicRoutes);
+app.use('/api/membership', membershipRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
