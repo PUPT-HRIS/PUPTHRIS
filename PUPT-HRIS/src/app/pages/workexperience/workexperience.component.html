@@ -7,13 +7,10 @@
 
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="workExperienceData.length > 0" class="p-6 space-y-6">
-      <div class="flex justify-end mb-4">
-        <button class="btn bg-black text-white" (click)="addNewExperience()">Add Info</button>
-      </div>
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto px-10">
         <table class="table table-zebra w-full border-separate border-spacing-0">
           <thead>
-            <tr class="bg-red-900 text-white">
+            <tr class="bg-maroon text-white">
               <th class="p-4">#</th>
               <th class="p-4">Inclusive Dates From</th>
               <th class="p-4">Inclusive Dates To</th>
@@ -27,7 +24,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let experience of workExperienceData; let i = index">
+            <tr *ngFor="let experience of workExperienceData; let i = index" class="hover:bg-gray-100">
               <th class="p-4">{{ i + 1 }}</th>
               <td class="p-4">{{ experience.InclusiveDatesFrom | date }}</td>
               <td class="p-4">{{ experience.InclusiveDatesTo | date }}</td>
@@ -38,12 +35,17 @@
               <td class="p-4">{{ experience.StatusOfAppointment }}</td>
               <td class="p-4">{{ experience.GovtService ? 'Yes' : 'No' }}</td>
               <td class="p-4">
-                <button (click)="editExperience(experience.WorkExperienceID!)" class="btn btn-sm btn-primary">Edit</button>
-                <button (click)="deleteExperience(experience.WorkExperienceID!)" class="btn btn-sm btn-error">Delete</button>
+                <div class="btn-container">
+                  <button (click)="editExperience(experience.WorkExperienceID!)" class="btn btn-sm btn-edit">Edit</button>
+                  <button (click)="deleteExperience(experience.WorkExperienceID!)" class="btn btn-sm btn-delete">Delete</button>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="mt-4 px-10">
+        <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewExperience()">Add Info</button>
       </div>
     </div>
 
@@ -51,8 +53,8 @@
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <p class="text-lg">No work experience information available.</p>
       </div>
-      <div class="flex justify-end">
-        <button class="btn btn-add-info bg-black text-white" (click)="addNewExperience()">Add Info</button>
+      <div class="mt-4">
+        <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewExperience()">Add Info</button>
       </div>
     </div>
   </ng-container>
