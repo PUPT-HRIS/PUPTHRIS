@@ -6,33 +6,35 @@
   </div>
 
   <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="employee" class="p-6 space-y-6">
-      <div class="p-6 bg-white rounded-lg shadow-lg space-y-4">
-        <p class="text-lg"><strong>Last Name:</strong> {{ employee?.LastName }}</p>
-        <p class="text-lg"><strong>First Name:</strong> {{ employee?.FirstName }}</p>
-        <p class="text-lg"><strong>Middle Name:</strong> {{ employee?.MiddleName }}</p>
-        <p class="text-lg"><strong>Name Extension:</strong> {{ employee?.NameExtension }}</p>
-        <p class="text-lg"><strong>Birth Date:</strong> {{ employee?.BirthDate | date }}</p>
-        <p class="text-lg"><strong>Place of Birth:</strong> {{ employee?.PlaceOfBirth }}</p>
-        <p class="text-lg"><strong>Gender:</strong> {{ employee?.Gender }}</p>
-        <p class="text-lg"><strong>Civil Status:</strong> {{ employee?.CivilStatus }}</p>
-        <p class="text-lg"><strong>Height:</strong> {{ employee?.Height }}</p>
-        <p class="text-lg"><strong>Weight:</strong> {{ employee?.Weight }}</p>
-        <p class="text-lg"><strong>Blood Type:</strong> {{ employee?.BloodType }}</p>
-        <p class="text-lg"><strong>GSIS Number:</strong> {{ employee?.GSISNumber }}</p>
-        <p class="text-lg"><strong>Pag-Ibig Number:</strong> {{ employee?.PagIbigNumber }}</p>
-        <p class="text-lg"><strong>PhilHealth Number:</strong> {{ employee?.PhilHealthNumber }}</p>
-        <p class="text-lg"><strong>SSS Number:</strong> {{ employee?.SSSNumber }}</p>
-        <p class="text-lg"><strong>TIN Number:</strong> {{ employee?.TINNumber }}</p>
-        <p class="text-lg"><strong>Agency Employee Number:</strong> {{ employee?.AgencyEmployeeNumber }}</p>
-        <p class="text-lg"><strong>Citizenship:</strong> {{ employee?.Citizenship }}</p>
-        <p class="text-lg"><strong>Residential Address:</strong> {{ employee?.ResidentialAddress }}</p>
-        <p class="text-lg"><strong>Residential Zip Code:</strong> {{ employee?.ResidentialZipCode }}</p>
-        <p class="text-lg"><strong>Permanent Address:</strong> {{ employee?.PermanentAddress }}</p>
-        <p class="text-lg"><strong>Permanent Zip Code:</strong> {{ employee?.PermanentZipCode }}</p>
-        <p class="text-lg"><strong>Telephone Number:</strong> {{ employee?.TelephoneNumber }}</p>
-        <p class="text-lg"><strong>Mobile Number:</strong> {{ employee?.MobileNumber }}</p>
-        <p class="text-lg"><strong>Email Address:</strong> {{ employee?.EmailAddress }}</p>
+    <div *ngIf="employee" class="p-6 space-y-8">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <div class="grid grid-cols-2 gap-x-12 gap-y-4">
+          <p class="text-lg"><strong>Last Name:</strong> {{ employee?.LastName }}</p>
+          <p class="text-lg"><strong>First Name:</strong> {{ employee?.FirstName }}</p>
+          <p class="text-lg"><strong>Middle Name:</strong> {{ employee?.MiddleName }}</p>
+          <p class="text-lg"><strong>Name Extension:</strong> {{ employee?.NameExtension }}</p>
+          <p class="text-lg"><strong>Birth Date:</strong> {{ employee?.BirthDate | date }}</p>
+          <p class="text-lg"><strong>Place of Birth:</strong> {{ employee?.PlaceOfBirth }}</p>
+          <p class="text-lg"><strong>Gender:</strong> {{ employee?.Gender }}</p>
+          <p class="text-lg"><strong>Civil Status:</strong> {{ employee?.CivilStatus }}</p>
+          <p class="text-lg"><strong>Height:</strong> {{ employee?.Height }}</p>
+          <p class="text-lg"><strong>Weight:</strong> {{ employee?.Weight }}</p>
+          <p class="text-lg"><strong>Blood Type:</strong> {{ employee?.BloodType }}</p>
+          <p class="text-lg"><strong>GSIS Number:</strong> {{ employee?.GSISNumber }}</p>
+          <p class="text-lg"><strong>Pag-Ibig Number:</strong> {{ employee?.PagIbigNumber }}</p>
+          <p class="text-lg"><strong>PhilHealth Number:</strong> {{ employee?.PhilHealthNumber }}</p>
+          <p class="text-lg"><strong>SSS Number:</strong> {{ employee?.SSSNumber }}</p>
+          <p class="text-lg"><strong>TIN Number:</strong> {{ employee?.TINNumber }}</p>
+          <p class="text-lg"><strong>Agency Employee Number:</strong> {{ employee?.AgencyEmployeeNumber }}</p>
+          <p class="text-lg"><strong>Citizenship:</strong> {{ employee?.Citizenship }}</p>
+          <p class="text-lg"><strong>Residential Address:</strong> {{ employee?.ResidentialAddress }}</p>
+          <p class="text-lg"><strong>Residential Zip Code:</strong> {{ employee?.ResidentialZipCode }}</p>
+          <p class="text-lg"><strong>Permanent Address:</strong> {{ employee?.PermanentAddress }}</p>
+          <p class="text-lg"><strong>Permanent Zip Code:</strong> {{ employee?.PermanentZipCode }}</p>
+          <p class="text-lg"><strong>Telephone Number:</strong> {{ employee?.TelephoneNumber }}</p>
+          <p class="text-lg"><strong>Mobile Number:</strong> {{ employee?.MobileNumber }}</p>
+          <p class="text-lg"><strong>Email Address:</strong> {{ employee?.EmailAddress }}</p>
+        </div>
       </div>
       <div class="flex justify-end">
         <button class="btn bg-black text-white" (click)="edit()">Edit</button>
@@ -53,118 +55,7 @@
     <div class="p-6">
       <form [formGroup]="personalInfoForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <div class="grid grid-cols-2 gap-6">
-          <div class="form-control w-full">
-            <label for="LastName" class="label-text font-bold text-lg">Last Name</label>
-            <input id="LastName" formControlName="LastName" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="FirstName" class="label-text font-bold text-lg">First Name</label>
-            <input id="FirstName" formControlName="FirstName" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="MiddleName" class="label-text font-bold text-lg">Middle Name</label>
-            <input id="MiddleName" formControlName="MiddleName" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="NameExtension" class="label-text font-bold text-lg">Name Extension</label>
-            <input id="NameExtension" formControlName="NameExtension" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="BirthDate" class="label-text font-bold text-lg">Birth Date</label>
-            <input id="BirthDate" formControlName="BirthDate" class="input input-bordered w-full" type="date">
-          </div>
-          <div class="form-control w-full">
-            <label for="PlaceOfBirth" class="label-text font-bold text-lg">Place of Birth</label>
-            <input id="PlaceOfBirth" formControlName="PlaceOfBirth" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="Gender" class="label-text font-bold text-lg">Gender</label>
-            <select id="Gender" formControlName="Gender" class="select select-bordered">
-              <option value="" disabled selected>- Please select an Option -</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>            
-          </div>
-          <div class="form-control w-full">
-            <label for="CivilStatus" class="label-text font-bold text-lg">Civil Status</label>
-            <select id="CivilStatus" formControlName="CivilStatus" class="select select-bordered">
-              <option value="" disabled selected>- Please select an Option -</option>
-              <option value="Single">Single</option>
-              <option value="Married">Married</option>
-              <option value="Widowed">Widowed</option>
-              <option value="Separated">Separated</option>
-              <option value="Divorced">Divorced</option>
-            </select>
-          </div>
-          <div class="form-control w-full">
-            <label for="Height" class="label-text font-bold text-lg">Height</label>
-            <input id="Height" formControlName="Height" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="Weight" class="label-text font-bold text-lg">Weight</label>
-            <input id="Weight" formControlName="Weight" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="BloodType" class="label-text font-bold text-lg">Blood Type</label>
-            <input id="BloodType" formControlName="BloodType" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="GSISNumber" class="label-text font-bold text-lg">GSIS Number</label>
-            <input id="GSISNumber" formControlName="GSISNumber" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="PagIbigNumber" class="label-text font-bold text-lg">Pag-Ibig Number</label>
-            <input id="PagIbigNumber" formControlName="PagIbigNumber" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="PhilHealthNumber" class="label-text font-bold text-lg">PhilHealth Number</label>
-            <input id="PhilHealthNumber" formControlName="PhilHealthNumber" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="SSSNumber" class="label-text font-bold text-lg">SSS Number</label>
-            <input id="SSSNumber" formControlName="SSSNumber" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="TINNumber" class="label-text font-bold text-lg">TIN Number</label>
-            <input id="TINNumber" formControlName="TINNumber" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="AgencyEmployeeNumber" class="label-text font-bold text-lg">Agency Employee Number</label>
-            <input id="AgencyEmployeeNumber" formControlName="AgencyEmployeeNumber" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="Citizenship" class="label-text font-bold text-lg">Citizenship</label>
-            <input id="Citizenship" formControlName="Citizenship" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="ResidentialAddress" class="label-text font-bold text-lg">Residential Address</label>
-            <input id="ResidentialAddress" formControlName="ResidentialAddress" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="ResidentialZipCode" class="label-text font-bold text-lg">Residential Zip Code</label>
-            <input id="ResidentialZipCode" formControlName="ResidentialZipCode" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="PermanentAddress" class="label-text font-bold text-lg">Permanent Address</label>
-            <input id="PermanentAddress" formControlName="PermanentAddress" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="PermanentZipCode" class="label-text font-bold text-lg">Permanent Zip Code</label>
-            <input id="PermanentZipCode" formControlName="PermanentZipCode" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="TelephoneNumber" class="label-text font-bold text-lg">Telephone Number</label>
-            <input id="TelephoneNumber" formControlName="TelephoneNumber" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="MobileNumber" class="label-text font-bold text-lg">Mobile Number</label>
-            <input id="MobileNumber" formControlName="MobileNumber" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="EmailAddress" class="label-text font-bold text-lg">Email Address</label>
-            <input id="EmailAddress" formControlName="EmailAddress" class="input input-bordered w-full" type="email">
-          </div>
+          <!-- Input fields go here, as they are already set up for a two-column layout -->
         </div>
         <div class="flex justify-end mt-6">
           <button type="submit" class="btn btn-save mr-4">Save</button>

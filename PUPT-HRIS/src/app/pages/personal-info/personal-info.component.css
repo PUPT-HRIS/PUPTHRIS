@@ -21,12 +21,20 @@
   color: #ffffff; /* White text */
 }
 
+/* Grid layout for the display fields */
+.grid {
+  display: grid;
+  gap: 1rem; /* Space between grid items */
+}
 
-/* Heading */
-h2 {
-  font-size: 1.5rem;
-  color: #333; /* Dark text color */
-  margin-bottom: 1rem;
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+}
+
+@media (max-width: 768px) {
+  .grid-cols-2 {
+    grid-template-columns: 1fr; /* Stack columns on small screens */
+  }
 }
 
 /* Form controls */
@@ -82,14 +90,14 @@ h2 {
 }
 
 .btn-cancel {
-  background-color: #800000; /* Red background */
-  border-color: #800000; /* Red border */
+  background-color: #800000; /* Maroon background */
+  border-color: #800000; /* Maroon border */
   color: #fff; /* White text */
   transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
 }
 
 .btn-cancel:hover {
-  background-color: #9f0303; /* Slightly lighter red on hover */
+  background-color: #9f0303; /* Slightly lighter maroon on hover */
   transform: translateY(-1px); /* Slight lift effect */
 }
 
@@ -110,20 +118,4 @@ h2 {
 .flex-end {
   display: flex;
   justify-content: flex-end; /* Align buttons to the right */
-}
-
-/* Grid layout for display fields */
-.grid {
-  display: grid;
-  gap: 1rem; /* Space between grid items */
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-}
-
-@media (max-width: 768px) {
-  .grid-cols-2 {
-    grid-template-columns: 1fr; /* Stack columns on small screens */
-  }
 }
