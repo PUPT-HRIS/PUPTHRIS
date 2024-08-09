@@ -8,7 +8,7 @@ import { NonAcademic } from '../../model/nonacademic.model';
 import { Membership } from '../../model/membership.model';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-otherinformation',

@@ -26,7 +26,7 @@ export class SpecialSkillService {
         'Content-Type': 'application/json'
       })
     });
-  }  
+  }
 
   getSpecialSkills(employeeId: number): Observable<SpecialSkill[]> {
     return this.http.get<SpecialSkill[]>(`${this.apiUrl}/employee/${employeeId}`);

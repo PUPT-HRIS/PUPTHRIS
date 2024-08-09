@@ -57,3 +57,20 @@ exports.getWorkExperiencesByEmployee = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+exports.deleteWorkExperience = async (req, res) => {
+  try {
+    const workExperienceId = req.params.id;
+    const result = await WorkExperience.destroy({
+      where: { WorkExperienceID: workExperienceId }
+    });
+    if (result === 0) {
+      res.status(404).json({ error: 'Work experience record not found' });
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    console.error('Error deleting work experience:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

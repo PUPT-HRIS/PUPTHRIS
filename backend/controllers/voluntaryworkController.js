@@ -53,3 +53,20 @@ exports.getVoluntaryWorks = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+exports.deleteVoluntaryWork = async (req, res) => {
+  try {
+    const voluntaryWorkId = req.params.id;
+    const result = await VoluntaryWork.destroy({
+      where: { VoluntaryWorkID: voluntaryWorkId }
+    });
+    if (result === 0) {
+      res.status(404).json({ error: 'Voluntary work record not found' });
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    console.error('Error deleting voluntary work:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

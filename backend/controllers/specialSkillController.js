@@ -39,3 +39,20 @@ exports.getSpecialSkillsByEmployee = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.deleteSpecialSkill = async (req, res) => {
+  try {
+    const specialSkillId = req.params.id;
+    const result = await SpecialSkill.destroy({
+      where: { SpecialSkillsID: specialSkillId }
+    });
+    if (result === 0) {
+      res.status(404).json({ error: 'Special skill record not found' });
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    console.error('Error deleting special skill:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

@@ -27,7 +27,7 @@ export class MembershipService {
       })
     });
   }
-  
+
   getMemberships(employeeId: number): Observable<Membership[]> {
     return this.http.get<Membership[]>(`${this.apiUrl}/employee/${employeeId}`);
   }
@@ -36,3 +36,4 @@ export class MembershipService {
     return this.http.delete(`${this.apiUrl}/delete/${id}`);
   }
 }
+

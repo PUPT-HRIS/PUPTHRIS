@@ -39,3 +39,20 @@ exports.getNonAcademicsByEmployee = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.deleteNonAcademic = async (req, res) => {
+  try {
+    const nonAcademicId = req.params.id;
+    const result = await NonAcademic.destroy({
+      where: { NonAcademicID: nonAcademicId }
+    });
+    if (result === 0) {
+      res.status(404).json({ error: 'Non-academic distinction record not found' });
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    console.error('Error deleting non-academic distinction:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
