@@ -18,11 +18,6 @@
       [class.active]="activeItem === 'employees'"><i class="fas fa-users mr-3"></i>Employees</a>
     </li>
 
-    <li *ngIf="role === 'faculty' || role === 'staff' || role === 'admin'">
-      <a id="print-pds" class="sidebar-link" routerLink="/print-pds" (click)="setActive('print-pds')"
-      [class.active]="activeItem === 'print-pds'"><i class="fas fa-print mr-3"></i>Print PDS</a>
-    </li>
-
     <li *ngIf="role === 'admin'">
       <a id="new-account" class="sidebar-link" routerLink="/new-account" (click)="setActive('new-account')"
       [class.active]="activeItem === 'new-account'"><i class="fas fa-user-plus mr-3"></i>New Account</a>
@@ -35,6 +30,12 @@
       <i [ngClass]="isProfileDropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="ml-auto"></i>
       </a>
       <ul *ngIf="isProfileDropdownOpen" class="ml-6 mt-2 space-y-4 text-lg">
+        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
+          [class.active]="activeItem === 'my-profile-basic-details'">Basic Details</a></li>
+        <li><a routerLink="/personal-details" (click)="setActive('my-profile-personal-details')"
+          [class.active]="activeItem === 'my-profile-personal-details'">Personal Details</a></li>
+        <li><a routerLink="/contact-details" (click)="setActive('my-profile-contact-details')"
+          [class.active]="activeItem === 'my-profile-contact-details'">Contact details</a></li>      
         <li><a routerLink="/personal-info" (click)="setActive('my-profile-personal-info')"
           [class.active]="activeItem === 'my-profile-personal-info'">Personal Information</a></li>
         <li><a routerLink="/educational-background" (click)="setActive('my-profile-educational-background')"
@@ -51,10 +52,28 @@
           [class.active]="activeItem === 'my-profile-work-experience'">Work Experience/s</a></li>
         <li><a routerLink="/voluntary-works" (click)="setActive('my-profile-voluntary-works')"
           [class.active]="activeItem === 'my-profile-voluntary-works'">Voluntary Work/s</a></li>
+        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
+          [class.active]="activeItem === 'my-profile-basic-details'">Trainings and Seminars</a></li>
+        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
+          [class.active]="activeItem === 'my-profile-basic-details'">Outstanding Achievement</a></li>
+        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
+          [class.active]="activeItem === 'my-profile-basic-details'">Officer/Membership</a></li>      
         <li><a routerLink="/other-information" (click)="setActive('my-profile-other-information')"
           [class.active]="activeItem === 'my-profile-other-information'">Other Information</a></li>
+        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
+          [class.active]="activeItem === 'my-profile-basic-details'">Additional Question</a></li>
+        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
+          [class.active]="activeItem === 'my-profile-basic-details'">Character Reference</a></li>
+        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
+          [class.active]="activeItem === 'my-profile-basic-details'">Signature</a></li>    
       </ul>
     </li>
+
+    <li *ngIf="role === 'faculty' || role === 'staff' || role === 'admin'">
+      <a id="print-pds" class="sidebar-link" routerLink="/print-pds" (click)="setActive('print-pds')"
+      [class.active]="activeItem === 'print-pds'"><i class="fas fa-print mr-3"></i>Print PDS</a>
+    </li>
+    
         <!-- Spacer div -->
     <div class="flex-grow"></div>
 
