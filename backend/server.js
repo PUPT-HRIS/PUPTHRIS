@@ -12,6 +12,7 @@ const learningdevelopmentRoutes = require('./routes/learningdevelopmentRoutes');
 const childrenRoutes = require('./routes/childrenRoutes');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
+const basicDetailsRoutes = require('./routes/basicDetailsRoutes');
 
 const specialSkillRoutes = require('./routes/specialSkillRoutes');
 const nonAcademicRoutes = require('./routes/nonacademicRoutes');
@@ -26,6 +27,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/api/employees', employeeRoutes);
+app.use('/api/basic-details', basicDetailsRoutes);
 app.use('/api/education', educationRoutes);
 app.use('/api/familybackground', familybackgroundRoutes);
 app.use('/api/civilservice', civilserviceeligibilityRoutes);

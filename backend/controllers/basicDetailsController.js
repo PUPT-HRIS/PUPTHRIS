@@ -1,4 +1,4 @@
-const BasicDetails = require('../models/BasicDetails');
+const BasicDetails = require('../models/basicDetailsModel');
 
 exports.addBasicDetails = async (req, res) => {
   try {
@@ -31,8 +31,8 @@ exports.updateBasicDetails = async (req, res) => {
 
 exports.getBasicDetails = async (req, res) => {
   try {
-    const basicDetailsId = req.params.id;
-    const basicDetails = await BasicDetails.findOne({ where: { BasicDetailsID: basicDetailsId } });
+    const userId = req.params.userId;
+    const basicDetails = await BasicDetails.findOne({ where: { UserID: userId } });
     if (basicDetails) {
       res.status(200).json(basicDetails);
     } else {

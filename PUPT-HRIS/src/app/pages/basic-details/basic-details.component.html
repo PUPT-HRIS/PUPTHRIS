@@ -1,1 +1,91 @@
-<p>basic-details works!</p>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Basic Details</h1>
+  </div>
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <div *ngIf="basicDetails" class="p-6 space-y-8">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <div class="grid grid-cols-2 gap-x-12 gap-y-4">
+          <p class="text-lg"><strong>Last Name:</strong> {{ basicDetails?.LastName }}</p>
+          <p class="text-lg"><strong>First Name:</strong> {{ basicDetails?.FirstName }}</p>
+          <p class="text-lg"><strong>Middle Initial:</strong> {{ basicDetails?.MiddleInitial }}</p>
+          <p class="text-lg"><strong>Employee Number:</strong> {{ basicDetails?.EmployeeNo }}</p>
+          <p class="text-lg"><strong>Faculty Code:</strong> {{ basicDetails?.FacultyCode }}</p>
+          <p class="text-lg"><strong>Honorific:</strong> {{ basicDetails?.Honorific }}</p>
+          <p class="text-lg"><strong>Date of Birth:</strong> {{ basicDetails?.DateOfBirth | date }}</p>
+          <p class="text-lg"><strong>Sex:</strong> {{ basicDetails?.Sex }}</p>
+          <p class="text-lg"><strong>Name Extension:</strong> {{ basicDetails?.NameExtension }}</p>
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn bg-black text-white" (click)="edit()">Edit</button>
+      </div>
+    </div>
+
+    <div *ngIf="!basicDetails" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No basic details available.</p>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn btn-add-info bg-black text-white" (click)="edit()">Add Info</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="basicDetailsForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div class="form-control">
+            <label class="label-text">Last Name</label>
+            <input formControlName="LastName" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">First Name</label>
+            <input formControlName="FirstName" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Middle Initial</label>
+            <input formControlName="MiddleInitial" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Employee Number</label>
+            <input formControlName="EmployeeNo" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Faculty Code</label>
+            <input formControlName="FacultyCode" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Honorific</label>
+            <input formControlName="Honorific" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Date of Birth</label>
+            <input formControlName="DateOfBirth" class="input input-bordered" type="date">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Sex</label>
+            <select formControlName="Sex" class="select select-bordered">
+              <option value="">Select...</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-control">
+            <label class="label-text">Name Extension</label>
+            <input formControlName="NameExtension" class="input input-bordered" type="text">
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn btn-save mr-4">Save</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
+        </div>        
+      </form>
+    </div>
+  </ng-template>
+</div>
