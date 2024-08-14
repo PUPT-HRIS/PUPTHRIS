@@ -3,88 +3,89 @@
 
 <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
 <ul class="menu bg-red-900 text-base-content text-white text-xl space-y-6 min-h-full w-80 p-6">
-    <div class="logo-section flex items-center p-6">
-      <img src="assets/PUPLogo.svg" alt="Logo" class="logo">
-      <h1 class="text-xl font-bold text-white ml-4">PUP TAGUIG HR INFO SYSTEM</h1>
-    </div>  
-    <!-- Sidebar content here --> 
-    <li>
-      <a id="dashboard" class="sidebar-link" routerLink="/dashboard" (click)="setActive('dashboard')"
-      [class.active]="activeItem === 'dashboard'"><i class="fa fa-th-large mr-3" aria-hidden="true"></i>Dashboard</a>
-    </li>
-    
-    <li *ngIf="role === 'admin'">
-      <a id="employees" class="sidebar-link" routerLink="/employees" (click)="setActive('employees')"
-      [class.active]="activeItem === 'employees'"><i class="fas fa-users mr-3"></i>Employees</a>
-    </li>
+  <div class="logo-section flex items-center p-6">
+    <img src="assets/PUPLogo.svg" alt="Logo" class="logo">
+    <h1 class="text-xl font-bold text-white ml-4">PUP TAGUIG HR INFO SYSTEM</h1>
+  </div>  
+  <!-- Sidebar content here --> 
+  <li>
+    <a id="dashboard" class="sidebar-link" routerLink="/dashboard" (click)="setActive('dashboard')"
+    [class.active]="activeItem === 'dashboard'"><i class="fa fa-th-large mr-3" aria-hidden="true"></i>Dashboard</a>
+  </li>
+  
+  <li *ngIf="role === 'admin'">
+    <a id="employees" class="sidebar-link" routerLink="/employees" (click)="setActive('employees')"
+    [class.active]="activeItem === 'employees'"><i class="fas fa-users mr-3"></i>Employees</a>
+  </li>
 
-    <li *ngIf="role === 'admin'">
-      <a id="new-account" class="sidebar-link" routerLink="/new-account" (click)="setActive('new-account')"
-      [class.active]="activeItem === 'new-account'"><i class="fas fa-user-plus mr-3"></i>New Account</a>
-    </li>
+  <li *ngIf="role === 'admin'">
+    <a id="new-account" class="sidebar-link" routerLink="/new-account" (click)="setActive('new-account')"
+    [class.active]="activeItem === 'new-account'"><i class="fas fa-user-plus mr-3"></i>New Account</a>
+  </li>
 
-    <li>
-      <a id="my-profile" class="sidebar-link" (click)="toggleProfileDropdown()"
-      [class.active]="activeItem.startsWith('my-profile')">
-      <i class="fas fa-user mr-3"></i>My Profile
-      <i [ngClass]="isProfileDropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="ml-auto"></i>
-      </a>
-      <ul *ngIf="isProfileDropdownOpen" class="ml-6 mt-2 space-y-4 text-lg">
-        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
-          [class.active]="activeItem === 'my-profile-basic-details'">Basic Details</a></li>
-        <li><a routerLink="/personal-details" (click)="setActive('my-profile-personal-details')"
-          [class.active]="activeItem === 'my-profile-personal-details'">Personal Details</a></li>
-        <li><a routerLink="/contact-details" (click)="setActive('my-profile-contact-details')"
-          [class.active]="activeItem === 'my-profile-contact-details'">Contact details</a></li>      
-        <li><a routerLink="/personal-info" (click)="setActive('my-profile-personal-info')"
-          [class.active]="activeItem === 'my-profile-personal-info'">Personal Information</a></li>
-        <li><a routerLink="/educational-background" (click)="setActive('my-profile-educational-background')"
-          [class.active]="activeItem === 'my-profile-educational-background'">Educational Background</a></li>
-        <li><a routerLink="/family-background" (click)="setActive('my-profile-family-background')"
-          [class.active]="activeItem === 'my-profile-family-background'">Family Background</a></li>
-        <li><a routerLink="/children" (click)="setActive('my-profile-children')"
-          [class.active]="activeItem === 'my-profile-children'">Children</a></li>
-        <li><a routerLink="/civil-service-eligibility" (click)="setActive('my-profile-civil-service-eligibility')"
-          [class.active]="activeItem === 'my-profile-civil-service-eligibility'">Civil Service Eligibility</a></li>
-        <li><a routerLink="/learning-development" (click)="setActive('my-profile-learning-development')"
-          [class.active]="activeItem === 'my-profile-learning-development'">Learning Development</a></li>
-        <li><a routerLink="/work-experience" (click)="setActive('my-profile-work-experience')"
-          [class.active]="activeItem === 'my-profile-work-experience'">Work Experience/s</a></li>
-        <li><a routerLink="/voluntary-works" (click)="setActive('my-profile-voluntary-works')"
-          [class.active]="activeItem === 'my-profile-voluntary-works'">Voluntary Work/s</a></li>
-        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
-          [class.active]="activeItem === 'my-profile-basic-details'">Trainings and Seminars</a></li>
-        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
-          [class.active]="activeItem === 'my-profile-basic-details'">Outstanding Achievement</a></li>
-        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
-          [class.active]="activeItem === 'my-profile-basic-details'">Officer/Membership</a></li>      
-        <li><a routerLink="/other-information" (click)="setActive('my-profile-other-information')"
-          [class.active]="activeItem === 'my-profile-other-information'">Other Information</a></li>
-        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
-          [class.active]="activeItem === 'my-profile-basic-details'">Additional Question</a></li>
-        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
-          [class.active]="activeItem === 'my-profile-basic-details'">Character Reference</a></li>
-        <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
-          [class.active]="activeItem === 'my-profile-basic-details'">Signature</a></li>    
-      </ul>
-    </li>
+  <li>
+    <a id="my-profile" class="sidebar-link" (click)="toggleProfileDropdown()"
+    [class.active]="isProfileActive">
+    <i class="fas fa-user mr-3"></i>My Profile
+    <i [ngClass]="isProfileDropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="ml-auto"></i>
+    </a>
+    <ul *ngIf="isProfileDropdownOpen" class="ml-6 mt-2 space-y-4 text-lg">
+      <li><a routerLink="/basic-details" (click)="setActive('my-profile-basic-details')"
+        [class.active]="activeItem === 'my-profile-basic-details'">Basic Details</a></li>
+      <li><a routerLink="/personal-details" (click)="setActive('my-profile-personal-details')"
+        [class.active]="activeItem === 'my-profile-personal-details'">Personal Details</a></li>
+      <li><a routerLink="/contact-details" (click)="setActive('my-profile-contact-details')"
+        [class.active]="activeItem === 'my-profile-contact-details'">Contact Details</a></li>      
+      <li><a routerLink="/personal-info" (click)="setActive('my-profile-personal-info')"
+        [class.active]="activeItem === 'my-profile-personal-info'">Personal Information</a></li>
+      <li><a routerLink="/educational-background" (click)="setActive('my-profile-educational-background')"
+        [class.active]="activeItem === 'my-profile-educational-background'">Educational Background</a></li>
+      <li><a routerLink="/family-background" (click)="setActive('my-profile-family-background')"
+        [class.active]="activeItem === 'my-profile-family-background'">Family Background</a></li>
+      <li><a routerLink="/children" (click)="setActive('my-profile-children')"
+        [class.active]="activeItem === 'my-profile-children'">Children</a></li>
+      <li><a routerLink="/civil-service-eligibility" (click)="setActive('my-profile-civil-service-eligibility')"
+        [class.active]="activeItem === 'my-profile-civil-service-eligibility'">Civil Service Eligibility</a></li>
+      <li><a routerLink="/learning-development" (click)="setActive('my-profile-learning-development')"
+        [class.active]="activeItem === 'my-profile-learning-development'">Learning Development</a></li>
+      <li><a routerLink="/work-experience" (click)="setActive('my-profile-work-experience')"
+        [class.active]="activeItem === 'my-profile-work-experience'">Work Experience/s</a></li>
+      <li><a routerLink="/voluntary-works" (click)="setActive('my-profile-voluntary-works')"
+        [class.active]="activeItem === 'my-profile-voluntary-works'">Voluntary Work/s</a></li>
+      <li><a routerLink="/trainings-and-seminars" (click)="setActive('my-profile-trainings-and-seminars')"
+        [class.active]="activeItem === 'my-profile-trainings-and-seminars'">Trainings and Seminars</a></li>
+      <li><a routerLink="/outstanding-achievement" (click)="setActive('my-profile-outstanding-achievement')"
+        [class.active]="activeItem === 'my-profile-outstanding-achievement'">Outstanding Achievement</a></li>
+      <li><a routerLink="/officer-membership" (click)="setActive('my-profile-officer-membership')"
+        [class.active]="activeItem === 'my-profile-officer-membership'">Officer/Membership</a></li>      
+      <li><a routerLink="/other-information" (click)="setActive('my-profile-other-information')"
+        [class.active]="activeItem === 'my-profile-other-information'">Other Information</a></li>
+      <li><a routerLink="/additional-question" (click)="setActive('my-profile-additional-question')"
+        [class.active]="activeItem === 'my-profile-additional-question'">Additional Question</a></li>
+      <li><a routerLink="/character-reference" (click)="setActive('my-profile-character-reference')"
+        [class.active]="activeItem === 'my-profile-character-reference'">Character Reference</a></li>
+      <li><a routerLink="/signature" (click)="setActive('my-profile-signature')"
+        [class.active]="activeItem === 'my-profile-signature'">Signature</a></li>    
+    </ul>
+  </li>
 
-    <li *ngIf="role === 'faculty' || role === 'staff' || role === 'admin'">
-      <a id="print-pds" class="sidebar-link" routerLink="/print-pds" (click)="setActive('print-pds')"
-      [class.active]="activeItem === 'print-pds'"><i class="fas fa-print mr-3"></i>Print PDS</a>
-    </li>
-    
-        <!-- Spacer div -->
-    <div class="flex-grow"></div>
+  <li *ngIf="role === 'faculty' || role === 'staff' || role === 'admin'">
+    <a id="print-pds" class="sidebar-link" routerLink="/print-pds" (click)="setActive('print-pds')"
+    [class.active]="activeItem === 'print-pds'"><i class="fas fa-print mr-3"></i>Print PDS</a>
+  </li>
+  
+  <!-- Spacer div -->
+  <div class="flex-grow"></div>
 
-        <!-- Bottom Sidebar content -->
-    <li>
-      <a id="settings" class="sidebar-link" routerLink="/settings" (click)="setActive('settings')"
-      [class.active]="activeItem === 'settings'"><i class="fas fa-cog mr-3"></i>Settings</a>
-    </li>
+  <!-- Bottom Sidebar content -->
+  <li>
+    <a id="settings" class="sidebar-link" routerLink="/settings" (click)="setActive('settings')"
+    [class.active]="activeItem === 'settings'"><i class="fas fa-cog mr-3"></i>Settings</a>
+  </li>
 
-    <li>
-        <a id="logout" class="sidebar-link" (click)="logout()">
-          <i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
-    </li>
+  <li>
+      <a id="logout" class="sidebar-link" (click)="logout()">
+        <i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
+  </li>
 </ul>
+
