@@ -14,6 +14,7 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const basicDetailsRoutes = require('./routes/basicDetailsRoutes');
 const contactDetailsRoutes = require('./routes/contactDetailsRoutes');
+const characterReferenceRoutes = require('./routes/characterReferenceRoutes');
 
 const specialSkillRoutes = require('./routes/specialSkillRoutes');
 const nonAcademicRoutes = require('./routes/nonacademicRoutes');
@@ -36,6 +37,7 @@ app.use('/api/civilservice', civilserviceeligibilityRoutes);
 app.use('/api/workexperience', workexperienceRoutes);
 app.use('/api/voluntarywork', voluntaryworkRoutes);
 app.use('/api/learningdevelopment', learningdevelopmentRoutes);
+app.use('/api/character-reference', characterReferenceRoutes);
 app.use('/api/children', childrenRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);

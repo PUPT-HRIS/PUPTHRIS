@@ -1,1 +1,89 @@
-<p>reference works!</p>
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Character References</h1>
+  </div>
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <div *ngIf="referenceData.length > 0" class="p-6 space-y-6">
+      <div class="overflow-x-auto px-10">
+        <div class="flex-1 mb-2">
+          <a class="text-lg font-normal">You are currently viewing the list/s of Character References.</a>
+        </div>
+        <table class="table table-zebra w-full border-separate border-spacing-0">
+          <!-- head -->
+          <thead>
+            <tr class="bg-maroon text-white">
+              <th class="p-4">#</th>
+              <th class="p-4">Name</th>
+              <th class="p-4">Address</th>
+              <th class="p-4">Telephone Number</th>
+              <th class="p-4 w-36">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reference of referenceData" class="hover:bg-gray-100">
+                <th class="p-4">{{ reference.ReferenceID }}</th>
+                <td class="p-4">{{ reference.Name }}</td>
+                <td class="p-4">{{ reference.Address }}</td>
+                <td class="p-4">{{ reference.TelephoneNumber }}</td>
+                <td class="p-4">
+                  <div class="btn-container">
+                    <button 
+                      class="btn btn-sm bg-maroon text-white" 
+                      (click)="edit(reference.ReferenceID!)" 
+                      [disabled]="!reference.ReferenceID"
+                    >Edit</button>
+                    <button 
+                      class="btn btn-sm bg-black text-white" 
+                      (click)="delete(reference.ReferenceID!)" 
+                      [disabled]="!reference.ReferenceID"
+                    >Delete</button>
+                  </div>
+                </td>
+              </tr>                        
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="referenceData.length < 3" class="mt-4 px-10">
+        <button class="btn btn-add-info bg-black text-white w-full" (click)="toggleForm()">Add Info</button>
+      </div>
+      <div *ngIf="referenceData.length === 3" class="mt-4 px-10">
+        <p class="text-red-600 text-center">You can only add up to 3 references.</p>
+      </div>
+    </div>
+
+    <div *ngIf="referenceData.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No character references available.</p>
+      </div>
+      <div class="mt-4">
+        <button class="btn btn-add-info bg-black text-white w-full" (click)="toggleForm()">Add Info</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="referenceForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div class="form-control w-full">
+            <label for="Name" class="label-text font-bold text-lg">Name</label>
+            <input id="Name" formControlName="Name" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="Address" class="label-text font-bold text-lg">Address</label>
+            <input id="Address" formControlName="Address" class="input input-bordered w-full">
+          </div>
+          <div class="form-control w-full">
+            <label for="TelephoneNumber" class="label-text font-bold text-lg">Telephone Number</label>
+            <input id="TelephoneNumber" formControlName="TelephoneNumber" class="input input-bordered w-full">
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn btn-save mr-4">{{ currentReferenceId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>
