@@ -15,14 +15,6 @@ const ContactDetails = sequelize.define('ContactDetails', {
       key: 'UserID',
     },
   },
-  PersonalDetailsID: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'PersonalDetails',
-      key: 'PersonalDetailsID',
-    },
-  },
   TelephoneNumber: {
     type: DataTypes.STRING(20),
   },
