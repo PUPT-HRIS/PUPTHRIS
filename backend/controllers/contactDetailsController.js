@@ -1,4 +1,4 @@
-const ContactDetails = require('../models/ContactDetails');
+const ContactDetails = require('../models/contactDetailsModel');
 
 exports.addContactDetails = async (req, res) => {
   try {
@@ -31,8 +31,8 @@ exports.updateContactDetails = async (req, res) => {
 
 exports.getContactDetails = async (req, res) => {
   try {
-    const contactDetailsId = req.params.id;
-    const contactDetails = await ContactDetails.findOne({ where: { ContactDetailsID: contactDetailsId } });
+    const userId = req.params.id;
+    const contactDetails = await ContactDetails.findOne({ where: { UserID: userId } });
     if (contactDetails) {
       res.status(200).json(contactDetails);
     } else {

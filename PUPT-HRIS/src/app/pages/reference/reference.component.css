@@ -1,0 +1,47 @@
+.container {
+  background-color: #f9f9f9;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-edit, .btn-delete {
+  background-color: #d9534f;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #c9302c;
+}
+
+.btn-delete:hover {
+  background-color: #ac2925;
+}
+
+.btn-add-info {
+  background-color: #5cb85c;
+}
+
+.btn-add-info:hover {
+  background-color: #4cae4c;
+}
+
+.btn-save {
+  background-color: #5bc0de;
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #31b0d5;
+}
+
+.btn-cancel {
+  background-color: #f0ad4e;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #ec971f;
+}

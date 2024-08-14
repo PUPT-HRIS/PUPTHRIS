@@ -1,0 +1,58 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Contact Details</h1>
+  </div>
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <!-- Display Section -->
+    <div *ngIf="contactDetails" class="p-6 space-y-8">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <div class="grid grid-cols-2 gap-x-12 gap-y-4">
+          <p class="text-lg"><strong>Telephone Number:</strong> {{ contactDetails?.TelephoneNumber }}</p>
+          <p class="text-lg"><strong>Mobile Number:</strong> {{ contactDetails?.MobileNumber }}</p>
+          <p class="text-lg"><strong>Email Address:</strong> {{ contactDetails?.EmailAddress }}</p>
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn bg-black text-white" (click)="edit()">Edit</button>
+      </div>
+    </div>
+
+    <!-- Add Info Section -->
+    <div *ngIf="!contactDetails" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No contact details available.</p>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn btn-add-info bg-black text-white" (click)="edit()">Add Info</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="contactDetailsForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div class="form-control">
+            <label class="label-text">Telephone Number</label>
+            <input formControlName="TelephoneNumber" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Mobile Number</label>
+            <input formControlName="MobileNumber" class="input input-bordered" type="text" required>
+          </div>
+          <div class="form-control">
+            <label class="label-text">Email Address</label>
+            <input formControlName="EmailAddress" class="input input-bordered" type="email" required>
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn btn-save mr-4">Save</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
+        </div>        
+      </form>
+    </div>
+  </ng-template>
+</div>

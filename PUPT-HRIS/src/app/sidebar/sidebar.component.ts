@@ -60,6 +60,15 @@ export class SidebarComponent implements OnInit {
       this.activeItem = 'print-pds';
     } else if (url.includes('new-account')) {
       this.activeItem = 'new-account';
+    } else if (url.includes('basic-details')) {
+      this.activeItem = 'my-profile-basic-details';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('personal-details')) {
+      this.activeItem = 'my-profile-personal-details';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('contact-details')) {
+      this.activeItem = 'my-profile-contact-details';
+      this.isProfileDropdownOpen = true;
     } else if (url.includes('personal-info')) {
       this.activeItem = 'my-profile-personal-info';
       this.isProfileDropdownOpen = true;
@@ -87,12 +96,32 @@ export class SidebarComponent implements OnInit {
     } else if (url.includes('other-information')) {
       this.activeItem = 'my-profile-other-information';
       this.isProfileDropdownOpen = true;
+    } else if (url.includes('trainings-and-seminars')) {
+      this.activeItem = 'my-profile-trainings-and-seminars';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('outstanding-achievement')) {
+      this.activeItem = 'my-profile-outstanding-achievement';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('officer-membership')) {
+      this.activeItem = 'my-profile-officer-membership';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('additional-question')) {
+      this.activeItem = 'my-profile-additional-question';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('character-reference')) {
+      this.activeItem = 'my-profile-character-reference';
+      this.isProfileDropdownOpen = true;
+    } else if (url.includes('signature')) {
+      this.activeItem = 'my-profile-signature';
+      this.isProfileDropdownOpen = true;
     } else if (url.includes('settings')) {
       this.activeItem = 'settings';
     } else {
       this.activeItem = '';
     }
   }
+  
+  
 
   logout() {
     localStorage.removeItem('token');

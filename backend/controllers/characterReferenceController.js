@@ -1,4 +1,4 @@
-const CharacterReference = require('../models/CharacterReference');
+const CharacterReference = require('../models/characterReferenceModel');
 
 exports.addCharacterReference = async (req, res) => {
   try {
@@ -31,15 +31,35 @@ exports.updateCharacterReference = async (req, res) => {
 
 exports.getCharacterReference = async (req, res) => {
   try {
-    const referenceId = req.params.id;
-    const characterReference = await CharacterReference.findOne({ where: { ReferenceID: referenceId } });
-    if (characterReference) {
-      res.status(200).json(characterReference);
+    const userId = req.params.id;
+    const characterReferences = await CharacterReference.findAll({ where: { UserID: userId } });
+    if (characterReferences) {
+      res.status(200).json(characterReferences);
     } else {
-      res.status(404).send('Character reference record not found');
+      res.status(404).send('No references found for this user');
     }
   } catch (error) {
-    console.error('Error getting character reference:', error);
+    console.error('Error fetching character references:', error);
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.deleteCharacterReference = async (req, res) => {
+  try {
+    const referenceId = req.params.id;
+    const result = await CharacterReference.destroy({
+      where: { ReferenceID: referenceId }
+    });
+
+    if (result) {
+      res.status(200).json({ message: 'Character reference deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Character reference not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting character reference:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+

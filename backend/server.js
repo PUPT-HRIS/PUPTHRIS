@@ -12,6 +12,9 @@ const learningdevelopmentRoutes = require('./routes/learningdevelopmentRoutes');
 const childrenRoutes = require('./routes/childrenRoutes');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
+const basicDetailsRoutes = require('./routes/basicDetailsRoutes');
+const contactDetailsRoutes = require('./routes/contactDetailsRoutes');
+const characterReferenceRoutes = require('./routes/characterReferenceRoutes');
 
 const specialSkillRoutes = require('./routes/specialSkillRoutes');
 const nonAcademicRoutes = require('./routes/nonacademicRoutes');
@@ -26,12 +29,15 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/api/employees', employeeRoutes);
+app.use('/api/basic-details', basicDetailsRoutes);
+app.use('/api/contact-details', contactDetailsRoutes);
 app.use('/api/education', educationRoutes);
 app.use('/api/familybackground', familybackgroundRoutes);
 app.use('/api/civilservice', civilserviceeligibilityRoutes);
 app.use('/api/workexperience', workexperienceRoutes);
 app.use('/api/voluntarywork', voluntaryworkRoutes);
 app.use('/api/learningdevelopment', learningdevelopmentRoutes);
+app.use('/api/character-reference', characterReferenceRoutes);
 app.use('/api/children', childrenRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);

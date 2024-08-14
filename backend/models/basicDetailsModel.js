@@ -25,8 +25,25 @@ const BasicDetails = sequelize.define('BasicDetails', {
     type: DataTypes.STRING(50),
     allowNull: false,
   },
+  MiddleInitial: {
+    type: DataTypes.STRING(10),
+  },
   NameExtension: {
     type: DataTypes.STRING(10),
+  },
+  DateOfBirth: {
+    type: DataTypes.DATE,
+  },
+  Sex: {
+    type: DataTypes.ENUM('Male', 'Female', 'Other'),
+  },
+  UserID: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'UserID',
+    },
+    allowNull: false,
   },
 }, {
   tableName: 'basicdetails',
