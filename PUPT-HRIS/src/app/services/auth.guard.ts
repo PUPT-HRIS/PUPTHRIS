@@ -20,8 +20,8 @@ export class AuthGuard implements CanActivate {
       const currentTime = Math.floor(Date.now() / 1000);
 
       if (decodedToken.exp < currentTime) {
-        localStorage.removeItem('token');  // Remove the expired token
-        this.router.navigate(['/login']);  // Redirect to login
+        localStorage.removeItem('token');
+        this.router.navigate(['/login']);
         return false;
       }
 

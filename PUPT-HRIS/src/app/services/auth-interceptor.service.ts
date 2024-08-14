@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          // Handle 401 errors - token expired or not authorized
+          
           this.authService.logout();
           this.router.navigate(['/login']);
         }
