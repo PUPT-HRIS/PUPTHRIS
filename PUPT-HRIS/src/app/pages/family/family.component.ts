@@ -6,13 +6,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { jwtDecode } from 'jwt-decode';
+import { ChildrenComponent } from "../children/children.component";
 
 @Component({
   selector: 'app-family',
   templateUrl: './family.component.html',
   styleUrls: ['./family.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule, ChildrenComponent]
 })
 export class FamilyComponent implements OnInit {
   familyForm: FormGroup;
