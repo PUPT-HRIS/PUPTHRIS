@@ -1,6 +1,6 @@
 export interface VoluntaryWork {
   VoluntaryWorkID?: number;
-  EmployeeID: number;
+  UserID: number;
   OrganizationNameAddress: string;
   InclusiveDatesFrom: Date;
   InclusiveDatesTo: Date;
