@@ -28,8 +28,8 @@ export class NonAcademicService {
     });
   }
 
-  getNonAcademics(employeeId: number): Observable<NonAcademic[]> {
-    return this.http.get<NonAcademic[]>(`${this.apiUrl}/employee/${employeeId}`);
+  getNonAcademics(userId: number): Observable<NonAcademic[]> {
+    return this.http.get<NonAcademic[]>(`${this.apiUrl}/user/${userId}`);
   }
 
   deleteNonAcademic(id: number): Observable<any> {

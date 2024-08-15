@@ -17,7 +17,7 @@ const contactDetailsRoutes = require('./routes/contactDetailsRoutes');
 const characterReferenceRoutes = require('./routes/characterReferenceRoutes');
 
 const specialSkillRoutes = require('./routes/specialSkillRoutes');
-const nonAcademicRoutes = require('./routes/nonacademicRoutes');
+const nonAcademicRoutes = require('./routes/nonAcademicRoutes');
 const membershipRoutes = require('./routes/membershipRoutes');
 
 dotenv.config();

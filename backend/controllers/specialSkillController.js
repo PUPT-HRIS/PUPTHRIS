@@ -2,7 +2,10 @@ const SpecialSkill = require('../models/specialSkillModel');
 
 exports.addSpecialSkill = async (req, res) => {
   try {
-    const newSpecialSkill = await SpecialSkill.create(req.body);
+    const newSpecialSkill = await SpecialSkill.create({
+      ...req.body,
+      UserID: req.user.userId
+    });
     res.status(201).json(newSpecialSkill);
   } catch (error) {
     console.error('Error adding special skill:', error);
@@ -14,9 +17,8 @@ exports.updateSpecialSkill = async (req, res) => {
   try {
     const specialSkillId = req.params.id;
     const updatedData = req.body;
-    console.log('Received data for update:', updatedData);
     const result = await SpecialSkill.update(updatedData, {
-      where: { SpecialSkillsID: specialSkillId }
+      where: { SpecialSkillsID: specialSkillId, UserID: req.user.userId }
     });
     if (result[0] === 0) {
       res.status(404).json({ message: 'Special skill record not found' });
@@ -29,10 +31,10 @@ exports.updateSpecialSkill = async (req, res) => {
   }
 };
 
-exports.getSpecialSkillsByEmployee = async (req, res) => {
+exports.getSpecialSkillsByUser = async (req, res) => {
   try {
-    const employeeId = req.params.id;
-    const specialSkills = await SpecialSkill.findAll({ where: { EmployeeID: employeeId } });
+    const userId = req.user.userId;
+    const specialSkills = await SpecialSkill.findAll({ where: { UserID: userId } });
     res.status(200).json(specialSkills);
   } catch (error) {
     console.error('Error fetching special skills:', error);
@@ -44,7 +46,7 @@ exports.deleteSpecialSkill = async (req, res) => {
   try {
     const specialSkillId = req.params.id;
     const result = await SpecialSkill.destroy({
-      where: { SpecialSkillsID: specialSkillId }
+      where: { SpecialSkillsID: specialSkillId, UserID: req.user.userId }
     });
     if (result === 0) {
       res.status(404).json({ error: 'Special skill record not found' });
