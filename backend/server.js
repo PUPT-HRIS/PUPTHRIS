@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const employeeRoutes = require('./routes/employeeRoutes');
 const educationRoutes = require('./routes/educationRoutes');
 const familybackgroundRoutes = require('./routes/familybackgroundRoutes');
 const civilserviceeligibilityRoutes = require('./routes/civilserviceeligibilityRoutes');
@@ -28,7 +27,6 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/api/employees', employeeRoutes);
 app.use('/api/basic-details', basicDetailsRoutes);
 app.use('/api/contact-details', contactDetailsRoutes);
 app.use('/api/education', educationRoutes);

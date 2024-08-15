@@ -69,9 +69,6 @@ export class SidebarComponent implements OnInit {
     } else if (url.includes('contact-details')) {
       this.activeItem = 'my-profile-contact-details';
       this.isProfileDropdownOpen = true;
-    } else if (url.includes('personal-info')) {
-      this.activeItem = 'my-profile-personal-info';
-      this.isProfileDropdownOpen = true;
     } else if (url.includes('educational-background')) {
       this.activeItem = 'my-profile-educational-background';
       this.isProfileDropdownOpen = true;

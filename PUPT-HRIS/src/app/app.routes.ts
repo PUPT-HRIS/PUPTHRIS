@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
 import { EmployeeComponent } from './pages/employees/employees.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { PersonalInfoComponent } from './pages/personal-info/personal-info.component';
 import { EducationComponent } from './pages/education/education.component';
 import { FamilyComponent } from './pages/family/family.component';
 import { ChildrenComponent } from './pages/children/children.component';
@@ -37,7 +36,6 @@ export const routes: Routes = [
       { path: 'basic-details', component: BasicDetailsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'personal-details', component: PersonalDetailsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'contact-details', component: ContactDetailsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
-      { path: 'personal-info', component: PersonalInfoComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'educational-background', component: EducationComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'family-background', component: FamilyComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'children', component: ChildrenComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
