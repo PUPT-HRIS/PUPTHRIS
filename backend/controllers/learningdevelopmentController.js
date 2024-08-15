@@ -2,7 +2,10 @@ const LearningDevelopment = require('../models/learningdevelopmentModel');
 
 exports.addLearningDevelopment = async (req, res) => {
   try {
-    const newLearningDevelopment = await LearningDevelopment.create(req.body);
+    const newLearningDevelopment = await LearningDevelopment.create({
+      ...req.body,
+      UserID: req.user.userId
+    });
     res.status(201).json(newLearningDevelopment);
   } catch (error) {
     console.error('Error adding learning and development:', error);
@@ -15,7 +18,7 @@ exports.updateLearningDevelopment = async (req, res) => {
     const learningDevelopmentId = req.params.id;
     const updatedData = req.body;
     const result = await LearningDevelopment.update(updatedData, {
-      where: { LearningDevelopmentID: learningDevelopmentId }
+      where: { LearningDevelopmentID: learningDevelopmentId, UserID: req.user.userId }
     });
     if (result[0] === 0) {
       res.status(404).json({ message: 'Learning development record not found' });
@@ -30,8 +33,8 @@ exports.updateLearningDevelopment = async (req, res) => {
 
 exports.getLearningDevelopments = async (req, res) => {
   try {
-    const employeeId = req.params.employeeId;
-    const learningDevelopments = await LearningDevelopment.findAll({ where: { EmployeeID: employeeId } });
+    const userId = req.user.userId;
+    const learningDevelopments = await LearningDevelopment.findAll({ where: { UserID: userId } });
     if (learningDevelopments) {
       res.status(200).json(learningDevelopments);
     } else {
@@ -47,7 +50,7 @@ exports.deleteLearningDevelopment = async (req, res) => {
   try {
     const learningDevelopmentId = req.params.id;
     const result = await LearningDevelopment.destroy({
-      where: { LearningDevelopmentID: learningDevelopmentId }
+      where: { LearningDevelopmentID: learningDevelopmentId, UserID: req.user.userId }
     });
     if (result === 0) {
       res.status(404).json({ message: 'Learning development record not found' });

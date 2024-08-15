@@ -13,8 +13,8 @@ export class LearningService {
 
   constructor(private http: HttpClient) { }
 
-  getLearningDevelopments(employeeId: number): Observable<LearningDevelopment[]> {
-    return this.http.get<LearningDevelopment[]>(`${this.apiUrl}/employee/${employeeId}`)
+  getLearningDevelopments(userId: number): Observable<LearningDevelopment[]> {
+    return this.http.get<LearningDevelopment[]>(`${this.apiUrl}/user/${userId}`)
       .pipe(
         catchError(this.handleError)
       );

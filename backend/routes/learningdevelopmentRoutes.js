@@ -1,11 +1,12 @@
 const express = require('express');
 const learningdevelopmentController = require('../controllers/learningdevelopmentController');
+const authenticateJWT = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post('/add', learningdevelopmentController.addLearningDevelopment);
-router.patch('/update/:id', learningdevelopmentController.updateLearningDevelopment);
-router.get('/employee/:employeeId', learningdevelopmentController.getLearningDevelopments);
-router.delete('/delete/:id', learningdevelopmentController.deleteLearningDevelopment);
+router.post('/add', authenticateJWT, learningdevelopmentController.addLearningDevelopment);
+router.patch('/update/:id', authenticateJWT, learningdevelopmentController.updateLearningDevelopment);
+router.get('/user/:id', authenticateJWT, learningdevelopmentController.getLearningDevelopments);
+router.delete('/delete/:id', authenticateJWT, learningdevelopmentController.deleteLearningDevelopment);
 
 module.exports = router;
