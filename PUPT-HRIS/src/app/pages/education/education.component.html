@@ -13,7 +13,6 @@
           <!-- head -->
           <thead>
             <tr class="bg-maroon text-white">
-              <th class="p-4">#</th>
               <th class="p-4">Level</th>
               <th class="p-4">Name Of School</th>
               <th class="p-4">Course</th>
@@ -27,7 +26,6 @@
           </thead>
           <tbody>
             <tr *ngFor="let education of educationData; let i = index" class="hover:bg-gray-100">
-              <th class="p-4">{{ i + 1 }}</th>
               <td class="p-4">{{ education.Level }}</td>
               <td class="p-4">{{ education.NameOfSchool }}</td>
               <td class="p-4">{{ education.BasicEducationDegreeCourse }}</td>
@@ -67,7 +65,14 @@
         <div class="grid grid-cols-2 gap-6">
           <div class="form-control w-full">
             <label for="Level" class="label-text font-bold text-lg">Level</label>
-            <input id="Level" formControlName="Level" class="input input-bordered w-full">
+            <div class="relative">
+              <select id="Level" formControlName="Level" class="input input-bordered w-full appearance-none">
+                <option *ngFor="let level of levels" [value]="level">{{ level }}</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.25 7.75L10 12.5l4.75-4.75H5.25z"/></svg>
+              </div>
+            </div>
           </div>
           <div class="form-control w-full">
             <label for="NameOfSchool" class="label-text font-bold text-lg">Name Of School</label>
