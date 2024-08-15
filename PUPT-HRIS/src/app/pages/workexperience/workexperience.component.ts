@@ -19,15 +19,15 @@ export class WorkExperienceComponent implements OnInit {
   workExperienceData: WorkExperience[] = [];
   isEditing: boolean = false;
   currentExperienceId: number | null = null;
-  employeeId: number;
+  userId: number;
 
   constructor(private fb: FormBuilder, private workService: WorkService, private authService: AuthService) {
     const token = this.authService.getToken();
     if (token) {
       const decoded: any = jwtDecode(token);
-      this.employeeId = decoded.userId;
+      this.userId = decoded.userId;
     } else {
-      this.employeeId = 0;
+      this.userId = 0;
     }
 
     this.workExperienceForm = this.fb.group({
@@ -47,7 +47,7 @@ export class WorkExperienceComponent implements OnInit {
   }
 
   loadWorkExperiences(): void {
-    this.workService.getWorkExperiences(this.employeeId).subscribe(
+    this.workService.getWorkExperiences(this.userId).subscribe(
       data => {
         this.workExperienceData = data;
       },
@@ -64,7 +64,7 @@ export class WorkExperienceComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const workExperience = { ...this.workExperienceForm.value, EmployeeID: this.employeeId };
+    const workExperience = { ...this.workExperienceForm.value, UserID: this.userId };
     if (this.currentExperienceId) {
       this.workService.updateWorkExperience(this.currentExperienceId, workExperience).subscribe(
         response => {
@@ -104,7 +104,7 @@ export class WorkExperienceComponent implements OnInit {
       this.workService.deleteWorkExperience(id).subscribe(
         response => {
           console.log('Work experience deleted successfully', response);
-          this.loadWorkExperiences();
+          this.workExperienceData = this.workExperienceData.filter(ex => ex.WorkExperienceID !== id);
         },
         error => {
           console.error('Error deleting work experience', error);

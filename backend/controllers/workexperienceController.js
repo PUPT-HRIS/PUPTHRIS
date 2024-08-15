@@ -2,7 +2,10 @@ const WorkExperience = require('../models/workexperienceModel');
 
 exports.addWorkExperience = async (req, res) => {
   try {
-    const newWorkExperience = await WorkExperience.create(req.body);
+    const newWorkExperience = await WorkExperience.create({
+      ...req.body,
+      UserID: req.user.userId
+    });
     res.status(201).json(newWorkExperience);
   } catch (error) {
     console.error('Error adding work experience:', error);
@@ -15,7 +18,7 @@ exports.updateWorkExperience = async (req, res) => {
     const workExperienceId = req.params.id;
     const updatedData = req.body;
     const result = await WorkExperience.update(updatedData, {
-      where: { WorkExperienceID: workExperienceId }
+      where: { WorkExperienceID: workExperienceId, UserID: req.user.userId }
     });
     if (result[0] === 0) {
       res.status(404).json({ error: 'Work experience record not found' });
@@ -31,7 +34,7 @@ exports.updateWorkExperience = async (req, res) => {
 exports.getWorkExperience = async (req, res) => {
   try {
     const workExperienceId = req.params.id;
-    const workExperience = await WorkExperience.findOne({ where: { WorkExperienceID: workExperienceId } });
+    const workExperience = await WorkExperience.findOne({ where: { WorkExperienceID: workExperienceId, UserID: req.user.userId } });
     if (workExperience) {
       res.status(200).json(workExperience);
     } else {
@@ -43,10 +46,10 @@ exports.getWorkExperience = async (req, res) => {
   }
 };
 
-exports.getWorkExperiencesByEmployee = async (req, res) => {
+exports.getWorkExperiencesByUser = async (req, res) => {
   try {
-    const employeeId = req.params.employeeId;
-    const workExperiences = await WorkExperience.findAll({ where: { EmployeeID: employeeId } });
+    const userId = req.user.userId;
+    const workExperiences = await WorkExperience.findAll({ where: { UserID: userId } });
     if (workExperiences) {
       res.status(200).json(workExperiences);
     } else {
@@ -62,7 +65,7 @@ exports.deleteWorkExperience = async (req, res) => {
   try {
     const workExperienceId = req.params.id;
     const result = await WorkExperience.destroy({
-      where: { WorkExperienceID: workExperienceId }
+      where: { WorkExperienceID: workExperienceId, UserID: req.user.userId }
     });
     if (result === 0) {
       res.status(404).json({ error: 'Work experience record not found' });
