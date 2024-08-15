@@ -13,8 +13,8 @@ export class FamilyService {
 
   constructor(private http: HttpClient) { }
 
-  getFamilyBackground(employeeId: number): Observable<FamilyBackground> {
-    return this.http.get<FamilyBackground>(`${this.apiUrl}/${employeeId}`).pipe(
+  getFamilyBackground(userId: number): Observable<FamilyBackground> {
+    return this.http.get<FamilyBackground>(`${this.apiUrl}/${userId}`).pipe(
       catchError(this.handleError)
     );
   }
