@@ -44,14 +44,14 @@ exports.getChild = async (req, res) => {
   }
 };
 
-exports.getChildrenByEmployeeId = async (req, res) => {
+exports.getChildrenByUserId = async (req, res) => {
   try {
-    const { employeeId } = req.params;
-    const children = await Children.findAll({ where: { EmployeeID: employeeId } });
+    const { userId } = req.params;
+    const children = await Children.findAll({ where: { UserID: userId } });
     if (children.length > 0) {
       res.status(200).json(children);
     } else {
-      res.status(404).send('No children found for this employee');
+      res.status(404).send('No children found for this user');
     }
   } catch (error) {
     console.error('Error getting children:', error);

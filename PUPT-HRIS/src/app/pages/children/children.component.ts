@@ -19,15 +19,15 @@ export class ChildrenComponent implements OnInit {
   childrenData: Children[] = [];
   isEditing: boolean = false;
   currentChildId: number | null | undefined = null;
-  employeeId: number;
+  userId: number;
 
   constructor(private fb: FormBuilder, private childrenService: ChildrenService, private authService: AuthService) {
     const token = this.authService.getToken();
     if (token) {
       const decoded: any = jwtDecode(token);
-      this.employeeId = decoded.userId;
+      this.userId = decoded.userId;
     } else {
-      this.employeeId = 0;
+      this.userId = 0;
     }
 
     this.childrenForm = this.fb.group({
@@ -41,7 +41,7 @@ export class ChildrenComponent implements OnInit {
   }
 
   loadChildren(): void {
-    this.childrenService.getChildren(this.employeeId).subscribe(
+    this.childrenService.getChildren(this.userId).subscribe(
       data => {
         this.childrenData = data;
       },
@@ -76,7 +76,7 @@ export class ChildrenComponent implements OnInit {
         }
       );
     } else {
-      const newChild = { ...this.childrenForm.value, EmployeeID: this.employeeId };
+      const newChild = { ...this.childrenForm.value, UserID: this.userId };
       this.childrenService.addChild(newChild).subscribe(
         response => {
           console.log('Child added successfully', response);
@@ -95,7 +95,7 @@ export class ChildrenComponent implements OnInit {
       this.childrenService.deleteChild(id).subscribe(
         response => {
           console.log('Child deleted successfully', response);
-          this.loadChildren();
+          this.childrenData = this.childrenData.filter(child => child.ChildrenID !== id);
         },
         error => {
           console.error('Error deleting child', error);
