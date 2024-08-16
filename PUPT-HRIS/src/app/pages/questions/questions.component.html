@@ -1,1 +1,184 @@
-<p>questions works!</p>
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Additional Questions</h1>
+  </div>
+
+  <form [formGroup]="questionsForm" (ngSubmit)="onSubmit()" class="p-6 space-y-6">
+    <!-- Question 34 -->
+    <div class="p-4 bg-white rounded-lg shadow-lg space-y-4">
+      <label class="label-text font-bold">34. Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau or office?</label>
+
+      <div class="form-group">
+        <label for="Q34a" class="label-text font-bold">a. within the third degree?</label>
+        <div class="flex space-x-4">
+          <label>
+            <input type="radio" formControlName="Q34a" value="Yes" /> Yes
+          </label>
+          <label>
+            <input type="radio" formControlName="Q34a" value="No" /> No
+          </label>
+        </div>
+        <textarea formControlName="Q34a_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="Q34b" class="label-text font-bold">b. within the fourth degree (for Local Government Unit - Career Employees)?</label>
+        <div class="flex space-x-4">
+          <label>
+            <input type="radio" formControlName="Q34b" value="Yes" /> Yes
+          </label>
+          <label>
+            <input type="radio" formControlName="Q34b" value="No" /> No
+          </label>
+        </div>
+        <textarea formControlName="Q34b_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+      </div>
+    </div>
+
+    <!-- Question 35 -->
+    <div class="p-4 bg-white rounded-lg shadow-lg space-y-4">
+      <label class="label-text font-bold">35. Have you ever been found guilty of any administrative offense?</label>
+
+      <div class="form-group">
+        <label for="Q35a" class="label-text font-bold">a. Found guilty?</label>
+        <div class="flex space-x-4">
+          <label>
+            <input type="radio" formControlName="Q35a" value="Yes" /> Yes
+          </label>
+          <label>
+            <input type="radio" formControlName="Q35a" value="No" /> No
+          </label>
+        </div>
+        <textarea formControlName="Q35a_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="Q35b" class="label-text font-bold">b. Criminally charged?</label>
+        <div class="flex space-x-4">
+          <label>
+            <input type="radio" formControlName="Q35b" value="Yes" /> Yes
+          </label>
+          <label>
+            <input type="radio" formControlName="Q35b" value="No" /> No
+          </label>
+        </div>
+        <textarea formControlName="Q35b_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+        <div class="form-group mt-2">
+          <label class="label-text font-bold">Date Filed:</label>
+          <input type="date" formControlName="Q35b_DateFiled" class="input input-bordered w-full">
+        </div>
+        <div class="form-group mt-2">
+          <label class="label-text font-bold">Status of Case:</label>
+          <input type="text" formControlName="Q35b_Status" class="input input-bordered w-full">
+        </div>
+      </div>
+    </div>
+
+    <!-- Question 36 -->
+    <div class="p-4 bg-white rounded-lg shadow-lg space-y-4">
+      <label for="Q36" class="label-text font-bold">36. Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?</label>
+      <div class="flex space-x-4">
+        <label>
+          <input type="radio" formControlName="Q36" value="Yes" /> Yes
+        </label>
+        <label>
+          <input type="radio" formControlName="Q36" value="No" /> No
+        </label>
+      </div>
+      <textarea formControlName="Q36_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+    </div>
+
+    <!-- Question 37 -->
+    <div class="p-4 bg-white rounded-lg shadow-lg space-y-4">
+      <label class="label-text font-bold">37. Have you ever been separated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term, finished contract or phased out (abolition) in the public or private sector?</label>
+
+      <div class="form-group">
+        <label for="Q37a" class="label-text font-bold">a. Resignation?</label>
+        <div class="flex space-x-4">
+          <label>
+            <input type="radio" formControlName="Q37a" value="Yes" /> Yes
+          </label>
+          <label>
+            <input type="radio" formControlName="Q37a" value="No" /> No
+          </label>
+        </div>
+        <textarea formControlName="Q37a_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="Q37b" class="label-text font-bold">b. Termination?</label>
+        <div class="flex space-x-4">
+          <label>
+            <input type="radio" formControlName="Q37b" value="Yes" /> Yes
+          </label>
+          <label>
+            <input type="radio" formControlName="Q37b" value="No" /> No
+          </label>
+        </div>
+        <textarea formControlName="Q37b_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="Q37c" class="label-text font-bold">c. Dropped from the rolls?</label>
+        <div class="flex space-x-4">
+          <label>
+            <input type="radio" formControlName="Q37c" value="Yes" /> Yes
+          </label>
+          <label>
+            <input type="radio" formControlName="Q37c" value="No" /> No
+          </label>
+        </div>
+        <textarea formControlName="Q37c_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+      </div>
+    </div>
+
+    <!-- Question 38 -->
+    <div class="p-4 bg-white rounded-lg shadow-lg space-y-4">
+      <label for="Q38" class="label-text font-bold">38. Have you ever been a candidate in a national or local election held within the last year (except Barangay election)?</label>
+      <div class="flex space-x-4">
+        <label>
+          <input type="radio" formControlName="Q38" value="Yes" /> Yes
+        </label>
+        <label>
+          <input type="radio" formControlName="Q38" value="No" /> No
+        </label>
+      </div>
+      <textarea formControlName="Q38_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+    </div>
+
+    <!-- Question 39 -->
+    <div class="p-4 bg-white rounded-lg shadow-lg space-y-4">
+      <label class="label-text font-bold">39. Have you resigned from the government service during the three (3)-month period before the last election to promote/actively campaign for a national or local candidate?</label>
+
+      <div class="form-group">
+        <label for="Q39a" class="label-text font-bold">a. Resigned?</label>
+        <div class="flex space-x-4">
+          <label>
+            <input type="radio" formControlName="Q39a" value="Yes" /> Yes
+          </label>
+          <label>
+            <input type="radio" formControlName="Q39a" value="No" /> No
+          </label>
+        </div>
+        <textarea formControlName="Q39a_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="Q39b" class="label-text font-bold">b. Actively campaigned?</label>
+        <div class="flex space-x-4">
+          <label>
+            <input type="radio" formControlName="Q39b" value="Yes" /> Yes
+          </label>
+          <label>
+            <input type="radio" formControlName="Q39b" value="No" /> No
+          </label>
+        </div>
+        <textarea formControlName="Q39b_Details" placeholder="If YES, give details" class="textarea textarea-bordered w-full mt-2"></textarea>
+      </div>
+    </div>
+
+    <div class="flex justify-end mt-6">
+      <button type="submit" class="btn bg-black text-white">Save</button>
+    </div>
+  </form>
+</div>
