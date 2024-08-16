@@ -1,0 +1,122 @@
+* {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Container styling */
+  .form-container {
+    background-color: #f9f9f9;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    max-width: 800px;
+    margin: 2rem auto;
+  }
+  
+  /* Heading */
+  .bg-maroon {
+    background-color: #800000;
+  }
+  
+  .text-white {
+    color: #ffffff;
+  }
+  
+  /* Grid layout for the display fields */
+  .grid {
+    display: grid;
+    gap: 1rem;
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 768px) {
+    .grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Form controls */
+  .form-control {
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Label text */
+  .label-text {
+    color: #555;
+    font-weight: 500;
+  }
+  
+  /* Input fields */
+  .input-bordered {
+    border: 1px solid #ddd;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .input-bordered:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  }
+  
+  /* Select fields */
+  .select-bordered {
+    border: 1px solid #ddd;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .select-bordered:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  }
+  
+  /* Buttons */
+  .btn-save {
+    background-color: #000;
+    border-color: #000;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn-save:hover {
+    background-color: #222222;
+    transform: translateY(-1px);
+  }
+  
+  .btn-cancel {
+    background-color: #800000;
+    border-color: #800000;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn-cancel:hover {
+    background-color: #9f0303;
+    transform: translateY(-1px);
+  }
+  
+  /* Add Info button */
+  .btn-add-info {
+    background-color: #000;
+    border-color: #000;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn-add-info:hover {
+    background-color: #333;
+    transform: translateY(-1px);
+  }
+  
+  /* Flex container for buttons */
+  .flex-end {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
