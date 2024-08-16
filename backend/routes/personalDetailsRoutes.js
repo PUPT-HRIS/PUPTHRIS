@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post('/add', authenticateJWT, personalDetailsController.addPersonalDetails);
 router.patch('/update/:id', authenticateJWT, personalDetailsController.updatePersonalDetails);
-router.get('/user', authenticateJWT, personalDetailsController.getPersonalDetails);
+router.get('/user/:userId', authenticateJWT, personalDetailsController.getPersonalDetails);
 
 module.exports = router;

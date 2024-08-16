@@ -1,11 +1,12 @@
-const PersonalDetails = require('../models/PersonalDetails');
+const PersonalDetails = require('../models/personalDetailsModel');
 
 exports.addPersonalDetails = async (req, res) => {
   try {
-    const newPersonalDetails = await PersonalDetails.create({
-      ...req.body,
-      UserID: req.user.userId,  // Assuming you're using authentication middleware to get the logged-in user ID
-    });
+    // Attach the UserID from the JWT to the request body
+    req.body.UserID = req.user.userId;
+    
+    // Create new personal details
+    const newPersonalDetails = await PersonalDetails.create(req.body);
     res.status(201).json(newPersonalDetails);
   } catch (error) {
     console.error('Error adding personal details:', error);
@@ -17,13 +18,16 @@ exports.updatePersonalDetails = async (req, res) => {
   try {
     const personalDetailsId = req.params.id;
     const updatedData = req.body;
+    
+    // Ensure only the logged-in user's data is updated
     const result = await PersonalDetails.update(updatedData, {
       where: { PersonalDetailsID: personalDetailsId, UserID: req.user.userId }
     });
+    
     if (result[0] === 0) {
       res.status(404).json({ message: 'Personal details record not found' });
     } else {
-      const updatedPersonalDetails = await PersonalDetails.findOne({ where: { PersonalDetailsID: personalDetailsId } });
+      const updatedPersonalDetails = await PersonalDetails.findOne({ where: { PersonalDetailsID: personalDetailsId, UserID: req.user.userId } });
       res.status(200).json(updatedPersonalDetails);
     }
   } catch (error) {
@@ -34,11 +38,12 @@ exports.updatePersonalDetails = async (req, res) => {
 
 exports.getPersonalDetails = async (req, res) => {
   try {
+    // Find the personal details for the logged-in user
     const personalDetails = await PersonalDetails.findOne({ where: { UserID: req.user.userId } });
     if (personalDetails) {
       res.status(200).json(personalDetails);
     } else {
-      res.status(404).send('Personal details record not found');
+      res.status(404).json({ message: 'Personal details record not found' });
     }
   } catch (error) {
     console.error('Error getting personal details:', error);

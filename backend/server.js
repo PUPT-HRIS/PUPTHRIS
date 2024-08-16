@@ -30,7 +30,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/api/basic-details', basicDetailsRoutes);
-app.user('/api/personaldetails', personalDetailsRoutes);
+app.use('/api/personaldetails', personalDetailsRoutes);
 app.use('/api/contact-details', contactDetailsRoutes);
 app.use('/api/education', educationRoutes);
 app.use('/api/familybackground', familybackgroundRoutes);
