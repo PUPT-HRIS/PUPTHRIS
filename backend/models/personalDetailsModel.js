@@ -15,32 +15,14 @@ const PersonalDetails = sequelize.define('PersonalDetails', {
       key: 'UserID',
     },
   },
-  LastName: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-  },
-  FirstName: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-  },
-  MiddleName: {
-    type: DataTypes.STRING(50),
-  },
-  NameExtension: {
-    type: DataTypes.STRING(10),
-  },
-  BirthDate: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
   PlaceOfBirth: {
     type: DataTypes.STRING(100),
   },
-  Gender: {
-    type: DataTypes.ENUM('Male', 'Female', 'Other'),
-  },
   CivilStatus: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.ENUM('Single', 'Married', 'Widowed', 'Separated', 'Other'),
+  },
+  OtherCivilStatus: {
+    type: DataTypes.STRING(50),
   },
   Height: {
     type: DataTypes.FLOAT,
@@ -72,11 +54,56 @@ const PersonalDetails = sequelize.define('PersonalDetails', {
   Citizenship: {
     type: DataTypes.STRING(50),
   },
-  ResidentialAddress: {
-    type: DataTypes.STRING(255),
+  CitizenshipType: {
+    type: DataTypes.ENUM('Filipino', 'Dual Citizenship'),
   },
-  PermanentAddress: {
-    type: DataTypes.STRING(255),
+  CitizenshipAcquisition: {
+    type: DataTypes.ENUM('by birth', 'by naturalization'),
+  },
+  CitizenshipCountry: {
+    type: DataTypes.STRING(50),
+  },
+  ResidentialHouseBlockLot: {
+    type: DataTypes.STRING(100),
+  },
+  ResidentialStreet: {
+    type: DataTypes.STRING(100),
+  },
+  ResidentialSubdivisionVillage: {
+    type: DataTypes.STRING(100),
+  },
+  ResidentialBarangay: {
+    type: DataTypes.STRING(100),
+  },
+  ResidentialCityMunicipality: {
+    type: DataTypes.STRING(100),
+  },
+  ResidentialProvince: {
+    type: DataTypes.STRING(100),
+  },
+  ResidentialZipCode: {
+    type: DataTypes.STRING(10),
+  },
+  PermanentHouseBlockLot: {
+    type: DataTypes.STRING(100),
+  },
+  PermanentStreet: {
+    type: DataTypes.STRING(100),
+  },
+  PermanentSubdivisionVillage: {
+    type: DataTypes.STRING(100),
+  },
+  PermanentBarangay: {
+    type: DataTypes.STRING(100),
+  },
+  PermanentCityMunicipality: {
+    type: DataTypes.STRING(100),
+  },
+  PermanentProvince: {
+    type: DataTypes.STRING(100),
+  },
+  PermanentZipCode: {
+    type: DataTypes.STRING(10),
   },
 }, {
   tableName: 'personaldetails',

@@ -19,8 +19,8 @@ export class EducationService {
     );
   }
 
-  getEducationByEmployee(employeeId: number): Observable<Education[]> {
-    return this.http.get<Education[]>(`${this.apiUrl}/employee/${employeeId}`).pipe(
+  getEducationByUser(userId: number): Observable<Education[]> {
+    return this.http.get<Education[]>(`${this.apiUrl}/user/${userId}`).pipe(
       catchError(this.handleError)
     );
   }

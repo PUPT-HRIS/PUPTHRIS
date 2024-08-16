@@ -1,45 +1,38 @@
-const AdditionalQuestion = require('../models/AdditionalQuestion');
+const AdditionalQuestion = require('../models/additionalQuestionModel');
 
-exports.addAdditionalQuestion = async (req, res) => {
+exports.addOrUpdateAdditionalQuestion = async (req, res) => {
   try {
-    const newAdditionalQuestion = await AdditionalQuestion.create(req.body);
-    res.status(201).json(newAdditionalQuestion);
-  } catch (error) {
-    console.error('Error adding additional question:', error);
-    res.status(500).send('Internal Server Error');
-  }
-};
+    const existingRecord = await AdditionalQuestion.findOne({ where: { UserID: req.user.userId } });
 
-exports.updateAdditionalQuestion = async (req, res) => {
-  try {
-    const responseId = req.params.id;
-    const updatedData = req.body;
-    const result = await AdditionalQuestion.update(updatedData, {
-      where: { ResponseID: responseId }
-    });
-    if (result[0] === 0) {
-      res.status(404).json({ message: 'Additional question record not found' });
+    if (existingRecord) {
+      // If record exists, update it
+      const updatedData = await existingRecord.update(req.body);
+      res.status(200).json(updatedData);
     } else {
-      const updatedAdditionalQuestion = await AdditionalQuestion.findOne({ where: { ResponseID: responseId } });
-      res.status(200).json(updatedAdditionalQuestion);
+      // If no record exists, create a new one
+      const newRecord = await AdditionalQuestion.create({
+        ...req.body,
+        UserID: req.user.userId
+      });
+      res.status(201).json(newRecord);
     }
   } catch (error) {
-    console.error('Error updating additional question:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Error in addOrUpdateAdditionalQuestion:', error);
+    res.status(500).send('Internal Server Error');
   }
 };
 
 exports.getAdditionalQuestion = async (req, res) => {
   try {
-    const responseId = req.params.id;
-    const additionalQuestion = await AdditionalQuestion.findOne({ where: { ResponseID: responseId } });
-    if (additionalQuestion) {
-      res.status(200).json(additionalQuestion);
+    const record = await AdditionalQuestion.findOne({ where: { UserID: req.user.userId } });
+
+    if (record) {
+      res.status(200).json(record);
     } else {
-      res.status(404).send('Additional question record not found');
+      res.status(404).send('No additional question record found for this user');
     }
   } catch (error) {
-    console.error('Error getting additional question:', error);
+    console.error('Error in getAdditionalQuestion:', error);
     res.status(500).send('Internal Server Error');
   }
 };

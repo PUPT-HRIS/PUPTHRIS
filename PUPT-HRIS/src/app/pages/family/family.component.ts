@@ -6,27 +6,28 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { jwtDecode } from 'jwt-decode';
+import { ChildrenComponent } from "../children/children.component";
 
 @Component({
   selector: 'app-family',
   templateUrl: './family.component.html',
   styleUrls: ['./family.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule, ChildrenComponent]
 })
 export class FamilyComponent implements OnInit {
   familyForm: FormGroup;
   familyData: FamilyBackground | null = null;
   isEditing: boolean = false;
-  employeeId: number;
+  userId: number;
 
   constructor(private fb: FormBuilder, private familyService: FamilyService, private authService: AuthService) {
     const token = this.authService.getToken();
     if (token) {
       const decoded: any = jwtDecode(token);
-      this.employeeId = decoded.userId;
+      this.userId = decoded.userId;
     } else {
-      this.employeeId = 0;
+      this.userId = 0;
     }
 
     this.familyForm = this.fb.group({
@@ -51,7 +52,7 @@ export class FamilyComponent implements OnInit {
   }
 
   loadFamilyBackground(): void {
-    this.familyService.getFamilyBackground(this.employeeId).subscribe(
+    this.familyService.getFamilyBackground(this.userId).subscribe(
       data => {
         this.familyData = data;
         if (this.familyData) {
@@ -69,7 +70,7 @@ export class FamilyComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const familyBackground = { ...this.familyForm.value, EmployeeID: this.employeeId };
+    const familyBackground = { ...this.familyForm.value, UserID: this.userId };
     if (this.familyData) {
       this.familyService.updateFamilyBackground(this.familyData.FamilyBackgroundID!, familyBackground).subscribe(
         response => {

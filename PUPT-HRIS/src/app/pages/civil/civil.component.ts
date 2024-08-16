@@ -4,6 +4,8 @@ import { CivilServiceEligibility } from '../../model/civil-service.model';
 import { CivilServiceService } from '../../services/civil.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import {jwtDecode} from 'jwt-decode';
 
 @Component({
   selector: 'app-civil',
@@ -17,8 +19,21 @@ export class CivilComponent implements OnInit {
   civilServiceData: CivilServiceEligibility[] = [];
   isEditing: boolean = false;
   currentEligibilityId: number | null = null;
+  userId: number;
 
-  constructor(private fb: FormBuilder, private civilServiceService: CivilServiceService) {
+  constructor(
+    private fb: FormBuilder,
+    private civilServiceService: CivilServiceService,
+    private authService: AuthService
+  ) {
+    const token = this.authService.getToken();
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      this.userId = decoded.userId;
+    } else {
+      this.userId = 0;
+    }
+
     this.civilServiceForm = this.fb.group({
       CareerService: [''],
       Rating: [''],
@@ -51,7 +66,7 @@ export class CivilComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const formData = { ...this.civilServiceForm.value };
+    const formData = { ...this.civilServiceForm.value, UserID: this.userId };
     if (this.currentEligibilityId) {
       this.civilServiceService.updateCivilServiceEligibility(this.currentEligibilityId, formData).subscribe(
         response => {
@@ -91,7 +106,7 @@ export class CivilComponent implements OnInit {
       this.civilServiceService.deleteCivilServiceEligibility(id).subscribe(
         response => {
           console.log('Civil service eligibility deleted successfully', response);
-          this.loadCivilServiceEligibilities();
+          this.civilServiceData = this.civilServiceData.filter(eligibility => eligibility.CivilServiceEligibilityID !== id);
         },
         error => {
           console.error('Error deleting civil service eligibility', error);

@@ -1,6 +1,6 @@
 export class CivilServiceEligibility {
   CivilServiceEligibilityID?: number;
-  EmployeeID?: number;
+  UserID?: number;
   CareerService?: string;
   Rating?: string;
   DateOfExamination?: Date;

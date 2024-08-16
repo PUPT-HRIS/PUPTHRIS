@@ -1,6 +1,6 @@
 export interface Children {
   ChildrenID?: number;
-  EmployeeID: number;
+  UserID: number;
   ChildName: string;
   BirthDate: Date;
 }

@@ -1,6 +1,6 @@
 export interface FamilyBackground {
   FamilyBackgroundID?: number;
-  EmployeeID: number;
+  UserID: number;
   SpouseLastName?: string;
   SpouseFirstName?: string;
   SpouseMiddleName?: string;

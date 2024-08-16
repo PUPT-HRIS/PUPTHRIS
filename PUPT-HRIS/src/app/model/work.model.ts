@@ -1,6 +1,6 @@
 export interface WorkExperience {
   WorkExperienceID?: number;
-  EmployeeID: number;
+  userID: number;
   InclusiveDatesFrom: Date;
   InclusiveDatesTo: Date;
   PositionTitle: string;

@@ -1,6 +1,6 @@
 export interface Education {
   EducationID?: number;
-  EmployeeID: number;
+  UserID: number;
   Level: string;
   NameOfSchool: string;
   BasicEducationDegreeCourse: string;

@@ -28,8 +28,8 @@ export class SpecialSkillService {
     });
   }
 
-  getSpecialSkills(employeeId: number): Observable<SpecialSkill[]> {
-    return this.http.get<SpecialSkill[]>(`${this.apiUrl}/employee/${employeeId}`);
+  getSpecialSkills(userId: number): Observable<SpecialSkill[]> {
+    return this.http.get<SpecialSkill[]>(`${this.apiUrl}/user/${userId}`);
   }
 
   deleteSpecialSkill(id: number): Observable<any> {

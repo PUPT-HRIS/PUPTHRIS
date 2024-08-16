@@ -7,11 +7,11 @@ const Education = sequelize.define('Education', {
     autoIncrement: true,
     primaryKey: true,
   },
-  EmployeeID: {
+  UserID: {
     type: DataTypes.INTEGER,
     references: {
-      model: 'employee',
-      key: 'EmployeeID',
+      model: 'users',
+      key: 'UserID',
     },
   },
   Level: {

@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const employeeRoutes = require('./routes/employeeRoutes');
 const educationRoutes = require('./routes/educationRoutes');
 const familybackgroundRoutes = require('./routes/familybackgroundRoutes');
 const civilserviceeligibilityRoutes = require('./routes/civilserviceeligibilityRoutes');
@@ -15,9 +14,11 @@ const authRoutes = require('./routes/authRoutes');
 const basicDetailsRoutes = require('./routes/basicDetailsRoutes');
 const contactDetailsRoutes = require('./routes/contactDetailsRoutes');
 const characterReferenceRoutes = require('./routes/characterReferenceRoutes');
+const additionalQuestionRoutes = require('./routes/additionalQuestionRoutes');
+const personalDetailsRoutes = require('./routes/personalDetailsRoutes');
 
 const specialSkillRoutes = require('./routes/specialSkillRoutes');
-const nonAcademicRoutes = require('./routes/nonacademicRoutes');
+const nonAcademicRoutes = require('./routes/nonAcademicRoutes');
 const membershipRoutes = require('./routes/membershipRoutes');
 
 dotenv.config();
@@ -28,8 +29,8 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/api/employees', employeeRoutes);
 app.use('/api/basic-details', basicDetailsRoutes);
+app.use('/api/personaldetails', personalDetailsRoutes);
 app.use('/api/contact-details', contactDetailsRoutes);
 app.use('/api/education', educationRoutes);
 app.use('/api/familybackground', familybackgroundRoutes);
@@ -38,6 +39,7 @@ app.use('/api/workexperience', workexperienceRoutes);
 app.use('/api/voluntarywork', voluntaryworkRoutes);
 app.use('/api/learningdevelopment', learningdevelopmentRoutes);
 app.use('/api/character-reference', characterReferenceRoutes);
+app.use('/api/additionalquestion', additionalQuestionRoutes);
 app.use('/api/children', childrenRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);

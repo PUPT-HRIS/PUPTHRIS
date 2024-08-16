@@ -31,8 +31,8 @@ exports.updateFamilyBackground = async (req, res) => {
 
 exports.getFamilyBackground = async (req, res) => {
   try {
-    const employeeId = req.params.employeeId;
-    const familyBackground = await FamilyBackground.findOne({ where: { EmployeeID: employeeId } });
+    const userId = req.params.userId;
+    const familyBackground = await FamilyBackground.findOne({ where: { UserID: userId } });
     if (familyBackground) {
       res.status(200).json(familyBackground);
     } else {

@@ -6,7 +6,7 @@ exports.addEducation = async (req, res) => {
     res.status(201).json(newEducation);
   } catch (error) {
     if (error.name === 'SequelizeForeignKeyConstraintError') {
-      res.status(400).json({ error: 'Invalid EmployeeID. The employee does not exist.' });
+      res.status(400).json({ error: 'Invalid UserID. The user does not exist.' });
     } else {
       res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -24,7 +24,7 @@ exports.updateEducation = async (req, res) => {
       res.status(404).send('Education record not found');
     } else {
       const updatedEducation = await Education.findOne({ where: { EducationID: educationId } });
-      res.status(200).json(updatedEducation); // Return updated data
+      res.status(200).json(updatedEducation);
     }
   } catch (err) {
     console.error('Error updating education:', err);
@@ -47,14 +47,14 @@ exports.getEducation = async (req, res) => {
   }
 };
 
-exports.getEducationByEmployee = async (req, res) => {
+exports.getEducationByUser = async (req, res) => {
   try {
-    const employeeId = req.params.employeeId;
-    const educationRecords = await Education.findAll({ where: { EmployeeID: employeeId } });
+    const userId = req.params.userId;
+    const educationRecords = await Education.findAll({ where: { UserID: userId } });
     if (educationRecords) {
       res.status(200).json(educationRecords);
     } else {
-      res.status(404).send('No education records found for this employee');
+      res.status(404).send('No education records found for this user');
     }
   } catch (error) {
     console.error('Error getting education records:', error);

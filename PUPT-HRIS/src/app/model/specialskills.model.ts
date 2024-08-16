@@ -1,5 +1,5 @@
 export interface SpecialSkill {
   SpecialSkillsID: number;
-  EmployeeID: number;
+  UserID: number;
   Skill: string;
 }

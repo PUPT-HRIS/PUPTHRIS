@@ -1,1 +1,150 @@
-<p>personal-details works!</p>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Personal Details</h1>
+  </div>
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <div *ngIf="personalDetails" class="p-6 space-y-8">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <div class="grid grid-cols-2 gap-x-12 gap-y-4">
+          <p class="text-lg"><strong>Place of Birth:</strong> {{ personalDetails?.PlaceOfBirth }}</p>
+          <p class="text-lg"><strong>Civil Status:</strong> {{ personalDetails?.CivilStatus }}</p>
+          <p class="text-lg"><strong>Height:</strong> {{ personalDetails?.Height }}</p>
+          <p class="text-lg"><strong>Weight:</strong> {{ personalDetails?.Weight }}</p>
+          <p class="text-lg"><strong>Blood Type:</strong> {{ personalDetails?.BloodType }}</p>
+          <p class="text-lg"><strong>GSIS Number:</strong> {{ personalDetails?.GSISNumber }}</p>
+          <p class="text-lg"><strong>Pag-Ibig Number:</strong> {{ personalDetails?.PagIbigNumber }}</p>
+          <p class="text-lg"><strong>PhilHealth Number:</strong> {{ personalDetails?.PhilHealthNumber }}</p>
+          <p class="text-lg"><strong>SSS Number:</strong> {{ personalDetails?.SSSNumber }}</p>
+          <p class="text-lg"><strong>TIN Number:</strong> {{ personalDetails?.TINNumber }}</p>
+          <p class="text-lg"><strong>Agency Employee Number:</strong> {{ personalDetails?.AgencyEmployeeNumber }}</p>
+          <p class="text-lg"><strong>Citizenship:</strong> {{ personalDetails?.CitizenshipType }}</p>
+          <p class="text-lg"><strong>Citizenship Acquisition:</strong> {{ personalDetails?.CitizenshipAcquisition }}</p>
+          <p class="text-lg"><strong>Citizenship Country:</strong> {{ personalDetails?.CitizenshipCountry }}</p>
+          <p class="text-lg"><strong>Residential Address:</strong> {{ personalDetails?.ResidentialHouseBlockLot }}, {{ personalDetails?.ResidentialStreet }}, {{ personalDetails?.ResidentialSubdivisionVillage }}, {{ personalDetails?.ResidentialBarangay }}, {{ personalDetails?.ResidentialCityMunicipality }}, {{ personalDetails?.ResidentialProvince }} - {{ personalDetails?.ResidentialZipCode }}</p>
+          <p class="text-lg"><strong>Permanent Address:</strong> {{ personalDetails?.PermanentHouseBlockLot }}, {{ personalDetails?.PermanentStreet }}, {{ personalDetails?.PermanentSubdivisionVillage }}, {{ personalDetails?.PermanentBarangay }}, {{ personalDetails?.PermanentCityMunicipality }}, {{ personalDetails?.PermanentProvince }} - {{ personalDetails?.PermanentZipCode }}</p>
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn bg-black text-white" (click)="edit()">Edit</button>
+      </div>
+    </div>
+
+    <div *ngIf="!personalDetails" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No personal details available.</p>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn btn-add-info bg-black text-white" (click)="edit()">Add Info</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="personalDetailsForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div class="form-control">
+            <label class="label-text">Place of Birth</label>
+            <input formControlName="PlaceOfBirth" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Civil Status</label>
+            <select formControlName="CivilStatus" class="select select-bordered">
+              <option value="">Select...</option>
+              <option value="Single">Single</option>
+              <option value="Married">Married</option>
+              <option value="Widowed">Widowed</option>
+              <option value="Separated">Separated</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-control" *ngIf="personalDetailsForm.get('CivilStatus')?.value === 'Other'">
+            <label class="label-text">If Other, please specify</label>
+            <input formControlName="OtherCivilStatus" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Height</label>
+            <input formControlName="Height" class="input input-bordered" type="number" step="0.01">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Weight</label>
+            <input formControlName="Weight" class="input input-bordered" type="number" step="0.01">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Blood Type</label>
+            <input formControlName="BloodType" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">GSIS Number</label>
+            <input formControlName="GSISNumber" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Pag-Ibig Number</label>
+            <input formControlName="PagIbigNumber" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">PhilHealth Number</label>
+            <input formControlName="PhilHealthNumber" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">SSS Number</label>
+            <input formControlName="SSSNumber" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">TIN Number</label>
+            <input formControlName="TINNumber" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Agency Employee Number</label>
+            <input formControlName="AgencyEmployeeNumber" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Citizenship</label>
+            <select formControlName="CitizenshipType" class="select select-bordered">
+              <option value="">Select...</option>
+              <option value="Filipino">Filipino</option>
+              <option value="Dual Citizenship">Dual Citizenship</option>
+            </select>
+          </div>
+          <div class="form-control" *ngIf="personalDetailsForm.get('CitizenshipType')?.value === 'Dual Citizenship'">
+            <label class="label-text">Acquisition</label>
+            <select formControlName="CitizenshipAcquisition" class="select select-bordered">
+              <option value="">Select...</option>
+              <option value="by birth">by birth</option>
+              <option value="by naturalization">by naturalization</option>
+            </select>
+            <label class="label-text mt-2">Country</label>
+            <input formControlName="CitizenshipCountry" class="input input-bordered" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Residential Address</label>
+            <input formControlName="ResidentialHouseBlockLot" class="input input-bordered" placeholder="House/Block/Lot No." type="text">
+            <input formControlName="ResidentialStreet" class="input input-bordered mt-2" placeholder="Street" type="text">
+            <input formControlName="ResidentialSubdivisionVillage" class="input input-bordered mt-2" placeholder="Subdivision/Village" type="text">
+            <input formControlName="ResidentialBarangay" class="input input-bordered mt-2" placeholder="Barangay" type="text">
+            <input formControlName="ResidentialCityMunicipality" class="input input-bordered mt-2" placeholder="City/Municipality" type="text">
+            <input formControlName="ResidentialProvince" class="input input-bordered mt-2" placeholder="Province" type="text">
+            <input formControlName="ResidentialZipCode" class="input input-bordered mt-2" placeholder="Zip Code" type="text">
+          </div>
+          <div class="form-control">
+            <label class="label-text">Permanent Address</label>
+            <input formControlName="PermanentHouseBlockLot" class="input input-bordered" placeholder="House/Block/Lot No." type="text">
+            <input formControlName="PermanentStreet" class="input input-bordered mt-2" placeholder="Street" type="text">
+            <input formControlName="PermanentSubdivisionVillage" class="input input-bordered mt-2" placeholder="Subdivision/Village" type="text">
+            <input formControlName="PermanentBarangay" class="input input-bordered mt-2" placeholder="Barangay" type="text">
+            <input formControlName="PermanentCityMunicipality" class="input input-bordered mt-2" placeholder="City/Municipality" type="text">
+            <input formControlName="PermanentProvince" class="input input-bordered mt-2" placeholder="Province" type="text">
+            <input formControlName="PermanentZipCode" class="input input-bordered mt-2" placeholder="Zip Code" type="text">
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn btn-save mr-4">Save</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
+        </div>        
+      </form>
+    </div>
+  </ng-template>
+</div>

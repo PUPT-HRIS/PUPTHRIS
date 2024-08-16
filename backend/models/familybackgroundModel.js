@@ -7,11 +7,11 @@ const FamilyBackground = sequelize.define('familybackground', {
     autoIncrement: true,
     primaryKey: true,
   },
-  EmployeeID: {
+  UserID: {
     type: DataTypes.INTEGER,
     references: {
-      model: 'employee',
-      key: 'EmployeeID',
+      model: 'users',
+      key: 'UserID',
     },
   },
   SpouseLastName: {

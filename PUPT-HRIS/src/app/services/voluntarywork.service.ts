@@ -13,8 +13,8 @@ export class VoluntaryWorkService {
 
   constructor(private http: HttpClient) { }
 
-  getVoluntaryWorks(employeeId: number): Observable<VoluntaryWork[]> {
-    return this.http.get<VoluntaryWork[]>(`${this.apiUrl}/employee/${employeeId}`)
+  getVoluntaryWorks(userId: number): Observable<VoluntaryWork[]> {
+    return this.http.get<VoluntaryWork[]>(`${this.apiUrl}/user/${userId}`)
       .pipe(catchError(this.handleError));
   }
 

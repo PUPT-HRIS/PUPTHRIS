@@ -19,15 +19,15 @@ export class LearningComponent implements OnInit {
   learningData: LearningDevelopment[] = [];
   isEditing: boolean = false;
   currentLearningId: number | null = null;
-  employeeId: number;
+  userId: number;
 
   constructor(private fb: FormBuilder, private learningService: LearningService, private authService: AuthService) {
     const token = this.authService.getToken();
     if (token) {
       const decoded: any = jwtDecode(token);
-      this.employeeId = decoded.userId;
+      this.userId = decoded.userId;
     } else {
-      this.employeeId = 0;
+      this.userId = 0;
     }
 
     this.learningForm = this.fb.group({
@@ -45,7 +45,7 @@ export class LearningComponent implements OnInit {
   }
 
   loadLearningDevelopments(): void {
-    this.learningService.getLearningDevelopments(this.employeeId).subscribe(
+    this.learningService.getLearningDevelopments(this.userId).subscribe(
       data => {
         this.learningData = data;
       },
@@ -62,13 +62,13 @@ export class LearningComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const formData = { ...this.learningForm.value, EmployeeID: this.employeeId };
+    const formData = { ...this.learningForm.value, UserID: this.userId };
     if (this.currentLearningId) {
       this.learningService.updateLearningDevelopment(this.currentLearningId, formData).subscribe(
         response => {
           console.log('Learning development updated successfully', response);
-          this.loadLearningDevelopments(); // Reload data
-          this.resetForm(); // Reset form and switch back to display mode
+          this.loadLearningDevelopments();
+          this.resetForm();
         },
         error => {
           console.error('Error updating learning development', error);
@@ -102,7 +102,7 @@ export class LearningComponent implements OnInit {
       this.learningService.deleteLearningDevelopment(id).subscribe(
         response => {
           console.log('Learning development deleted successfully', response);
-          this.loadLearningDevelopments();
+          this.learningData = this.learningData.filter(ld => ld.LearningDevelopmentID !== id);
         },
         error => {
           console.error('Error deleting learning development', error);

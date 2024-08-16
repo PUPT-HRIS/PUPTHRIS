@@ -1,5 +1,5 @@
 export interface NonAcademic {
   NonAcademicID: number;
-  EmployeeID: number;
+  UserID: number;
   Distinction: string;
 }

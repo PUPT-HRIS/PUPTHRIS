@@ -1,5 +1,5 @@
 export interface Membership {
   MembershipID: number;
-  EmployeeID: number;
+  UserID: number; 
   Association: string;
 }

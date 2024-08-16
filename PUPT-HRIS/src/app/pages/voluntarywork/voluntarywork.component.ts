@@ -18,7 +18,7 @@ export class VoluntaryWorkComponent implements OnInit {
   voluntaryWorkData: VoluntaryWork[] = [];
   isEditing: boolean = false;
   currentVoluntaryWorkId: number | null = null;
-  employeeId: number;
+  userId: number;
 
   constructor(
     private fb: FormBuilder,
@@ -28,9 +28,9 @@ export class VoluntaryWorkComponent implements OnInit {
     const token = this.authService.getToken();
     if (token) {
       const decoded: any = jwtDecode(token);
-      this.employeeId = decoded.userId;
+      this.userId = decoded.userId;
     } else {
-      this.employeeId = 0;
+      this.userId = 0;
     }
 
     this.voluntaryWorkForm = this.fb.group({
@@ -47,7 +47,7 @@ export class VoluntaryWorkComponent implements OnInit {
   }
 
   loadVoluntaryWorks(): void {
-    this.voluntaryWorkService.getVoluntaryWorks(this.employeeId).subscribe(
+    this.voluntaryWorkService.getVoluntaryWorks(this.userId).subscribe(
       data => {
         this.voluntaryWorkData = data;
       },
@@ -64,7 +64,7 @@ export class VoluntaryWorkComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const formData = { ...this.voluntaryWorkForm.value, EmployeeID: this.employeeId };
+    const formData = { ...this.voluntaryWorkForm.value, UserID: this.userId };
     if (this.currentVoluntaryWorkId) {
       this.voluntaryWorkService.updateVoluntaryWork(this.currentVoluntaryWorkId, formData).subscribe(
         response => {
@@ -104,7 +104,7 @@ export class VoluntaryWorkComponent implements OnInit {
       this.voluntaryWorkService.deleteVoluntaryWork(id).subscribe(
         response => {
           console.log('Voluntary work deleted successfully', response);
-          this.loadVoluntaryWorks();
+          this.voluntaryWorkData = this.voluntaryWorkData.filter(vw => vw.VoluntaryWorkID !== id);
         },
         error => {
           console.error('Error deleting voluntary work', error);

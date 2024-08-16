@@ -13,8 +13,8 @@ export class WorkService {
 
   constructor(private http: HttpClient) { }
 
-  getWorkExperiences(employeeId: number): Observable<WorkExperience[]> {
-    return this.http.get<WorkExperience[]>(`${this.apiUrl}/employee/${employeeId}`)
+  getWorkExperiences(userID: number): Observable<WorkExperience[]> {
+    return this.http.get<WorkExperience[]>(`${this.apiUrl}/user/${userID}`)
       .pipe(
         catchError(this.handleError)
       );

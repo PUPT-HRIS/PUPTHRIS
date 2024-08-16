@@ -19,16 +19,23 @@ export class EducationComponent implements OnInit {
   educationData: Education[] = [];
   isEditing: boolean = false;
   currentEducationId: number | null = null;
-  employeeId: number;
+  userId: number;
+  levels: string[] = [
+    'ELEMENTARY',
+    'SECONDARY',
+    'VOCATIONAL / TRADE COURSE',
+    'COLLEGE',
+    'GRADUATE STUDIES'
+  ];
 
   constructor(private fb: FormBuilder, private educationService: EducationService, private authService: AuthService) {
     const token = this.authService.getToken();
     if (token) {
       const decoded: any = jwtDecode(token);
-      this.employeeId = decoded.userId;
+      this.userId = decoded.userId;
     } else {
       // Handle error or redirect to login
-      this.employeeId = 0;
+      this.userId = 0;
     }
 
     this.educationForm = this.fb.group({
@@ -48,7 +55,7 @@ export class EducationComponent implements OnInit {
   }
 
   loadEducation(): void {
-    this.educationService.getEducationByEmployee(this.employeeId).subscribe(
+    this.educationService.getEducationByUser(this.userId).subscribe(
       data => {
         this.educationData = data;
       },
@@ -73,7 +80,7 @@ export class EducationComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const education = { ...this.educationForm.value, EmployeeID: this.employeeId };
+    const education = { ...this.educationForm.value, UserID: this.userId };
     if (this.currentEducationId) {
       this.educationService.updateEducation(this.currentEducationId, education).subscribe(
         response => {

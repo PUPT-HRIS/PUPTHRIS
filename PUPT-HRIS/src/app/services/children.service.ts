@@ -13,8 +13,8 @@ export class ChildrenService {
 
   constructor(private http: HttpClient) { }
 
-  getChildren(employeeId: number): Observable<Children[]> {
-    return this.http.get<Children[]>(`${this.apiUrl}/employee/${employeeId}`).pipe(
+  getChildren(userId: number): Observable<Children[]> {
+    return this.http.get<Children[]>(`${this.apiUrl}/user/${userId}`).pipe(
       catchError(this.handleError)
     );
   }
