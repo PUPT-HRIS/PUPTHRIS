@@ -15,6 +15,7 @@ const basicDetailsRoutes = require('./routes/basicDetailsRoutes');
 const contactDetailsRoutes = require('./routes/contactDetailsRoutes');
 const characterReferenceRoutes = require('./routes/characterReferenceRoutes');
 const additionalQuestionRoutes = require('./routes/additionalQuestionRoutes');
+const personalDetailsRoutes = require('./routes/personalDetailsRoutes');
 
 const specialSkillRoutes = require('./routes/specialSkillRoutes');
 const nonAcademicRoutes = require('./routes/nonAcademicRoutes');
@@ -29,6 +30,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/api/basic-details', basicDetailsRoutes);
+app.user('/api/personaldetails', personalDetailsRoutes);
 app.use('/api/contact-details', contactDetailsRoutes);
 app.use('/api/education', educationRoutes);
 app.use('/api/familybackground', familybackgroundRoutes);

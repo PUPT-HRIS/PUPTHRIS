@@ -2,7 +2,10 @@ const PersonalDetails = require('../models/PersonalDetails');
 
 exports.addPersonalDetails = async (req, res) => {
   try {
-    const newPersonalDetails = await PersonalDetails.create(req.body);
+    const newPersonalDetails = await PersonalDetails.create({
+      ...req.body,
+      UserID: req.user.userId,  // Assuming you're using authentication middleware to get the logged-in user ID
+    });
     res.status(201).json(newPersonalDetails);
   } catch (error) {
     console.error('Error adding personal details:', error);
@@ -15,7 +18,7 @@ exports.updatePersonalDetails = async (req, res) => {
     const personalDetailsId = req.params.id;
     const updatedData = req.body;
     const result = await PersonalDetails.update(updatedData, {
-      where: { PersonalDetailsID: personalDetailsId }
+      where: { PersonalDetailsID: personalDetailsId, UserID: req.user.userId }
     });
     if (result[0] === 0) {
       res.status(404).json({ message: 'Personal details record not found' });
@@ -31,8 +34,7 @@ exports.updatePersonalDetails = async (req, res) => {
 
 exports.getPersonalDetails = async (req, res) => {
   try {
-    const personalDetailsId = req.params.id;
-    const personalDetails = await PersonalDetails.findOne({ where: { PersonalDetailsID: personalDetailsId } });
+    const personalDetails = await PersonalDetails.findOne({ where: { UserID: req.user.userId } });
     if (personalDetails) {
       res.status(200).json(personalDetails);
     } else {
