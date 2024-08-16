@@ -15,68 +15,101 @@ const PersonalDetails = sequelize.define('PersonalDetails', {
       key: 'UserID',
     },
   },
-  LastName: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-  },
-  FirstName: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-  },
-  MiddleName: {
-    type: DataTypes.STRING(50),
-  },
-  NameExtension: {
-    type: DataTypes.STRING(10),
-  },
-  BirthDate: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
   PlaceOfBirth: {
     type: DataTypes.STRING(100),
-  },
-  Gender: {
-    type: DataTypes.ENUM('Male', 'Female', 'Other'),
+    allowNull: false,
   },
   CivilStatus: {
     type: DataTypes.STRING(20),
+    allowNull: false,
   },
   Height: {
     type: DataTypes.FLOAT,
+    allowNull: false,
   },
   Weight: {
     type: DataTypes.FLOAT,
+    allowNull: false,
   },
   BloodType: {
     type: DataTypes.STRING(5),
+    allowNull: false,
   },
   GSISNumber: {
     type: DataTypes.STRING(20),
+    allowNull: false,
   },
   PagIbigNumber: {
     type: DataTypes.STRING(20),
+    allowNull: false,
   },
   PhilHealthNumber: {
     type: DataTypes.STRING(20),
+    allowNull: false,
   },
   SSSNumber: {
     type: DataTypes.STRING(20),
+    allowNull: false,
   },
   TINNumber: {
     type: DataTypes.STRING(20),
+    allowNull: false,
   },
   AgencyEmployeeNumber: {
     type: DataTypes.STRING(20),
+    allowNull: false,
   },
   Citizenship: {
     type: DataTypes.STRING(50),
+    allowNull: false,
   },
-  ResidentialAddress: {
-    type: DataTypes.STRING(255),
+  ResidentialHouseBlockLot: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
   },
-  PermanentAddress: {
-    type: DataTypes.STRING(255),
+  ResidentialStreet: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  ResidentialSubdivisionVillage: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  ResidentialBarangay: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  ResidentialCityMunicipality: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  ResidentialProvince: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  PermanentHouseBlockLot: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  PermanentStreet: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  PermanentSubdivisionVillage: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  PermanentBarangay: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  PermanentCityMunicipality: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  PermanentProvince: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
   },
 }, {
   tableName: 'personaldetails',
