@@ -1,3 +1,5 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h1 class="text-2xl font-bold">Character References</h1>
@@ -22,25 +24,25 @@
           </thead>
           <tbody>
             <tr *ngFor="let reference of referenceData" class="hover:bg-gray-100">
-                <th class="p-4">{{ reference.ReferenceID }}</th>
-                <td class="p-4">{{ reference.Name }}</td>
-                <td class="p-4">{{ reference.Address }}</td>
-                <td class="p-4">{{ reference.TelephoneNumber }}</td>
-                <td class="p-4">
-                  <div class="btn-container">
-                    <button 
-                      class="btn btn-sm bg-maroon text-white" 
-                      (click)="edit(reference.ReferenceID!)" 
-                      [disabled]="!reference.ReferenceID"
-                    >Edit</button>
-                    <button 
-                      class="btn btn-sm bg-black text-white" 
-                      (click)="delete(reference.ReferenceID!)" 
-                      [disabled]="!reference.ReferenceID"
-                    >Delete</button>
-                  </div>
-                </td>
-              </tr>                        
+              <th class="p-4">{{ reference.ReferenceID }}</th>
+              <td class="p-4">{{ reference.Name }}</td>
+              <td class="p-4">{{ reference.Address }}</td>
+              <td class="p-4">{{ reference.TelephoneNumber }}</td>
+              <td class="p-4">
+                <div class="btn-container">
+                  <button 
+                    class="btn btn-sm bg-maroon text-white" 
+                    (click)="edit(reference.ReferenceID!)" 
+                    [disabled]="!reference.ReferenceID"
+                  >Edit</button>
+                  <button 
+                    class="btn btn-sm bg-black text-white" 
+                    (click)="delete(reference.ReferenceID!)" 
+                    [disabled]="!reference.ReferenceID"
+                  >Delete</button>
+                </div>
+              </td>
+            </tr>                        
           </tbody>
         </table>
       </div>
@@ -67,15 +69,15 @@
       <form [formGroup]="referenceForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <div class="grid grid-cols-2 gap-6">
           <div class="form-control w-full">
-            <label for="Name" class="label-text font-bold text-lg">Name</label>
+            <label for="Name" class="label-text">Name</label>
             <input id="Name" formControlName="Name" class="input input-bordered w-full">
           </div>
           <div class="form-control w-full">
-            <label for="Address" class="label-text font-bold text-lg">Address</label>
+            <label for="Address" class="label-text">Address</label>
             <input id="Address" formControlName="Address" class="input input-bordered w-full">
           </div>
           <div class="form-control w-full">
-            <label for="TelephoneNumber" class="label-text font-bold text-lg">Telephone Number</label>
+            <label for="TelephoneNumber" class="label-text">Telephone Number</label>
             <input id="TelephoneNumber" formControlName="TelephoneNumber" class="input input-bordered w-full">
           </div>
         </div>
