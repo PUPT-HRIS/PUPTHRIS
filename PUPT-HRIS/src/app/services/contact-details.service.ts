@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -13,20 +13,25 @@ export class ContactDetailsService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
   getContactDetails(userId: number): Observable<ContactDetails> {
-    return this.http.get<ContactDetails>(`${this.apiUrl}/${userId}`).pipe(
+    return this.http.get<ContactDetails>(`${this.apiUrl}/${userId}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
   addContactDetails(details: ContactDetails): Observable<ContactDetails> {
-    return this.http.post<ContactDetails>(`${this.apiUrl}/add`, details).pipe(
+    return this.http.post<ContactDetails>(`${this.apiUrl}/add`, details, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
   updateContactDetails(id: number, details: ContactDetails): Observable<ContactDetails> {
-    return this.http.patch<ContactDetails>(`${this.apiUrl}/update/${id}`, details).pipe(
+    return this.http.patch<ContactDetails>(`${this.apiUrl}/update/${id}`, details, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }

@@ -26,9 +26,31 @@
         <td class="p-4">{{ user.Department }}</td>
         <td class="p-4">{{ user.EmploymentType }}</td>
         <td class="p-4">
-          <button class="btn btn-primary btn-sm">View Info</button>
+          <button class="btn btn-primary btn-sm" (click)="openModal(user)">View Info</button>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
+
+<div *ngIf="isModalOpen" class="modal modal-open">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg">Basic Details</h3>
+    <div *ngIf="basicDetails !== null; else noInfo">
+      <p class="py-2"><strong>Employee No:</strong> {{ basicDetails?.EmployeeNo }}</p>
+      <p class="py-2"><strong>Faculty Code:</strong> {{ basicDetails?.FacultyCode }}</p>
+      <p class="py-2"><strong>Name:</strong> {{ basicDetails?.Honorific }} {{ basicDetails?.FirstName }} {{ basicDetails?.MiddleInitial }} {{ basicDetails?.LastName }} {{ basicDetails?.NameExtension }}</p>
+      <p class="py-2"><strong>Date of Birth:</strong> {{ basicDetails?.DateOfBirth | date:'longDate' }}</p>
+      <p class="py-2"><strong>Sex:</strong> {{ basicDetails?.Sex }}</p>
+    </div>
+    <ng-template #noInfo>
+      <p class="py-2 text-red-600">Information not yet inputted.</p>
+    </ng-template>
+    <div class="modal-action">
+      <button class="btn" (click)="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+
+

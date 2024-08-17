@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -13,28 +13,34 @@ export class BasicDetailsService {
 
   constructor(private http: HttpClient) { }
 
-  // Get Basic Details by UserID
   getBasicDetails(userId: number): Observable<BasicDetails> {
-    return this.http.get<BasicDetails>(`${this.apiUrl}/${userId}`).pipe(
+    const token = localStorage.getItem('Token');
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    return this.http.get<BasicDetails>(`${this.apiUrl}/${userId}`, { headers }).pipe(
       catchError(this.handleError)
     );
-  }
+  }  
 
-  // Add Basic Details
   addBasicDetails(basicDetails: BasicDetails): Observable<BasicDetails> {
-    return this.http.post<BasicDetails>(`${this.apiUrl}/add`, basicDetails).pipe(
+    const token = localStorage.getItem('Token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.post<BasicDetails>(`${this.apiUrl}/add`, basicDetails, { headers }).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Update Basic Details by ID
   updateBasicDetails(id: number, basicDetails: BasicDetails): Observable<BasicDetails> {
-    return this.http.patch<BasicDetails>(`${this.apiUrl}/update/${id}`, basicDetails).pipe(
+    const token = localStorage.getItem('Token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.patch<BasicDetails>(`${this.apiUrl}/update/${id}`, basicDetails, { headers }).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Handle errors
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);
     return throwError(error.message || 'Server error');

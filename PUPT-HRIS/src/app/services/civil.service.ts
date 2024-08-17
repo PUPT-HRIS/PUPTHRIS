@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CivilServiceEligibility } from '../model/civil-service.model';
@@ -13,29 +13,34 @@ export class CivilServiceService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
   getCivilServiceEligibilities(): Observable<CivilServiceEligibility[]> {
-    return this.http.get<CivilServiceEligibility[]>(`${this.apiUrl}/employee`)
+    return this.http.get<CivilServiceEligibility[]>(`${this.apiUrl}/employee`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   addCivilServiceEligibility(data: CivilServiceEligibility): Observable<CivilServiceEligibility> {
-    return this.http.post<CivilServiceEligibility>(`${this.apiUrl}/add`, data)
+    return this.http.post<CivilServiceEligibility>(`${this.apiUrl}/add`, data, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   updateCivilServiceEligibility(id: number, data: CivilServiceEligibility): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/update/${id}`, data)
+    return this.http.patch(`${this.apiUrl}/update/${id}`, data, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   deleteCivilServiceEligibility(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete/${id}`)
+    return this.http.delete(`${this.apiUrl}/delete/${id}`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );

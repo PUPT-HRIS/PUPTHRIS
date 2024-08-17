@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PersonalDetails } from '../model/personal-details.model';
@@ -13,25 +13,28 @@ export class PersonalDetailsService {
 
   constructor(private http: HttpClient) {}
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
   getPersonalDetails(userId: number): Observable<PersonalDetails> {
-    return this.http.get<PersonalDetails>(`${this.apiUrl}/user/${userId}`)
+    return this.http.get<PersonalDetails>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   addPersonalDetails(data: PersonalDetails): Observable<PersonalDetails> {
-    return this.http.post<PersonalDetails>(`${this.apiUrl}/add`, data)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  updatePersonalDetails(id: number, data: PersonalDetails): Observable<PersonalDetails> {
-    return this.http.patch<PersonalDetails>(`${this.apiUrl}/update/${id}`, data)
+    return this.http.post<PersonalDetails>(`${this.apiUrl}/add`, data, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
-  private handleError(error: any): Observable<never> {
+  updatePersonalDetails(id: number, data: PersonalDetails): Observable<PersonalDetails> {
+    return this.http.patch<PersonalDetails>(`${this.apiUrl}/update/${id}`, data, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);
-    return throwError(error);
+    return throwError(error.message || 'Server error');
   }
 }
