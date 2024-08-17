@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -13,20 +13,25 @@ export class FamilyService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
   getFamilyBackground(userId: number): Observable<FamilyBackground> {
-    return this.http.get<FamilyBackground>(`${this.apiUrl}/${userId}`).pipe(
+    return this.http.get<FamilyBackground>(`${this.apiUrl}/${userId}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
   addFamilyBackground(familyBackground: FamilyBackground): Observable<FamilyBackground> {
-    return this.http.post<FamilyBackground>(`${this.apiUrl}/add`, familyBackground).pipe(
+    return this.http.post<FamilyBackground>(`${this.apiUrl}/add`, familyBackground, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
   updateFamilyBackground(id: number, familyBackground: FamilyBackground): Observable<FamilyBackground> {
-    return this.http.patch<FamilyBackground>(`${this.apiUrl}/update/${id}`, familyBackground).pipe(
+    return this.http.patch<FamilyBackground>(`${this.apiUrl}/update/${id}`, familyBackground, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }

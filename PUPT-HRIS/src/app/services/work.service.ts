@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { WorkExperience } from '../model/work.model';
@@ -13,29 +13,34 @@ export class WorkService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
   getWorkExperiences(userID: number): Observable<WorkExperience[]> {
-    return this.http.get<WorkExperience[]>(`${this.apiUrl}/user/${userID}`)
+    return this.http.get<WorkExperience[]>(`${this.apiUrl}/user/${userID}`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   addWorkExperience(data: WorkExperience): Observable<WorkExperience> {
-    return this.http.post<WorkExperience>(`${this.apiUrl}/add`, data)
+    return this.http.post<WorkExperience>(`${this.apiUrl}/add`, data, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   updateWorkExperience(id: number, data: WorkExperience): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/update/${id}`, data)
+    return this.http.patch(`${this.apiUrl}/update/${id}`, data, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   deleteWorkExperience(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete/${id}`)
+    return this.http.delete(`${this.apiUrl}/delete/${id}`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
