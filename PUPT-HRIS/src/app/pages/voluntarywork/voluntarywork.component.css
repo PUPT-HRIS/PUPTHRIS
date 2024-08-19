@@ -94,7 +94,7 @@
   }
   
   .btn-add-info:hover {
-    background-color: #333; /* Slightly lighter black on hover */
+    background-color: #232323; /* Slightly lighter black on hover */
     transform: translateY(-1px); /* Slight lift effect */
   }
   

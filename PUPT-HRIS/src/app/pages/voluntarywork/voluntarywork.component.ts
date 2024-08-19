@@ -19,12 +19,13 @@ export class VoluntaryWorkComponent implements OnInit {
   isEditing: boolean = false;
   currentVoluntaryWorkId: number | null = null;
   userId: number;
+  initialFormValue: any; // To store the initial form value
 
-  constructor(
-    private fb: FormBuilder,
-    private voluntaryWorkService: VoluntaryWorkService,
-    private authService: AuthService
-  ) {
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
+
+  constructor(private fb: FormBuilder, private voluntaryWorkService: VoluntaryWorkService, private authService: AuthService) {
     const token = this.authService.getToken();
     if (token) {
       const decoded: any = jwtDecode(token);
@@ -52,38 +53,50 @@ export class VoluntaryWorkComponent implements OnInit {
         this.voluntaryWorkData = data;
       },
       error => {
+        this.showToastNotification('Error fetching voluntary works.', 'error');
         console.error('Error fetching voluntary works', error);
       }
     );
   }
 
-  resetForm(): void {
+  resetForm(showToast: boolean = true): void {
+    if (showToast && this.hasUnsavedChanges()) {
+      this.showToastNotification('The changes are not saved.', 'error');
+    }
     this.voluntaryWorkForm.reset();
     this.currentVoluntaryWorkId = null;
     this.isEditing = false;
+    this.initialFormValue = this.voluntaryWorkForm.getRawValue(); // Store the initial form value for new form
   }
 
   onSubmit(): void {
-    const formData = { ...this.voluntaryWorkForm.value, UserID: this.userId };
+    if (!this.hasUnsavedChanges()) {
+      this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
+    const voluntaryWork = { ...this.voluntaryWorkForm.value, UserID: this.userId };
     if (this.currentVoluntaryWorkId) {
-      this.voluntaryWorkService.updateVoluntaryWork(this.currentVoluntaryWorkId, formData).subscribe(
+      this.voluntaryWorkService.updateVoluntaryWork(this.currentVoluntaryWorkId, voluntaryWork).subscribe(
         response => {
-          console.log('Voluntary work updated successfully', response);
           this.loadVoluntaryWorks();
           this.resetForm();
+          this.showToastNotification('Voluntary work updated successfully.', 'success');
         },
         error => {
+          this.showToastNotification('There is an error saving/updating the changes.', 'error');
           console.error('Error updating voluntary work', error);
         }
       );
     } else {
-      this.voluntaryWorkService.addVoluntaryWork(formData).subscribe(
+      this.voluntaryWorkService.addVoluntaryWork(voluntaryWork).subscribe(
         response => {
-          console.log('Voluntary work added successfully', response);
           this.loadVoluntaryWorks();
           this.resetForm();
+          this.showToastNotification('Voluntary work added successfully.', 'success');
         },
         error => {
+          this.showToastNotification('There is an error saving/updating the changes.', 'error');
           console.error('Error adding voluntary work', error);
         }
       );
@@ -96,6 +109,7 @@ export class VoluntaryWorkComponent implements OnInit {
       this.voluntaryWorkForm.patchValue(voluntaryWork);
       this.currentVoluntaryWorkId = id;
       this.isEditing = true;
+      this.initialFormValue = this.voluntaryWorkForm.getRawValue(); // Store the initial form value
     }
   }
 
@@ -103,10 +117,11 @@ export class VoluntaryWorkComponent implements OnInit {
     if (confirm('Are you sure you want to delete this record?')) {
       this.voluntaryWorkService.deleteVoluntaryWork(id).subscribe(
         response => {
-          console.log('Voluntary work deleted successfully', response);
           this.voluntaryWorkData = this.voluntaryWorkData.filter(vw => vw.VoluntaryWorkID !== id);
+          this.showToastNotification('Voluntary work deleted successfully.', 'error');
         },
         error => {
+          this.showToastNotification('There is an error deleting the record.', 'error');
           console.error('Error deleting voluntary work', error);
         }
       );
@@ -114,7 +129,23 @@ export class VoluntaryWorkComponent implements OnInit {
   }
 
   addNewVoluntaryWork(): void {
-    this.resetForm();
+    this.resetForm(false); // Avoid showing the toast on the first click
     this.isEditing = true;
+    this.initialFormValue = this.voluntaryWorkForm.getRawValue(); // Store the initial form value for new form
+  }
+
+  private hasUnsavedChanges(): boolean {
+    const currentFormValue = this.voluntaryWorkForm.getRawValue();
+    return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
   }
 }
