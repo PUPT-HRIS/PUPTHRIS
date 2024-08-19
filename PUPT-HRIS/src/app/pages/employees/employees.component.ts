@@ -60,7 +60,7 @@ export class EmployeeComponent implements OnInit {
     private learningService: LearningService,
     private workService: WorkService,
     private voluntaryWorkService: VoluntaryWorkService,
-    private characterReferenceService: CharacterReferenceService  // Inject the CharacterReferenceService
+    private characterReferenceService: CharacterReferenceService
   ) {}
 
   ngOnInit(): void {
