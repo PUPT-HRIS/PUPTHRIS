@@ -90,3 +90,16 @@
     </div>
   </ng-template>
 </div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
+  </div>
+</div>
