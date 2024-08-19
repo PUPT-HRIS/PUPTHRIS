@@ -74,7 +74,7 @@ export class ReferenceComponent implements OnInit {
         this.characterReferenceService.updateReference(this.currentReferenceId, reference).subscribe(
           (updatedReference: CharacterReference) => {
             this.getReferences();
-            this.resetForm();
+            this.resetForm(false); // Don't show toast on reset after update
             this.showToastNotification('Reference updated successfully.', 'success');
           },
           (error: any) => this.showToastNotification('Error updating reference.', 'error')
@@ -84,7 +84,7 @@ export class ReferenceComponent implements OnInit {
           this.characterReferenceService.addReference(reference).subscribe(
             (newReference: CharacterReference) => {
               this.getReferences();
-              this.resetForm();
+              this.resetForm(false); // Don't show toast on reset after add
               this.showToastNotification('Reference added successfully.', 'success');
             },
             (error: any) => this.showToastNotification('Error adding reference.', 'error')
@@ -110,15 +110,18 @@ export class ReferenceComponent implements OnInit {
 
   delete(referenceId: number | undefined): void {
     if (referenceId !== undefined) {
-      this.characterReferenceService.deleteReference(referenceId).subscribe(
-        (response) => {
-          this.getReferences();
-          this.showToastNotification('Reference deleted successfully.', 'error');
-        },
-        (error) => this.showToastNotification('Error deleting reference.', 'error')
-      );
+        const confirmation = confirm('Are you sure you want to delete this reference?');
+        if (confirmation) {
+            this.characterReferenceService.deleteReference(referenceId).subscribe(
+                (response) => {
+                    this.getReferences();
+                    this.showToastNotification('Reference deleted successfully.', 'error');
+                },
+                (error) => this.showToastNotification('Error deleting reference.', 'error')
+            );
+        }
     }
-  }
+}
 
   cancelEdit(): void {
     this.resetForm();
@@ -128,6 +131,7 @@ export class ReferenceComponent implements OnInit {
     this.isEditing = !this.isEditing;
     this.referenceForm.reset();
     this.currentReferenceId = null;
+    this.initialFormValue = this.referenceForm.getRawValue(); // Store the initial form value for new form
   }
 
   resetForm(showToast: boolean = true): void {
