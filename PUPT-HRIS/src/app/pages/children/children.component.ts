@@ -20,6 +20,11 @@ export class ChildrenComponent implements OnInit {
   isEditing: boolean = false;
   currentChildId: number | null | undefined = null;
   userId: number;
+  initialFormValue: any; // To store the initial form value
+
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
 
   constructor(private fb: FormBuilder, private childrenService: ChildrenService, private authService: AuthService) {
     const token = this.authService.getToken();
@@ -46,6 +51,7 @@ export class ChildrenComponent implements OnInit {
         this.childrenData = data;
       },
       error => {
+        this.showToastNotification('Error fetching children data.', 'error');
         console.error('Error fetching children data', error);
       }
     );
@@ -55,35 +61,52 @@ export class ChildrenComponent implements OnInit {
     this.isEditing = true;
     this.currentChildId = child.ChildrenID;
     this.childrenForm.patchValue(child);
+    this.initialFormValue = this.childrenForm.getRawValue(); // Store the initial form value
   }
 
   toggleForm(): void {
     this.isEditing = !this.isEditing;
-    this.currentChildId = null;
-    this.childrenForm.reset();
+
+    if (this.isEditing) {
+      this.childrenForm.reset();
+      this.currentChildId = null;
+      this.initialFormValue = this.childrenForm.getRawValue(); // Store the initial form value for new form
+    } else {
+      if (this.hasUnsavedChanges()) { // Check for unsaved changes before canceling
+        this.showToastNotification('The changes are not saved.', 'error');
+      }
+    }
   }
 
   onSubmit(): void {
+    if (!this.hasUnsavedChanges()) {
+      this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
+    const childData = { ...this.childrenForm.value, UserID: this.userId };
+
     if (this.currentChildId !== null && this.currentChildId !== undefined) {
-      this.childrenService.updateChild(this.currentChildId, this.childrenForm.value).subscribe(
+      this.childrenService.updateChild(this.currentChildId, childData).subscribe(
         response => {
-          console.log('Child updated successfully', response);
           this.loadChildren();
           this.toggleForm();
+          this.showToastNotification('Information updated successfully.', 'success');
         },
         error => {
+          this.showToastNotification('There is an error saving/updating the changes.', 'error');
           console.error('Error updating child', error);
         }
       );
     } else {
-      const newChild = { ...this.childrenForm.value, UserID: this.userId };
-      this.childrenService.addChild(newChild).subscribe(
+      this.childrenService.addChild(childData).subscribe(
         response => {
-          console.log('Child added successfully', response);
           this.loadChildren();
           this.toggleForm();
+          this.showToastNotification('Child added successfully.', 'success');
         },
         error => {
+          this.showToastNotification('There is an error saving/updating the changes.', 'error');
           console.error('Error adding child', error);
         }
       );
@@ -94,13 +117,29 @@ export class ChildrenComponent implements OnInit {
     if (confirm('Are you sure you want to delete this child?')) {
       this.childrenService.deleteChild(id).subscribe(
         response => {
-          console.log('Child deleted successfully', response);
-          this.childrenData = this.childrenData.filter(child => child.ChildrenID !== id);
+          this.loadChildren();
+          this.showToastNotification('Child record deleted successfully.', 'error');
         },
         error => {
+          this.showToastNotification('There is an error deleting the record.', 'error');
           console.error('Error deleting child', error);
         }
       );
     }
+  }
+
+  private hasUnsavedChanges(): boolean {
+    const currentFormValue = this.childrenForm.getRawValue();
+    return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
   }
 }

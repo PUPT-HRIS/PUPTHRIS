@@ -92,4 +92,13 @@ body {
   .p-6 {
     padding: 1.5rem;
   }
+
+  .bg-maroon {
+    background-color: #800000;
+  }
+
+  .bg-maroon:hover {
+    background-color: #a40d0d;
+  }
+
   

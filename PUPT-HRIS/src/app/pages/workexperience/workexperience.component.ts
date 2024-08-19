@@ -20,6 +20,11 @@ export class WorkExperienceComponent implements OnInit {
   isEditing: boolean = false;
   currentExperienceId: number | null = null;
   userId: number;
+  initialFormValue: any; // To store the initial form value
+
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
 
   constructor(private fb: FormBuilder, private workService: WorkService, private authService: AuthService) {
     const token = this.authService.getToken();
@@ -52,38 +57,50 @@ export class WorkExperienceComponent implements OnInit {
         this.workExperienceData = data;
       },
       error => {
+        this.showToastNotification('Error fetching work experiences.', 'error');
         console.error('Error fetching work experiences', error);
       }
     );
   }
 
-  resetForm(): void {
+  resetForm(showToast: boolean = true): void {
+    if (showToast && this.hasUnsavedChanges()) {
+      this.showToastNotification('The changes are not saved.', 'error');
+    }
     this.workExperienceForm.reset();
     this.currentExperienceId = null;
     this.isEditing = false;
+    this.initialFormValue = this.workExperienceForm.getRawValue(); // Store the initial form value for new form
   }
 
   onSubmit(): void {
+    if (!this.hasUnsavedChanges()) {
+      this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
     const workExperience = { ...this.workExperienceForm.value, UserID: this.userId };
     if (this.currentExperienceId) {
       this.workService.updateWorkExperience(this.currentExperienceId, workExperience).subscribe(
         response => {
-          console.log('Work experience updated successfully', response);
           this.loadWorkExperiences();
           this.resetForm();
+          this.showToastNotification('Work experience updated successfully.', 'success');
         },
         error => {
+          this.showToastNotification('There is an error saving/updating the changes.', 'error');
           console.error('Error updating work experience', error);
         }
       );
     } else {
       this.workService.addWorkExperience(workExperience).subscribe(
         response => {
-          console.log('Work experience added successfully', response);
           this.loadWorkExperiences();
           this.resetForm();
+          this.showToastNotification('Work experience added successfully.', 'success');
         },
         error => {
+          this.showToastNotification('There is an error saving/updating the changes.', 'error');
           console.error('Error adding work experience', error);
         }
       );
@@ -96,6 +113,7 @@ export class WorkExperienceComponent implements OnInit {
       this.workExperienceForm.patchValue(experience);
       this.currentExperienceId = id;
       this.isEditing = true;
+      this.initialFormValue = this.workExperienceForm.getRawValue(); // Store the initial form value
     }
   }
 
@@ -103,10 +121,11 @@ export class WorkExperienceComponent implements OnInit {
     if (confirm('Are you sure you want to delete this record?')) {
       this.workService.deleteWorkExperience(id).subscribe(
         response => {
-          console.log('Work experience deleted successfully', response);
           this.workExperienceData = this.workExperienceData.filter(ex => ex.WorkExperienceID !== id);
+          this.showToastNotification('Work experience deleted successfully.', 'error');
         },
         error => {
+          this.showToastNotification('There is an error deleting the record.', 'error');
           console.error('Error deleting work experience', error);
         }
       );
@@ -114,7 +133,23 @@ export class WorkExperienceComponent implements OnInit {
   }
 
   addNewExperience(): void {
-    this.resetForm();
+    this.resetForm(false); // Avoid showing the toast on the first click
     this.isEditing = true;
+    this.initialFormValue = this.workExperienceForm.getRawValue(); // Store the initial form value for new form
+  }
+
+  private hasUnsavedChanges(): boolean {
+    const currentFormValue = this.workExperienceForm.getRawValue();
+    return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
   }
 }

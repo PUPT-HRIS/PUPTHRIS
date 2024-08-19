@@ -88,7 +88,7 @@
         </div>
         <div class="flex justify-end mt-6">
           <button type="submit" class="btn bg-black text-white mr-4">{{ familyData ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn bg-gray-600 text-white" (click)="toggleForm()">Cancel</button>
+          <button type="button" class="btn bg-maroon text-white" (click)="toggleForm()">Cancel</button>
         </div>
       </form>
     </div>
@@ -96,3 +96,16 @@
 </div>
 
 <app-children></app-children>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
+  </div>
+</div>
