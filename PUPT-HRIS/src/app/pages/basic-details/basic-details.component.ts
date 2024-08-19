@@ -18,6 +18,11 @@ export class BasicDetailsComponent implements OnInit {
   basicDetails: BasicDetails | null = null;
   isEditing: boolean = false;
   userId: number;
+  initialFormValue: any; // To store the initial form value
+
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
 
   constructor(
     private fb: FormBuilder,
@@ -62,14 +67,23 @@ export class BasicDetailsComponent implements OnInit {
 
   edit(): void {
     this.isEditing = true;
+    this.initialFormValue = this.basicDetailsForm.getRawValue(); // Store the initial form value
   }
 
   cancelEdit(): void {
+    if (this.hasUnsavedChanges()) { // Check for unsaved changes
+      this.showToastNotification('Changes have not been saved.', 'error');
+    }
     this.isEditing = false;
     this.basicDetailsForm.patchValue(this.basicDetails || {});
   }
 
   onSubmit(): void {
+    if (!this.hasUnsavedChanges()) {
+      this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
     if (this.basicDetailsForm.valid) {
       const details: BasicDetails = this.basicDetailsForm.value;
       details.UserID = this.userId;
@@ -79,20 +93,43 @@ export class BasicDetailsComponent implements OnInit {
           (updatedDetails) => {
             this.basicDetails = updatedDetails;
             this.isEditing = false;
+            this.showToastNotification('Changes have been saved successfully.', 'success');
           },
-          (error) => console.error('Error updating basic details:', error)
+          (error) => {
+            console.error('Error updating basic details:', error);
+            this.showToastNotification('An error occurred while saving changes.', 'error');
+          }
         );
       } else {
         this.basicDetailsService.addBasicDetails(details).subscribe(
           (newDetails) => {
             this.basicDetails = newDetails;
             this.isEditing = false;
+            this.showToastNotification('Changes have been saved successfully.', 'success');
           },
-          (error) => console.error('Error adding basic details:', error)
+          (error) => {
+            console.error('Error adding basic details:', error);
+            this.showToastNotification('An error occurred while saving changes.', 'error');
+          }
         );
       }
     } else {
       console.log('Form is invalid');
     }
-  }  
+  }
+
+  private hasUnsavedChanges(): boolean {
+    const currentFormValue = this.basicDetailsForm.getRawValue();
+    return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
+  }
 }

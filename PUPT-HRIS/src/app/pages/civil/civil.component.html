@@ -22,20 +22,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let eligibility of civilServiceData; let i = index">
-              <th class="p-4">{{ i + 1 }}</th>
-              <td class="p-4">{{ eligibility.CareerService }}</td>
-              <td class="p-4">{{ eligibility.Rating }}</td>
-              <td class="p-4">{{ eligibility.DateOfExamination | date }}</td>
-              <td class="p-4">{{ eligibility.PlaceOfExamination }}</td>
-              <td class="p-4">{{ eligibility.LicenseNumber }}</td>
-              <td class="p-4">{{ eligibility.LicenseValidityDate | date }}</td>
-              <td class="p-4">
-                <button (click)="editEligibility(eligibility.CivilServiceEligibilityID!)" class="btn btn-sm btn-primary">Edit</button>
-                <button (click)="deleteEligibility(eligibility.CivilServiceEligibilityID!)" class="btn btn-sm btn-error">Delete</button>
-              </td>
+            <tr *ngFor="let eligibility of civilServiceData; let i = index" class="hover:bg-gray-100">
+                <th class="p-4">{{ i + 1 }}</th>
+                <td class="p-4">{{ eligibility.CareerService }}</td>
+                <td class="p-4">{{ eligibility.Rating }}</td>
+                <td class="p-4">{{ eligibility.DateOfExamination | date }}</td>
+                <td class="p-4">{{ eligibility.PlaceOfExamination }}</td>
+                <td class="p-4">{{ eligibility.LicenseNumber }}</td>
+                <td class="p-4">{{ eligibility.LicenseValidityDate | date }}</td>
+                <td class="p-4">
+                    <div class="btn-container">
+                        <button class="btn btn-edit btn-sm" (click)="editEligibility(eligibility.CivilServiceEligibilityID!)">Edit</button>
+                        <button class="btn btn-delete btn-sm" (click)="deleteEligibility(eligibility.CivilServiceEligibilityID!)">Delete</button>
+                    </div>
+                </td>
             </tr>
-          </tbody>
+        </tbody>        
         </table>
       </div>
       <div class="flex justify-end mt-4">
@@ -89,4 +91,17 @@
       </form>
     </div>
   </ng-template>
+</div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
+  </div>
 </div>

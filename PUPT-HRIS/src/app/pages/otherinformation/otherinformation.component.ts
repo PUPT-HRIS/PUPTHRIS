@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SpecialSkillService } from '../../services/special-skill.service';
 import { NonAcademicService } from '../../services/non-academic.service';
 import { MembershipService } from '../../services/membership.service';
@@ -7,9 +7,9 @@ import { SpecialSkill } from '../../model/specialskills.model';
 import { NonAcademic } from '../../model/nonacademic.model';
 import { Membership } from '../../model/membership.model';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { jwtDecode } from 'jwt-decode';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-otherinformation',
@@ -37,6 +37,11 @@ export class OtherInformationComponent implements OnInit {
 
   userId: number;
 
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
+  initialFormValue: any;
+
   constructor(
     private fb: FormBuilder,
     private specialSkillService: SpecialSkillService,
@@ -53,15 +58,15 @@ export class OtherInformationComponent implements OnInit {
     }
 
     this.specialSkillsForm = this.fb.group({
-      Skill: ['']
+      Skill: ['', Validators.required]
     });
 
     this.nonAcademicForm = this.fb.group({
-      Distinction: ['']
+      Distinction: ['', Validators.required]
     });
 
     this.membershipForm = this.fb.group({
-      Association: ['']
+      Association: ['', Validators.required]
     });
   }
 
@@ -72,85 +77,100 @@ export class OtherInformationComponent implements OnInit {
   loadOtherInformation(): void {
     this.specialSkillService.getSpecialSkills(this.userId).subscribe(
       data => { this.specialSkillsData = data; },
-      error => { console.error('Error fetching special skills', error); }
+      error => { this.showToastNotification('Error fetching special skills', 'error'); }
     );
 
     this.nonAcademicService.getNonAcademics(this.userId).subscribe(
       data => { this.nonAcademicData = data; },
-      error => { console.error('Error fetching distinctions', error); }
+      error => { this.showToastNotification('Error fetching distinctions', 'error'); }
     );
 
     this.membershipService.getMemberships(this.userId).subscribe(
       data => { this.membershipData = data; },
-      error => { console.error('Error fetching memberships', error); }
+      error => { this.showToastNotification('Error fetching memberships', 'error'); }
     );
   }
 
   onSubmitSkill(): void {
-    const formData = { ...this.specialSkillsForm.value, UserID: this.userId }; 
+    if (!this.hasUnsavedChanges(this.specialSkillsForm)) {
+      this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
+    const formData = { ...this.specialSkillsForm.value, UserID: this.userId };
     if (this.currentSkillId) {
       this.specialSkillService.updateSpecialSkill(this.currentSkillId, formData).subscribe(
         response => {
-          console.log('Special skill updated successfully', response);
+          this.showToastNotification('Special skill updated successfully', 'success');
           this.loadOtherInformation();
-          this.resetSkillForm();
+          this.resetSkillForm(false);
         },
-        error => { console.error('Error updating special skill', error); }
+        error => { this.showToastNotification('Error updating special skill', 'error'); }
       );
     } else {
       this.specialSkillService.addSpecialSkill(formData).subscribe(
         response => {
-          console.log('Special skill added successfully', response);
+          this.showToastNotification('Special skill added successfully', 'success');
           this.loadOtherInformation();
-          this.resetSkillForm();
+          this.resetSkillForm(false);
         },
-        error => { console.error('Error adding special skill', error); }
+        error => { this.showToastNotification('Error adding special skill', 'error'); }
       );
     }
   }
 
   onSubmitDistinction(): void {
+    if (!this.hasUnsavedChanges(this.nonAcademicForm)) {
+      this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
     const formData = { ...this.nonAcademicForm.value, UserID: this.userId };
     if (this.currentDistinctionId) {
       this.nonAcademicService.updateNonAcademic(this.currentDistinctionId, formData).subscribe(
         response => {
-          console.log('Distinction updated successfully', response);
+          this.showToastNotification('Distinction updated successfully', 'success');
           this.loadOtherInformation();
-          this.resetDistinctionForm();
+          this.resetDistinctionForm(false);
         },
-        error => { console.error('Error updating distinction', error); }
+        error => { this.showToastNotification('Error updating distinction', 'error'); }
       );
     } else {
       this.nonAcademicService.addNonAcademic(formData).subscribe(
         response => {
-          console.log('Distinction added successfully', response);
+          this.showToastNotification('Distinction added successfully', 'success');
           this.loadOtherInformation();
-          this.resetDistinctionForm();
+          this.resetDistinctionForm(false);
         },
-        error => { console.error('Error adding distinction', error); }
+        error => { this.showToastNotification('Error adding distinction', 'error'); }
       );
     }
   }
 
   onSubmitMembership(): void {
+    if (!this.hasUnsavedChanges(this.membershipForm)) {
+      this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
     const formData = { ...this.membershipForm.value, UserID: this.userId };
     if (this.currentMembershipId) {
       this.membershipService.updateMembership(this.currentMembershipId, formData).subscribe(
         response => {
-          console.log('Membership updated successfully', response);
+          this.showToastNotification('Membership updated successfully', 'success');
           this.loadOtherInformation();
-          this.resetMembershipForm();
+          this.resetMembershipForm(false);
         },
-        error => { console.error('Error updating membership', error); }
+        error => { this.showToastNotification('Error updating membership', 'error'); }
       );
     } else {
       this.membershipService.addMembership(formData).subscribe(
         response => {
-          console.log('Membership added successfully', response);
+          this.showToastNotification('Membership added successfully', 'success');
           this.loadOtherInformation();
-          this.resetMembershipForm();
+          this.resetMembershipForm(false);
         },
-        error => { console.error('Error adding membership', error); }
+        error => { this.showToastNotification('Error adding membership', 'error'); }
       );
     }
   }
@@ -161,6 +181,7 @@ export class OtherInformationComponent implements OnInit {
       this.specialSkillsForm.patchValue(skill);
       this.currentSkillId = id;
       this.isEditingSkill = true;
+      this.initialFormValue = this.specialSkillsForm.getRawValue(); // Store the initial form value
     }
   }
 
@@ -170,6 +191,7 @@ export class OtherInformationComponent implements OnInit {
       this.nonAcademicForm.patchValue(distinction);
       this.currentDistinctionId = id;
       this.isEditingDistinction = true;
+      this.initialFormValue = this.nonAcademicForm.getRawValue(); // Store the initial form value
     }
   }
 
@@ -179,6 +201,7 @@ export class OtherInformationComponent implements OnInit {
       this.membershipForm.patchValue(membership);
       this.currentMembershipId = id;
       this.isEditingMembership = true;
+      this.initialFormValue = this.membershipForm.getRawValue(); // Store the initial form value
     }
   }
 
@@ -186,54 +209,76 @@ export class OtherInformationComponent implements OnInit {
     if (confirm('Are you sure you want to delete this record?')) {
       this.specialSkillService.deleteSpecialSkill(id).subscribe(
         response => {
-          console.log('Special skill deleted successfully', response);
+          this.showToastNotification('Special skill deleted successfully', 'error');
           this.specialSkillsData = this.specialSkillsData.filter(skill => skill.SpecialSkillsID !== id);
         },
-        error => { console.error('Error deleting special skill', error); }
+        error => { this.showToastNotification('Error deleting special skill', 'error'); }
       );
     }
-  }  
+  }
 
   deleteDistinction(id: number): void {
     if (confirm('Are you sure you want to delete this record?')) {
       this.nonAcademicService.deleteNonAcademic(id).subscribe(
         response => {
-          console.log('Distinction deleted successfully', response);
+          this.showToastNotification('Distinction deleted successfully', 'error');
           this.nonAcademicData = this.nonAcademicData.filter(distinction => distinction.NonAcademicID !== id);
         },
-        error => { console.error('Error deleting distinction', error); }
+        error => { this.showToastNotification('Error deleting distinction', 'error'); }
       );
     }
   }
-  
 
   deleteMembership(id: number): void {
     if (confirm('Are you sure you want to delete this record?')) {
       this.membershipService.deleteMembership(id).subscribe(
         response => {
-          console.log('Membership deleted successfully', response);
+          this.showToastNotification('Membership deleted successfully', 'error');
           this.membershipData = this.membershipData.filter(membership => membership.MembershipID !== id);
         },
-        error => { console.error('Error deleting membership', error); }
+        error => { this.showToastNotification('Error deleting membership', 'error'); }
       );
     }
   }
-  
-  resetSkillForm(): void {
-    this.specialSkillsForm.reset();
+
+  resetSkillForm(showToast: boolean = true): void {
+    this.resetForm(this.specialSkillsForm, showToast);
     this.currentSkillId = null;
     this.isEditingSkill = false;
   }
 
-  resetDistinctionForm(): void {
-    this.nonAcademicForm.reset();
+  resetDistinctionForm(showToast: boolean = true): void {
+    this.resetForm(this.nonAcademicForm, showToast);
     this.currentDistinctionId = null;
     this.isEditingDistinction = false;
   }
 
-  resetMembershipForm(): void {
-    this.membershipForm.reset();
+  resetMembershipForm(showToast: boolean = true): void {
+    this.resetForm(this.membershipForm, showToast);
     this.currentMembershipId = null;
     this.isEditingMembership = false;
+  }
+
+  private resetForm(form: FormGroup, showToast: boolean = true): void {
+    if (showToast && this.hasUnsavedChanges(form)) {
+      this.showToastNotification('The changes are not saved.', 'error');
+    }
+    form.reset();
+    this.initialFormValue = form.getRawValue(); // Store the initial form value for new form
+  }
+
+  private hasUnsavedChanges(form: FormGroup): boolean {
+    const currentFormValue = form.getRawValue();
+    return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
   }
 }

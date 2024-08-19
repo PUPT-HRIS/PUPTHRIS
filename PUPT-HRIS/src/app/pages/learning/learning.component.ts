@@ -20,6 +20,11 @@ export class LearningComponent implements OnInit {
   isEditing: boolean = false;
   currentLearningId: number | null = null;
   userId: number;
+  initialFormValue: any; // To store the initial form value
+
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
 
   constructor(private fb: FormBuilder, private learningService: LearningService, private authService: AuthService) {
     const token = this.authService.getToken();
@@ -50,38 +55,50 @@ export class LearningComponent implements OnInit {
         this.learningData = data;
       },
       error => {
+        this.showToastNotification('Error fetching learning developments.', 'error');
         console.error('Error fetching learning developments', error);
       }
     );
   }
 
-  resetForm(): void {
+  resetForm(showToast: boolean = true): void {
+    if (showToast && this.hasUnsavedChanges()) {
+      this.showToastNotification('The changes are not saved.', 'error');
+    }
     this.learningForm.reset();
     this.currentLearningId = null;
     this.isEditing = false;
+    this.initialFormValue = this.learningForm.getRawValue(); // Store the initial form value for new form
   }
 
   onSubmit(): void {
+    if (!this.hasUnsavedChanges()) {
+      this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
     const formData = { ...this.learningForm.value, UserID: this.userId };
     if (this.currentLearningId) {
       this.learningService.updateLearningDevelopment(this.currentLearningId, formData).subscribe(
         response => {
-          console.log('Learning development updated successfully', response);
           this.loadLearningDevelopments();
           this.resetForm();
+          this.showToastNotification('Learning development updated successfully.', 'success');
         },
         error => {
+          this.showToastNotification('There is an error saving/updating the changes.', 'error');
           console.error('Error updating learning development', error);
         }
       );
     } else {
       this.learningService.addLearningDevelopment(formData).subscribe(
         response => {
-          console.log('Learning development added successfully', response);
           this.loadLearningDevelopments();
           this.resetForm();
+          this.showToastNotification('Learning development added successfully.', 'success');
         },
         error => {
+          this.showToastNotification('There is an error saving/updating the changes.', 'error');
           console.error('Error adding learning development', error);
         }
       );
@@ -94,6 +111,7 @@ export class LearningComponent implements OnInit {
       this.learningForm.patchValue(learning);
       this.currentLearningId = id;
       this.isEditing = true;
+      this.initialFormValue = this.learningForm.getRawValue(); // Store the initial form value
     }
   }
 
@@ -103,8 +121,10 @@ export class LearningComponent implements OnInit {
         response => {
           console.log('Learning development deleted successfully', response);
           this.learningData = this.learningData.filter(ld => ld.LearningDevelopmentID !== id);
+          this.showToastNotification('Learning development deleted successfully.', 'error');
         },
         error => {
+          this.showToastNotification('There is an error deleting the record.', 'error');
           console.error('Error deleting learning development', error);
         }
       );
@@ -112,7 +132,23 @@ export class LearningComponent implements OnInit {
   }
 
   addNewLearning(): void {
-    this.resetForm();
+    this.resetForm(false); // Avoid showing the toast on the first click
     this.isEditing = true;
+    this.initialFormValue = this.learningForm.getRawValue(); // Store the initial form value for new form
+  }
+
+  private hasUnsavedChanges(): boolean {
+    const currentFormValue = this.learningForm.getRawValue();
+    return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
   }
 }

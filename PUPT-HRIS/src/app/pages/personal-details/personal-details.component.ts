@@ -18,6 +18,11 @@ export class PersonalDetailsComponent implements OnInit {
   personalDetails: PersonalDetails | null = null;
   isEditing: boolean = false;
   userId: number;
+  initialFormValue: any; // To store the initial form value
+
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
 
   constructor(
     private fb: FormBuilder,
@@ -75,6 +80,7 @@ export class PersonalDetailsComponent implements OnInit {
         if (data) {
           this.personalDetails = data;
           this.personalDetailsForm.patchValue(data);
+          this.initialFormValue = this.personalDetailsForm.getRawValue(); // Store the initial form value
         }
       },
       (error) => {
@@ -85,14 +91,23 @@ export class PersonalDetailsComponent implements OnInit {
 
   edit(): void {
     this.isEditing = true;
+    this.initialFormValue = this.personalDetailsForm.getRawValue(); // Store the initial form value
   }
 
   cancelEdit(): void {
+    if (this.hasUnsavedChanges()) { // Check for unsaved changes
+      this.showToastNotification('Changes have not been saved.', 'error');
+    }
     this.isEditing = false;
     this.personalDetailsForm.patchValue(this.personalDetails || {});
   }
 
   onSubmit(): void {
+    if (!this.hasUnsavedChanges()) {
+      this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
     if (this.personalDetailsForm.valid) {
       const personalDetails: PersonalDetails = this.personalDetailsForm.value;
       personalDetails.UserID = this.userId;
@@ -102,20 +117,43 @@ export class PersonalDetailsComponent implements OnInit {
           (updatedDetails) => {
             this.personalDetails = updatedDetails;
             this.isEditing = false;
+            this.showToastNotification('Changes have been saved successfully.', 'success');
           },
-          (error) => console.error('Error updating personal details:', error)
+          (error) => {
+            console.error('Error updating personal details:', error);
+            this.showToastNotification('An error occurred while saving changes.', 'error');
+          }
         );
       } else {
         this.personalDetailsService.addPersonalDetails(personalDetails).subscribe(
           (newDetails) => {
             this.personalDetails = newDetails;
             this.isEditing = false;
+            this.showToastNotification('Changes have been saved successfully.', 'success');
           },
-          (error) => console.error('Error adding personal details:', error)
+          (error) => {
+            console.error('Error adding personal details:', error);
+            this.showToastNotification('An error occurred while saving changes.', 'error');
+          }
         );
       }
     } else {
       console.log('Form is invalid');
     }
+  }
+
+  private hasUnsavedChanges(): boolean {
+    const currentFormValue = this.personalDetailsForm.getRawValue();
+    return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
   }
 }

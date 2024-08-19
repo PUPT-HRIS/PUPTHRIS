@@ -42,7 +42,7 @@
         </table>
       </div>
       <div class="mt-6">
-        <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
+        <button class="btn btn-add-info text-white w-full" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
       </div>
     </div>
 
@@ -88,4 +88,17 @@
       </form>
     </div>
   </ng-template>
+</div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
+  </div>
 </div>

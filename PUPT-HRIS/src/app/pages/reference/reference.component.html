@@ -12,7 +12,6 @@
           <a class="text-lg font-normal">You are currently viewing the list/s of Character References.</a>
         </div>
         <table class="table table-zebra w-full border-separate border-spacing-0">
-          <!-- head -->
           <thead>
             <tr class="bg-maroon text-white">
               <th class="p-4">#</th>
@@ -23,26 +22,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let reference of referenceData" class="hover:bg-gray-100">
-              <th class="p-4">{{ reference.ReferenceID }}</th>
+            <tr *ngFor="let reference of referenceData; let i = index" class="hover:bg-gray-100">
+              <th class="p-4">{{ i + 1 }}</th>
               <td class="p-4">{{ reference.Name }}</td>
               <td class="p-4">{{ reference.Address }}</td>
               <td class="p-4">{{ reference.TelephoneNumber }}</td>
               <td class="p-4">
                 <div class="btn-container">
-                  <button 
-                    class="btn btn-sm bg-maroon text-white" 
-                    (click)="edit(reference.ReferenceID!)" 
-                    [disabled]="!reference.ReferenceID"
-                  >Edit</button>
-                  <button 
-                    class="btn btn-sm bg-black text-white" 
-                    (click)="delete(reference.ReferenceID!)" 
-                    [disabled]="!reference.ReferenceID"
-                  >Delete</button>
+                  <button class="btn btn-edit btn-sm" (click)="edit(reference.ReferenceID!)">Edit</button>
+                  <button class="btn btn-delete btn-sm" (click)="delete(reference.ReferenceID!)">Delete</button>
                 </div>
               </td>
-            </tr>                        
+            </tr>
           </tbody>
         </table>
       </div>
@@ -69,15 +60,15 @@
       <form [formGroup]="referenceForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <div class="grid grid-cols-2 gap-6">
           <div class="form-control w-full">
-            <label for="Name" class="label-text">Name</label>
+            <label for="Name" class="label-text font-bold text-lg">Name</label>
             <input id="Name" formControlName="Name" class="input input-bordered w-full">
           </div>
           <div class="form-control w-full">
-            <label for="Address" class="label-text">Address</label>
+            <label for="Address" class="label-text font-bold text-lg">Address</label>
             <input id="Address" formControlName="Address" class="input input-bordered w-full">
           </div>
           <div class="form-control w-full">
-            <label for="TelephoneNumber" class="label-text">Telephone Number</label>
+            <label for="TelephoneNumber" class="label-text font-bold text-lg">Telephone Number</label>
             <input id="TelephoneNumber" formControlName="TelephoneNumber" class="input input-bordered w-full">
           </div>
         </div>
@@ -88,4 +79,17 @@
       </form>
     </div>
   </ng-template>
+</div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
+  </div>
 </div>
