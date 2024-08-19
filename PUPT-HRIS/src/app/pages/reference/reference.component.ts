@@ -19,6 +19,11 @@ export class ReferenceComponent implements OnInit {
   currentReferenceId: number | null = null;
   isEditing: boolean = false;
   userId: number;
+  initialFormValue: any; // To store the initial form value
+
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
 
   constructor(
     private fb: FormBuilder,
@@ -43,17 +48,22 @@ export class ReferenceComponent implements OnInit {
   ngOnInit(): void {
     this.getReferences();
   }
-  
-  getReferences(): void {  
+
+  getReferences(): void {
     this.characterReferenceService.getReferences(this.userId).subscribe(
       (references) => {
         this.referenceData = references;
       },
-      (error) => console.error('Error fetching references:', error)
+      (error) => this.showToastNotification('Error fetching references.', 'error')
     );
   }
 
   onSubmit(): void {
+    if (!this.hasUnsavedChanges()) {
+      this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
     if (this.referenceForm.valid) {
       const reference: CharacterReference = {
         ...this.referenceForm.value,
@@ -64,25 +74,27 @@ export class ReferenceComponent implements OnInit {
         this.characterReferenceService.updateReference(this.currentReferenceId, reference).subscribe(
           (updatedReference: CharacterReference) => {
             this.getReferences();
-            this.isEditing = false;
+            this.resetForm();
+            this.showToastNotification('Reference updated successfully.', 'success');
           },
-          (error: any) => console.error('Error updating reference:', error)
+          (error: any) => this.showToastNotification('Error updating reference.', 'error')
         );
       } else {
         if (this.referenceData.length < 3) {
           this.characterReferenceService.addReference(reference).subscribe(
             (newReference: CharacterReference) => {
               this.getReferences();
-              this.isEditing = false;
+              this.resetForm();
+              this.showToastNotification('Reference added successfully.', 'success');
             },
-            (error: any) => console.error('Error adding reference:', error)
+            (error: any) => this.showToastNotification('Error adding reference.', 'error')
           );
         } else {
-          alert('You can only add up to 3 references.');
+          this.showToastNotification('You can only add up to 3 references.', 'warning');
         }
       }
     } else {
-      console.log('Form is invalid');
+      this.showToastNotification('Form is invalid.', 'error');
     }
   }
 
@@ -92,6 +104,7 @@ export class ReferenceComponent implements OnInit {
     if (reference) {
       this.referenceForm.patchValue(reference);
       this.isEditing = true;
+      this.initialFormValue = this.referenceForm.getRawValue(); // Store the initial form value
     }
   }
 
@@ -99,23 +112,46 @@ export class ReferenceComponent implements OnInit {
     if (referenceId !== undefined) {
       this.characterReferenceService.deleteReference(referenceId).subscribe(
         (response) => {
-          console.log(response.message);
           this.getReferences();
+          this.showToastNotification('Reference deleted successfully.', 'error');
         },
-        (error) => console.error('Error deleting reference:', error)
+        (error) => this.showToastNotification('Error deleting reference.', 'error')
       );
     }
   }
-    
+
   cancelEdit(): void {
-    this.isEditing = false;
-    this.referenceForm.reset();
-    this.currentReferenceId = null;
+    this.resetForm();
   }
 
   toggleForm(): void {
     this.isEditing = !this.isEditing;
     this.referenceForm.reset();
     this.currentReferenceId = null;
+  }
+
+  resetForm(showToast: boolean = true): void {
+    if (showToast && this.hasUnsavedChanges()) {
+      this.showToastNotification('The changes are not saved.', 'error');
+    }
+    this.referenceForm.reset();
+    this.currentReferenceId = null;
+    this.isEditing = false;
+    this.initialFormValue = this.referenceForm.getRawValue(); // Store the initial form value for new form
+  }
+
+  private hasUnsavedChanges(): boolean {
+    const currentFormValue = this.referenceForm.getRawValue();
+    return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
   }
 }
