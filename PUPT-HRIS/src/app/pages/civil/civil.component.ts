@@ -91,13 +91,13 @@ export class CivilComponent implements OnInit {
   }
 
   addNewEligibility(): void {
-    this.resetForm();
+    this.resetForm(false);
     this.isEditing = true;
     this.initialFormValue = this.civilServiceForm.getRawValue(); // Store the initial form value for new form
   }
 
-  resetForm(): void {
-    if (this.hasUnsavedChanges()) {
+  resetForm(showToast: boolean = true): void {
+    if (showToast && this.hasUnsavedChanges()) {
       this.showToastNotification('The changes are not saved.', 'error');
     }
     this.civilServiceForm.reset();
