@@ -1,1 +1,94 @@
-<p>training-seminars works!</p>
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Trainings and Seminars</h1>
+  </div>
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <div *ngIf="trainingData.length > 0" class="p-6 space-y-6">
+      <div class="overflow-x-auto px-10">
+        <div class="flex-1 mb-2">
+          <a class="text-lg font-normal">You are currently viewing the list/s of Trainings and Seminars.</a>
+        </div>
+        <table class="table table-zebra w-full border-separate border-spacing-0">
+          <thead>
+            <tr class="bg-maroon text-white">
+              <th class="p-4">#</th>
+              <th class="p-4">Training Title</th>
+              <th class="p-4">Date From</th>
+              <th class="p-4">Date To</th>
+              <th class="p-4">Conducted By</th>
+              <th class="p-4 w-36">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let training of trainingData; let i = index" class="hover:bg-gray-100">
+              <th class="p-4">{{ i + 1 }}</th>
+              <td class="p-4">{{ training.TrainingTitle }}</td>
+              <td class="p-4">{{ training.DateFrom | date }}</td>
+              <td class="p-4">{{ training.DateTo | date }}</td>
+              <td class="p-4">{{ training.ConductedBy }}</td>
+              <td class="p-4">
+                <div class="btn-container">
+                  <button class="btn btn-edit btn-sm" (click)="editTraining(training)">Edit</button>
+                  <button class="btn btn-delete btn-sm" (click)="training.TrainingID !== undefined && deleteTraining(training.TrainingID)">Delete</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-4 px-10">
+        <button class="btn btn-add-info bg-black text-white w-full" (click)="toggleForm()">Add Training</button>
+      </div>
+    </div>
+
+    <div *ngIf="trainingData.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No training or seminar information available.</p>
+      </div>
+      <div class="mt-4">
+        <button class="btn btn-add-info bg-black text-white w-full" (click)="toggleForm()">Add Training</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="form-control w-full">
+          <label for="TrainingTitle" class="label-text font-bold text-lg">Training Title</label>
+          <input id="TrainingTitle" formControlName="TrainingTitle" class="input input-bordered w-full">
+        </div>
+        <div class="form-control w-full">
+          <label for="DateFrom" class="label-text font-bold text-lg">Date From</label>
+          <input id="DateFrom" type="date" formControlName="DateFrom" class="input input-bordered w-full">
+        </div>
+        <div class="form-control w-full">
+          <label for="DateTo" class="label-text font-bold text-lg">Date To</label>
+          <input id="DateTo" type="date" formControlName="DateTo" class="input input-bordered w-full">
+        </div>
+        <div class="form-control w-full">
+          <label for="ConductedBy" class="label-text font-bold text-lg">Conducted By</label>
+          <input id="ConductedBy" formControlName="ConductedBy" class="input input-bordered w-full">
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn btn-save mr-4">{{ currentTrainingId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-cancel" (click)="toggleForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
+  </div>
+</div>
