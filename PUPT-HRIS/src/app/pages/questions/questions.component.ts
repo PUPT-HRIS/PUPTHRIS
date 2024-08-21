@@ -55,12 +55,12 @@ export class QuestionsComponent implements OnInit {
       Q39a_Details: [''],
       Q39b: ['', Validators.required],
       Q39b_Details: [''],
-      Q40a: ['', Validators.required],  // Indigenous Group
+      Q40a: ['', Validators.required],
       Q40a_Details: [''],
-      Q40b: ['', Validators.required],  // Person with Disability
+      Q40b: ['', Validators.required], 
       Q40b_Details: [''],
       Q40b_ID: [''],
-      Q40c: ['', Validators.required],  // Solo Parent
+      Q40c: ['', Validators.required], 
       Q40c_Details: [''],
       Q40c_ID: [''],
     });
