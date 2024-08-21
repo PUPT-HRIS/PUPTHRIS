@@ -98,6 +98,33 @@ const AdditionalQuestion = sequelize.define('AdditionalQuestion', {
   Q39b_Details: {
     type: DataTypes.STRING(255),
   },
+  Q40a: {
+    type: DataTypes.ENUM('Yes', 'No'),
+    allowNull: false,
+  },
+  Q40a_Details: {
+    type: DataTypes.STRING(255),
+  },
+  Q40b: {
+    type: DataTypes.ENUM('Yes', 'No'),
+    allowNull: false,
+  },
+  Q40b_Details: {
+    type: DataTypes.STRING(255),
+  },
+  Q40b_ID: {
+    type: DataTypes.STRING(255),
+  },
+  Q40c: {
+    type: DataTypes.ENUM('Yes', 'No'),
+    allowNull: false,
+  },
+  Q40c_Details: {
+    type: DataTypes.STRING(255),
+  },
+  Q40c_ID: {
+    type: DataTypes.STRING(255),
+  },
 }, {
   tableName: 'additionalquestion',
   timestamps: false,
