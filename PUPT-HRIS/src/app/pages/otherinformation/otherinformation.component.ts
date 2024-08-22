@@ -280,5 +280,5 @@ export class OtherInformationComponent implements OnInit {
     setTimeout(() => {
       this.showToast = false;
     }, 3000); // Hide toast after 3 seconds
-  }
+    }
 }
