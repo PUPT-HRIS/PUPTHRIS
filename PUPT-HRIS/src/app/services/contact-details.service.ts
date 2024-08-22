@@ -31,7 +31,7 @@ export class ContactDetailsService {
   }
 
   updateContactDetails(id: number, details: ContactDetails): Observable<ContactDetails> {
-    return this.http.patch<ContactDetails>(`${this.apiUrl}/update/${id}`, details, { headers: this.getHeaders() }).pipe(
+    return this.http.put<ContactDetails>(`${this.apiUrl}/update/${id}`, details, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }

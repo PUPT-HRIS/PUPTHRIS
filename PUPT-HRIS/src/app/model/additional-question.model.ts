@@ -25,4 +25,12 @@ export interface AdditionalQuestion {
   Q39a_Details?: string;
   Q39b: 'Yes' | 'No';
   Q39b_Details?: string;
+  Q40a: 'Yes' | 'No';
+  Q40a_Details?: string;
+  Q40b: 'Yes' | 'No';
+  Q40b_Details?: string;
+  Q40b_ID?: string;
+  Q40c: 'Yes' | 'No';
+  Q40c_Details?: string;
+  Q40c_ID?: string;
 }

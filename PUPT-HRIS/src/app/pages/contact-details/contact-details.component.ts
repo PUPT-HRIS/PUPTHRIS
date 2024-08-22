@@ -18,7 +18,7 @@ export class ContactDetailsComponent implements OnInit {
   contactDetails: ContactDetails | null = null;
   isEditing: boolean = false;
   userId: number;
-  initialFormValue: any; // To store the initial form value
+  initialFormValue: any;
 
   showToast: boolean = false;
   toastMessage: string = '';
@@ -54,7 +54,7 @@ export class ContactDetailsComponent implements OnInit {
       (details) => {
         this.contactDetails = details;
         this.contactDetailsForm.patchValue(details || {});
-        this.initialFormValue = this.contactDetailsForm.getRawValue(); // Store the initial form value
+        this.initialFormValue = this.contactDetailsForm.getRawValue();
       },
       (error) => console.error('Error fetching contact details:', error)
     );
@@ -62,11 +62,11 @@ export class ContactDetailsComponent implements OnInit {
 
   edit(): void {
     this.isEditing = true;
-    this.initialFormValue = this.contactDetailsForm.getRawValue(); // Store the initial form value
+    this.initialFormValue = this.contactDetailsForm.getRawValue();
   }
 
   cancelEdit(): void {
-    if (this.hasUnsavedChanges()) { // Check for unsaved changes
+    if (this.hasUnsavedChanges()) { 
       this.showToastNotification('Changes have not been saved.', 'error');
     }
     this.isEditing = false;
@@ -125,6 +125,6 @@ export class ContactDetailsComponent implements OnInit {
 
     setTimeout(() => {
       this.showToast = false;
-    }, 3000); // Hide toast after 3 seconds
+    }, 3000);
   }
 }

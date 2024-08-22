@@ -96,8 +96,11 @@
           </div>
           <div class="form-control w-full">
             <label for="GovtService" class="label-text font-bold text-lg">Government Service</label>
-            <input id="GovtService" formControlName="GovtService" class="input input-bordered w-full" type="checkbox">
-          </div>
+            <select id="GovtService" formControlName="GovtService" class="select select-bordered w-full">
+              <option [ngValue]="true">Yes</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>          
         </div>
         <div class="flex justify-end mt-6">
           <button type="submit" class="btn btn-save mr-4">{{ currentExperienceId ? 'Update' : 'Add' }}</button>

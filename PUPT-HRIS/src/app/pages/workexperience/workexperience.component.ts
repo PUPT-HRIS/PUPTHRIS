@@ -20,7 +20,7 @@ export class WorkExperienceComponent implements OnInit {
   isEditing: boolean = false;
   currentExperienceId: number | null = null;
   userId: number;
-  initialFormValue: any; // To store the initial form value
+  initialFormValue: any;
 
   showToast: boolean = false;
   toastMessage: string = '';
