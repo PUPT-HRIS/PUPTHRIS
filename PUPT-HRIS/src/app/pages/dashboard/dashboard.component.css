@@ -1,0 +1,49 @@
+.dashboard-content {
+    margin-left: 60px;
+    margin-right: 60px;
+  }
+  
+  .cards-container {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .card {
+    background: linear-gradient(45deg, #b94802, #800000);
+    color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+  }
+  
+  .card h3 {
+    font-size: 1.125rem;
+  }
+  
+  .card p {
+    font-size: 2.25rem;
+    font-weight: bold;
+  }
+  
+  .view-btn {
+    background-color: #000;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    margin-top: 1rem;
+    display: inline-block;
+  }
+  
+  .charts-container {
+    display: grid;
+    gap: 2rem;
+  }
+  
+  .charts-container h2 {
+    margin-bottom: 1rem;
+  }
+  
+  canvas {
+    max-width: 100%;
+  }
+  
