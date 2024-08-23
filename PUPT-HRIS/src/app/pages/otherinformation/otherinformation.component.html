@@ -16,7 +16,7 @@
         <form [formGroup]="specialSkillsForm" (ngSubmit)="onSubmitSkill()" class="space-y-6 mt-4">
           <div class="form-control w-full">
             <label for="Skill" class="label-text font-bold">Skill</label>
-            <input id="Skill" formControlName="Skill" type="text" class="input input-bordered w-full" />
+            <input id="Skill" formControlName="Skill" type="text" class="input input-bordered w-full" placeholder="Describe your special skill (e.g., Web Development, Graphic Design)">
           </div>
           <div class="flex justify-end mt-6">
             <button type="submit" class="btn bg-black btn-add text-white mr-4">{{ currentSkillId ? 'Update Skill' : 'Add Skill' }}</button>
@@ -45,7 +45,7 @@
         <form [formGroup]="nonAcademicForm" (ngSubmit)="onSubmitDistinction()" class="space-y-6 mt-4">
           <div class="form-control w-full">
             <label for="Distinction" class="label-text font-bold">Distinction</label>
-            <input id="Distinction" formControlName="Distinction" type="text" class="input input-bordered w-full" />
+            <input id="Distinction" formControlName="Distinction" type="text" class="input input-bordered w-full" placeholder="List your non-academic distinction (e.g., Leadership Award)">
           </div>
           <div class="flex justify-end mt-6">
             <button type="submit" class="btn bg-black btn-add text-white mr-4">{{ currentDistinctionId ? 'Update Distinction' : 'Add Distinction' }}</button>
@@ -74,7 +74,7 @@
         <form [formGroup]="membershipForm" (ngSubmit)="onSubmitMembership()" class="space-y-6 mt-4">
           <div class="form-control w-full">
             <label for="Association" class="label-text font-bold">Association</label>
-            <input id="Association" formControlName="Association" type="text" class="input input-bordered w-full" />
+            <input id="Association" formControlName="Association" type="text" class="input input-bordered w-full" placeholder="Enter the name of the association or organization">
           </div>
           <div class="flex justify-end mt-6">
             <button type="submit" class="btn bg-black btn-add text-white mr-4">{{ currentMembershipId ? 'Update Membership' : 'Add Membership' }}</button>
