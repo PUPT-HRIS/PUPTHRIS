@@ -11,13 +11,13 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  fcode: string = '';
+  email: string = '';
   password: string = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
-    this.authService.login(this.fcode, this.password)
+    this.authService.login(this.email, this.password)
       .subscribe((response: any) => {
         localStorage.setItem('token', response.token);
         console.log('Login successful, token:', response.token);
