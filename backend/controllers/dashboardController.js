@@ -1,5 +1,8 @@
+const sequelize = require('../config/db.config');
+const { Sequelize } = require('sequelize');
 const User = require('../models/userModel');
 const BasicDetails = require('../models/basicDetailsModel');
+
 
 exports.getDashboardData = async (req, res) => {
   try {
@@ -11,6 +14,15 @@ exports.getDashboardData = async (req, res) => {
     const faculty = await User.count({ where: { Role: 'faculty' } });
     const staff = await User.count({ where: { Role: 'staff' } });
 
+    const departments = await User.findAll({
+      attributes: [
+        'Department',
+        [Sequelize.fn('COUNT', Sequelize.col('Department')), 'count'],
+      ],
+      group: ['Department'],
+      raw: true,
+    });
+
     res.status(200).json({
       totalFemale,
       totalMale,
@@ -18,7 +30,8 @@ exports.getDashboardData = async (req, res) => {
       fullTime,
       temporary,
       faculty,
-      staff
+      staff,
+      departments
     });
   } catch (error) {
     console.error('Error fetching dashboard data:', error);

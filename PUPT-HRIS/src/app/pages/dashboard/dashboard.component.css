@@ -37,6 +37,7 @@
   .charts-container {
     display: grid;
     gap: 2rem;
+    min-height: 300px;
   }
   
   .charts-container h2 {
