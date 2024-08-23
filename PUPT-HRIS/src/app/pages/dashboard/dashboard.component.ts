@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
-import { NgChartsModule } from 'ng2-charts';
+import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
+import { DashboardService } from '../../services/dashboard.service';
+import { DepartmentCount } from '../../model/departmentCount.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,7 +11,20 @@ import { NgChartsModule } from 'ng2-charts';
   standalone: true,
   imports: [NgChartsModule]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements AfterViewInit {
+
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+
+  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef){}
+
+  public totalFemale: number = 0;
+  public totalMale: number = 0;
+  public partTime: number = 0;
+  public fullTime: number = 0;
+  public temporary: number = 0;
+  public faculty: number = 0;
+  public staff: number = 0;
+
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
   };
@@ -25,21 +40,65 @@ export class DashboardComponent implements OnInit {
 
   public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'right',
+      }
+    }
   };
-  public pieChartLabels: string[] = ['Education', 'IT', 'Engineering', 'Marketing'];
+  public pieChartLabels: string[] = ['Math', 'IT', 'English'];
   public pieChartType: ChartType = 'pie';
   public pieChartLegend = true;
   public pieChartData: ChartData<'pie'> = {
     labels: this.pieChartLabels,
     datasets: [
       {
-        data: [33, 29.1, 22.2, 15.8],
-        backgroundColor: ['#F7464A', '#46BFBD', '#FDB45C', '#949FB1'],
+        data: [],
+        backgroundColor: [],
       }
     ]
   };
 
-  constructor() {}
-
-  ngOnInit(): void {}
+  ngAfterViewInit(): void {
+    this.dashboardService.getDashboardData().subscribe(data => {
+      console.log('Dashboard Data:', data);
+  
+      this.totalFemale = data.totalFemale;
+      this.totalMale = data.totalMale;
+      this.partTime = data.partTime;
+      this.fullTime = data.fullTime;
+      this.temporary = data.temporary;
+      this.faculty = data.faculty;
+      this.staff = data.staff;
+  
+      if (data.departments && Array.isArray(data.departments)) {
+        const departments: DepartmentCount[] = data.departments;
+        console.log('Departments Data:', departments);
+  
+        this.pieChartLabels = departments.map(dept => dept.Department);
+        this.pieChartData = {
+          labels: this.pieChartLabels,
+          datasets: [{
+            data: departments.map(dept => dept.count),
+            backgroundColor: departments.map((dept, index) => {
+              const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'];
+              return colors[index % colors.length];
+            })
+          }]
+        };
+  
+        setTimeout(() => {
+          if (this.chart) {
+            this.chart?.chart?.resize();
+            this.chart.update();
+          }
+          this.cdr.detectChanges();
+        }, 0);
+      } else {
+        console.error('Departments data is missing or not an array');
+      }
+    });
+  }
+  
 }

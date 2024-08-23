@@ -70,13 +70,15 @@ export class EmployeeComponent implements OnInit {
   loadUsers(): void {
     this.userService.getUsers().subscribe(
       (data) => {
+        console.log('API Response:', data); // Log the full response
         this.users = data;
       },
       (error) => {
         console.error('Error fetching users', error);
       }
     );
-  }
+  }  
+  
 
   openModal(user: User): void {
     this.isModalOpen = true;
