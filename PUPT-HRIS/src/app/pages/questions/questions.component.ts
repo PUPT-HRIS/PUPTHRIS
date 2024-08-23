@@ -16,6 +16,9 @@ import { CommonModule } from '@angular/common';
 export class QuestionsComponent implements OnInit {
   questionsForm: FormGroup;
   userId: number;
+  showToast: boolean = false;
+  toastType: 'success' | 'error' | 'warning' = 'success';
+  toastMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -90,16 +93,33 @@ export class QuestionsComponent implements OnInit {
         UserID: this.userId,
       };
 
-      this.additionalQuestionService.addOrUpdateAdditionalQuestion(additionalQuestion).subscribe(
-        (response) => {
-          console.log('Additional questions saved successfully', response);
-        },
-        (error) => {
-          console.error('Error saving additional questions', error);
-        }
-      );
+      if (this.questionsForm.dirty) {
+        this.additionalQuestionService.addOrUpdateAdditionalQuestion(additionalQuestion).subscribe(
+          (response) => {
+            this.triggerToast('success', 'Additional questions saved successfully');
+            this.questionsForm.markAsPristine();
+          },
+          (error) => {
+            this.triggerToast('error', 'Error saving additional questions');
+            console.error('Error saving additional questions', error);
+          }
+        );
+      } else {
+        this.triggerToast('warning', 'No changes detected');
+      }
     } else {
+      this.triggerToast('error', 'Form is invalid');
       console.error('Form is invalid');
     }
+  }
+
+  triggerToast(type: 'success' | 'error' | 'warning', message: string): void {
+    this.toastType = type;
+    this.toastMessage = message;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000);
   }
 }

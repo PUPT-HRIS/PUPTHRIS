@@ -48,12 +48,12 @@
         <div class="grid grid-cols-2 gap-6">
           <div class="form-control">
             <label class="label-text">Place of Birth</label>
-            <input formControlName="PlaceOfBirth" class="input input-bordered" type="text">
+            <input formControlName="PlaceOfBirth" class="input input-bordered" type="text" placeholder="City or municipality of birth.">
           </div>
           <div class="form-control">
             <label class="label-text">Civil Status</label>
             <select formControlName="CivilStatus" class="select select-bordered">
-              <option value="">Select...</option>
+              <option value="">Select your civil status...</option>
               <option value="Single">Single</option>
               <option value="Married">Married</option>
               <option value="Widowed">Widowed</option>
@@ -63,48 +63,48 @@
           </div>
           <div class="form-control" *ngIf="personalDetailsForm.get('CivilStatus')?.value === 'Other'">
             <label class="label-text">If Other, please specify</label>
-            <input formControlName="OtherCivilStatus" class="input input-bordered" type="text">
+            <input formControlName="OtherCivilStatus" class="input input-bordered" type="text" placeholder="Specify your civil status.">
           </div>
           <div class="form-control">
             <label class="label-text">Height</label>
-            <input formControlName="Height" class="input input-bordered" type="number" step="0.01">
+            <input formControlName="Height" class="input input-bordered" type="number" step="0.01" placeholder="Height in meters.">
           </div>
           <div class="form-control">
             <label class="label-text">Weight</label>
-            <input formControlName="Weight" class="input input-bordered" type="number" step="0.01">
+            <input formControlName="Weight" class="input input-bordered" type="number" step="0.01" placeholder="Weight in kilograms.">
           </div>
           <div class="form-control">
             <label class="label-text">Blood Type</label>
-            <input formControlName="BloodType" class="input input-bordered" type="text">
+            <input formControlName="BloodType" class="input input-bordered" type="text" placeholder="Your blood type (e.g., A, B, AB, O).">
           </div>
           <div class="form-control">
             <label class="label-text">GSIS Number</label>
-            <input formControlName="GSISNumber" class="input input-bordered" type="text">
+            <input formControlName="GSISNumber" class="input input-bordered" type="text" placeholder="Government Service Insurance System (GSIS) number.">
           </div>
           <div class="form-control">
             <label class="label-text">Pag-Ibig Number</label>
-            <input formControlName="PagIbigNumber" class="input input-bordered" type="text">
+            <input formControlName="PagIbigNumber" class="input input-bordered" type="text" placeholder="Pag-Ibig Fund membership number.">
           </div>
           <div class="form-control">
             <label class="label-text">PhilHealth Number</label>
-            <input formControlName="PhilHealthNumber" class="input input-bordered" type="text">
+            <input formControlName="PhilHealthNumber" class="input input-bordered" type="text" placeholder="PhilHealth membership number.">
           </div>
           <div class="form-control">
             <label class="label-text">SSS Number</label>
-            <input formControlName="SSSNumber" class="input input-bordered" type="text">
+            <input formControlName="SSSNumber" class="input input-bordered" type="text" placeholder="Social Security System (SSS) number.">
           </div>
           <div class="form-control">
             <label class="label-text">TIN Number</label>
-            <input formControlName="TINNumber" class="input input-bordered" type="text">
+            <input formControlName="TINNumber" class="input input-bordered" type="text" placeholder="Tax Identification Number (TIN).">
           </div>
           <div class="form-control">
             <label class="label-text">Agency Employee Number</label>
-            <input formControlName="AgencyEmployeeNumber" class="input input-bordered" type="text">
+            <input formControlName="AgencyEmployeeNumber" class="input input-bordered" type="text" placeholder="Your unique agency employee number.">
           </div>
           <div class="form-control">
             <label class="label-text">Citizenship</label>
             <select formControlName="CitizenshipType" class="select select-bordered">
-              <option value="">Select...</option>
+              <option value="">Select your citizenship...</option>
               <option value="Filipino">Filipino</option>
               <option value="Dual Citizenship">Dual Citizenship</option>
             </select>
@@ -112,12 +112,12 @@
           <div class="form-control" *ngIf="personalDetailsForm.get('CitizenshipType')?.value === 'Dual Citizenship'">
             <label class="label-text">Acquisition</label>
             <select formControlName="CitizenshipAcquisition" class="select select-bordered">
-              <option value="">Select...</option>
+              <option value="">Select method of acquisition...</option>
               <option value="by birth">by birth</option>
               <option value="by naturalization">by naturalization</option>
             </select>
             <label class="label-text mt-2">Country</label>
-            <input formControlName="CitizenshipCountry" class="input input-bordered" type="text">
+            <input formControlName="CitizenshipCountry" class="input input-bordered" type="text" placeholder="Country of citizenship.">
           </div>
           <div class="form-control">
             <label class="label-text">Residential Address</label>
