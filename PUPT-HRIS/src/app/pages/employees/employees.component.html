@@ -21,8 +21,10 @@
       <tr *ngFor="let user of users; let i = index">
         <th class="p-4">{{ i + 1 }}</th>
         <td class="p-4">{{ user.Fcode }}</td>
-        <td class="p-4">{{ user.Name }}</td>
-        <td class="p-4">{{ user.InstructorStatus }}</td>
+        <td class="p-4">
+          {{ user.FirstName }} {{ user.MiddleName }} {{ user.Surname }} {{ user.NameExtension }}
+        </td>        
+        <td class="p-4">{{ user.Role }}</td>      
         <td class="p-4">{{ user.Department }}</td>
         <td class="p-4">{{ user.EmploymentType }}</td>
         <td class="p-4">
