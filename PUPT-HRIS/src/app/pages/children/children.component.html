@@ -53,11 +53,11 @@
       <form [formGroup]="childrenForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <div class="form-control w-full">
           <label for="ChildName" class="label-text font-bold text-lg">Child Name</label>
-          <input id="ChildName" formControlName="ChildName" class="input input-bordered w-full">
+          <input id="ChildName" formControlName="ChildName" class="input input-bordered w-full" placeholder="Enter your child's full name">
         </div>
         <div class="form-control w-full">
           <label for="BirthDate" class="label-text font-bold text-lg">Birth Date</label>
-          <input id="BirthDate" type="date" formControlName="BirthDate" class="input input-bordered w-full">
+          <input id="BirthDate" type="date" formControlName="BirthDate" class="input input-bordered w-full" placeholder="Select your child's birth date">
         </div>
         <div class="flex justify-end mt-6">
           <button type="submit" class="btn btn-save mr-4">{{ currentChildId ? 'Update' : 'Add' }}</button>
