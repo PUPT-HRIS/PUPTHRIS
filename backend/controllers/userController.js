@@ -49,7 +49,7 @@ const sendEmail = async (toEmail, password, firstName) => {
   try {
     let transporter;
 
-    if (['gmail', 'outlook', 'yahoo'].includes(process.env.EMAIL_SERVICE)) {
+    if (['gmail', 'outlook', 'yahoo', 'iskolarngbayan.pup.edu.ph'].includes(process.env.EMAIL_SERVICE)) {
       transporter = nodemailer.createTransport({
         service: process.env.EMAIL_SERVICE,
         auth: {

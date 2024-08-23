@@ -17,6 +17,7 @@ const characterReferenceRoutes = require('./routes/characterReferenceRoutes');
 const additionalQuestionRoutes = require('./routes/additionalQuestionRoutes');
 const personalDetailsRoutes = require('./routes/personalDetailsRoutes');
 const trainingsRoutes = require('./routes/trainingsRoute');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const specialSkillRoutes = require('./routes/specialSkillRoutes');
 const nonAcademicRoutes = require('./routes/nonAcademicRoutes');
@@ -45,6 +46,7 @@ app.use('/api/additionalquestion', additionalQuestionRoutes);
 app.use('/api/children', childrenRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.use('/api/specialskills', specialSkillRoutes);
 app.use('/api/nonacademic', nonAcademicRoutes);

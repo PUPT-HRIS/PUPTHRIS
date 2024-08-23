@@ -1,56 +1,70 @@
 <div class="dashboard-content">
-    <!-- Cards Section -->
-    <div class="flex-1 mb-2">
-        <a class="text-lg font-normal">You are currently viewing the Dashboard.</a>
+  <!-- Cards Section -->
+  <div class="flex-1 mb-2">
+    <a class="text-lg font-normal">You are currently viewing the Dashboard.</a>
+  </div>
+  <div class="cards-container grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-2xl font-bold">Female</h3>
+      <p class="text-6xl font-extrabold">{{ totalFemale }}</p>
+      <button class="view-btn">View</button>
     </div>
-    <div class="cards-container grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-          <h3 class="text-2xl font-bold">Female</h3>
-          <p class="text-6xl font-extrabold">39</p>
-          <button class="view-btn">View</button>
-        </div>
-        <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-          <h3 class="text-2xl font-bold">Male</h3>
-          <p class="text-6xl font-extrabold">17</p>
-          <button class="view-btn">View</button>
-        </div>
-        <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-          <h3 class="text-2xl font-bold">Part-Time</h3>
-          <p class="text-6xl font-extrabold">16</p>
-          <button class="view-btn">View</button>
-        </div>
-        <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-          <h3 class="text-2xl font-bold">Full-Time</h3>
-          <p class="text-6xl font-extrabold">45</p>
-          <button class="view-btn">View</button>
-        </div>
+    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-2xl font-bold">Male</h3>
+      <p class="text-6xl font-extrabold">{{ totalMale }}</p>
+      <button class="view-btn">View</button>
+    </div>
+    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-2xl font-bold">Part-Time</h3>
+      <p class="text-6xl font-extrabold">{{ partTime }}</p>
+      <button class="view-btn">View</button>
+    </div>
+    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-2xl font-bold">Full-Time</h3>
+      <p class="text-6xl font-extrabold">{{ fullTime }}</p>
+      <button class="view-btn">View</button>
+    </div>
+    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-2xl font-bold">Temporary</h3>
+      <p class="text-6xl font-extrabold">{{ temporary }}</p>
+      <button class="view-btn">View</button>
+    </div>
+    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-2xl font-bold">Faculty</h3>
+      <p class="text-6xl font-extrabold">{{ faculty }}</p>
+      <button class="view-btn">View</button>
+    </div>
+    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-2xl font-bold">Staff</h3>
+      <p class="text-6xl font-extrabold">{{ staff }}</p>
+      <button class="view-btn">View</button>
+    </div>
+  </div>
+
+  <div class="flex w-full flex-col">
+    <div class="divider divider-neutral divider-end">See More</div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="charts-container grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
+    <div>
+      <h2 class="text-2xl font-bold">Employees this year</h2>
+      <canvas baseChart
+              [data]="lineChartData"
+              [options]="lineChartOptions"
+              [legend]="lineChartLegend"
+              [type]="'line'">
+      </canvas>
     </div>
 
-    <div class="flex w-full flex-col">
-        <div class="divider divider-neutral divider-end">See More</div>
+    <div>
+      <h2 class="text-2xl font-bold">Instructor per Department</h2>
+      <canvas baseChart
+              [data]="pieChartData"
+              [options]="pieChartOptions"
+              [legend]="pieChartLegend"
+              [type]="'pie'">
+      </canvas>
     </div>
-  
-    <!-- Charts Section -->
-    <div class="charts-container grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-        <div>
-          <h2 class="text-2xl font-bold">Employees this year</h2>
-          <canvas baseChart
-                  [data]="lineChartData"
-                  [options]="lineChartOptions"
-                  [legend]="lineChartLegend"
-                  [type]="'line'">
-          </canvas>
-        </div>
-    
-        <div>
-          <h2 class="text-2xl font-bold">Instructor per Department</h2>
-          <canvas baseChart
-                  [data]="pieChartData"
-                  [options]="pieChartOptions"
-                  [legend]="pieChartLegend"
-                  [type]="'pie'">
-          </canvas>
-        </div>
-      </div>
   </div>
-  
+</div>
