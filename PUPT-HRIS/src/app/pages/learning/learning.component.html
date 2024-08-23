@@ -1,3 +1,5 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h1 class="text-2xl font-bold">Learning and Development</h1>
@@ -62,7 +64,7 @@
         <div class="grid grid-cols-2 gap-6">
           <div class="form-control w-full">
             <label for="TitleOfLearningDevelopment" class="label-text font-bold text-lg">Title of Learning Development</label>
-            <input id="TitleOfLearningDevelopment" formControlName="TitleOfLearningDevelopment" class="input input-bordered w-full">
+            <input id="TitleOfLearningDevelopment" formControlName="TitleOfLearningDevelopment" class="input input-bordered w-full" placeholder="Enter the title of the learning and development program">
           </div>
           <div class="form-control w-full">
             <label for="InclusiveDatesFrom" class="label-text font-bold text-lg">Inclusive Dates From</label>
@@ -74,15 +76,15 @@
           </div>
           <div class="form-control w-full">
             <label for="NumberOfHours" class="label-text font-bold text-lg">Number of Hours</label>
-            <input id="NumberOfHours" formControlName="NumberOfHours" class="input input-bordered w-full" type="number">
+            <input id="NumberOfHours" formControlName="NumberOfHours" class="input input-bordered w-full" type="number" placeholder="Enter the total number of hours spent">
           </div>
           <div class="form-control w-full">
             <label for="TypeOfLD" class="label-text font-bold text-lg">Type</label>
-            <input id="TypeOfLD" formControlName="TypeOfLD" class="input input-bordered w-full">
+            <input id="TypeOfLD" formControlName="TypeOfLD" class="input input-bordered w-full" placeholder="Enter the type of learning and development">
           </div>
           <div class="form-control w-full">
             <label for="ConductedSponsoredBy" class="label-text font-bold text-lg">Conducted/Sponsored By</label>
-            <input id="ConductedSponsoredBy" formControlName="ConductedSponsoredBy" class="input input-bordered w-full">
+            <input id="ConductedSponsoredBy" formControlName="ConductedSponsoredBy" class="input input-bordered w-full" placeholder="Enter the organization or sponsor">
           </div>
         </div>
         <div class="flex justify-end mt-6">
@@ -106,4 +108,3 @@
     <span>{{ toastMessage }}</span>
   </div>
 </div>
-
