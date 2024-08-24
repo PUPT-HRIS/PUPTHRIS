@@ -37,21 +37,23 @@
 
 <!-- Modal with Sections -->
 <div *ngIf="isModalOpen" class="modal modal-open">
-  <div class="modal-box w-11/12 max-w-5xl">
-    <h3 class="font-bold text-lg">Employee Information</h3>
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 class="font-bold text-lg">Employee Information</h3>
+    </div>
     
     <!-- Tabs or Navigation -->
     <div class="tabs">
-      <a class="tab tab-bordered" [class.tab-active]="activeTab === 'basic'" (click)="setActiveTab('basic')">Basic Details</a>
-      <a class="tab tab-bordered" [class.tab-active]="activeTab === 'education'" (click)="setActiveTab('education')">Educational Background</a>
-      <a class="tab tab-bordered" [class.tab-active]="activeTab === 'personal'" (click)="setActiveTab('personal')">Personal Details</a>
-      <a class="tab tab-bordered" [class.tab-active]="activeTab === 'contact'" (click)="setActiveTab('contact')">Contact Details</a>
-      <a class="tab tab-bordered" [class.tab-active]="activeTab === 'family'" (click)="setActiveTab('family')">Family Background & Children</a>
-      <a class="tab tab-bordered" [class.tab-active]="activeTab === 'civil'" (click)="setActiveTab('civil')">Civil Service Eligibilities</a>
-      <a class="tab tab-bordered" [class.tab-active]="activeTab === 'learning'" (click)="setActiveTab('learning')">Learning & Development</a>
-      <a class="tab tab-bordered" [class.tab-active]="activeTab === 'work'" (click)="setActiveTab('work')">Work Experience</a>
-      <a class="tab tab-bordered" [class.tab-active]="activeTab === 'voluntary'" (click)="setActiveTab('voluntary')">Voluntary Work</a>
-      <a class="tab tab-bordered" [class.tab-active]="activeTab === 'character'" (click)="setActiveTab('character')">Character References</a>
+      <a class="tab" [class.tab-active]="activeTab === 'basic'" (click)="setActiveTab('basic')">Basic Details</a>
+      <a class="tab" [class.tab-active]="activeTab === 'education'" (click)="setActiveTab('education')">Educational Background</a>
+      <a class="tab" [class.tab-active]="activeTab === 'personal'" (click)="setActiveTab('personal')">Personal Details</a>
+      <a class="tab" [class.tab-active]="activeTab === 'contact'" (click)="setActiveTab('contact')">Contact Details</a>
+      <a class="tab" [class.tab-active]="activeTab === 'family'" (click)="setActiveTab('family')">Family Background & Children</a>
+      <a class="tab" [class.tab-active]="activeTab === 'civil'" (click)="setActiveTab('civil')">Civil Service Eligibilities</a>
+      <a class="tab" [class.tab-active]="activeTab === 'learning'" (click)="setActiveTab('learning')">Learning & Development</a>
+      <a class="tab" [class.tab-active]="activeTab === 'work'" (click)="setActiveTab('work')">Work Experience</a>
+      <a class="tab" [class.tab-active]="activeTab === 'voluntary'" (click)="setActiveTab('voluntary')">Voluntary Work</a>
+      <a class="tab" [class.tab-active]="activeTab === 'character'" (click)="setActiveTab('character')">Character References</a>
     </div>
 
     <!-- Basic Details Content -->
@@ -331,16 +333,3 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
