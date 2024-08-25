@@ -42,7 +42,7 @@ export class BasicDetailsComponent implements OnInit {
       FirstName: ['', Validators.required],
       MiddleInitial: [''],
       NameExtension: [''],
-      FacultyCode: [''],
+      FacultyCode: ['', Validators.required],
       Honorific: [''],
       EmployeeNo: ['', Validators.required],
       DateOfBirth: ['', Validators.required],
