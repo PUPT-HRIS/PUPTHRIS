@@ -1,14 +1,13 @@
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <form [formGroup]="newAccountForm" (ngSubmit)="onSubmit()" class="bg-base-200 rounded-lg shadow-lg max-w-6xl mx-auto mt-3">
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h2 class="text-xl font-bold">Create New Account</h2>
   </div>
   
   <div class="grid grid-cols-2 gap-6 p-6">
+    <!-- Fcode -->
     <div class="form-control w-full">
       <label class="label" for="Fcode">
-        <span class="label-text font-bold">Fcode</span>
+        <span class="label-text font-bold">Fcode <span class="text-red-500">*</span></span>
       </label>
       <input
         type="text"
@@ -19,9 +18,10 @@
       />
     </div>
 
+    <!-- Surname -->
     <div class="form-control w-full">
       <label class="label" for="Surname">
-        <span class="label-text font-bold">Surname</span>
+        <span class="label-text font-bold">Surname <span class="text-red-500">*</span></span>
       </label>
       <input
         type="text"
@@ -32,9 +32,10 @@
       />
     </div>
 
+    <!-- First Name -->
     <div class="form-control w-full">
       <label class="label" for="FirstName">
-        <span class="label-text font-bold">First Name</span>
+        <span class="label-text font-bold">First Name <span class="text-red-500">*</span></span>
       </label>
       <input
         type="text"
@@ -45,6 +46,7 @@
       />
     </div>
 
+    <!-- Middle Name -->
     <div class="form-control w-full">
       <label class="label" for="MiddleName">
         <span class="label-text font-bold">Middle Name</span>
@@ -58,6 +60,7 @@
       />
     </div>
 
+    <!-- Name Extension -->
     <div class="form-control w-full">
       <label class="label" for="NameExtension">
         <span class="label-text font-bold">Name Extension</span>
@@ -71,9 +74,10 @@
       />
     </div>
 
+    <!-- Email -->
     <div class="form-control w-full">
       <label class="label" for="Email">
-        <span class="label-text font-bold">Email</span>
+        <span class="label-text font-bold">Email <span class="text-red-500">*</span></span>
       </label>
       <input
         type="email"
@@ -84,9 +88,10 @@
       />
     </div>
 
+    <!-- Employment Type -->
     <div class="form-control w-full">
       <label class="label" for="EmploymentType">
-        <span class="label-text font-bold">Employment Type</span>
+        <span class="label-text font-bold">Employment Type <span class="text-red-500">*</span></span>
       </label>
       <select
         id="EmploymentType"
@@ -100,22 +105,25 @@
       </select>
     </div>
 
-    <div class="form-control w-full">
+    <!-- Password -->
+    <div class="form-control w-full relative">
       <label class="label" for="Password">
-        <span class="label-text font-bold">Password</span>
+        <span class="label-text font-bold">Password <span class="text-red-500">*</span></span>
       </label>
       <input
-        type="password"
+        type="text"
         id="Password"
         formControlName="Password"
         placeholder="Enter Password"
         class="input input-bordered w-full"
       />
+      <button type="button" (click)="onGeneratePasswordClick()" class="absolute right-2 top-9 bg-gray-300 text-black px-4 py-2 rounded-lg">Generate</button>
     </div>
 
+    <!-- Role -->
     <div class="form-control w-full">
       <label class="label" for="Role">
-        <span class="label-text font-bold">Role</span>
+        <span class="label-text font-bold">Role <span class="text-red-500">*</span></span>
       </label>
       <select
         id="Role"
@@ -129,14 +137,16 @@
       </select>
     </div>
 
+    <!-- Department -->
     <div class="form-control w-full">
       <label class="label" for="Department">
-        <span class="label-text font-bold">Department</span>
+        <span class="label-text font-bold">Department <span class="text-red-500">*</span></span>
       </label>
       <select
         id="Department"
         formControlName="Department"
         class="select select-bordered w-full"
+        [disabled]="newAccountForm.get('Role')?.value === 'staff'"
       >
         <option value="" disabled selected>- Please Select Option -</option>
         <option value="math">Math</option>
@@ -147,6 +157,6 @@
   </div>
 
   <div class="flex justify-end p-4">
-    <button type="submit" class="btn bg-black text-white">Create Account</button>
+    <button type="submit" class="btn bg-black text-white" [disabled]="newAccountForm.invalid">Create Account</button>
   </div>
 </form>

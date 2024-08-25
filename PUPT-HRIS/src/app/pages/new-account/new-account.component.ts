@@ -26,11 +26,40 @@ export class NewAccountComponent implements OnInit {
       EmploymentType: ['', Validators.required],
       Password: ['', [Validators.required, Validators.minLength(6)]],
       Role: ['', Validators.required],
-      Department: ['', Validators.required],
+      Department: [{ value: '', disabled: true }]
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.newAccountForm.get('Role')?.valueChanges.subscribe(role => {
+      const departmentControl = this.newAccountForm.get('Department');
+      if (role === 'staff') {
+        departmentControl?.disable();
+        departmentControl?.clearValidators(); 
+        departmentControl?.setValue(''); 
+      } else {
+        departmentControl?.enable();
+        departmentControl?.setValidators(Validators.required); 
+      }
+      departmentControl?.updateValueAndValidity(); 
+    });
+  }
+
+  generatePassword(): string {
+    const length = 12;
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=';
+    let password = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      password += charset[randomIndex];
+    }
+    return password;
+  }
+
+  onGeneratePasswordClick(): void {
+    const generatedPassword = this.generatePassword();
+    this.newAccountForm.get('Password')?.setValue(generatedPassword);
+  }
 
   onSubmit(): void {
     if (this.newAccountForm.valid) {
