@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PersonalDetailsService } from '../../services/personal-details.service';
 import { AuthService } from '../../services/auth.service';
 import { PersonalDetails } from '../../model/personal-details.model';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode} from 'jwt-decode'; // Correct import
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -23,6 +23,8 @@ export class PersonalDetailsComponent implements OnInit {
   showToast: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'warning' = 'success';
+
+  submitted: boolean = false; // Flag to track form submission
 
   constructor(
     private fb: FormBuilder,
@@ -103,8 +105,15 @@ export class PersonalDetailsComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.submitted = true; // Mark form as submitted
     if (!this.hasUnsavedChanges()) {
       this.showToastNotification('There are no current changes to be saved.', 'warning');
+      return;
+    }
+
+    if (this.personalDetailsForm.invalid) {
+      this.markAllAsTouched(); // Trigger validation messages and highlighting
+      this.showToastNotification('Please fill in all required fields.', 'error');
       return;
     }
 
@@ -142,6 +151,13 @@ export class PersonalDetailsComponent implements OnInit {
     }
   }
 
+  private markAllAsTouched(): void {
+    Object.keys(this.personalDetailsForm.controls).forEach(field => {
+      const control = this.personalDetailsForm.get(field);
+      control?.markAsTouched({ onlySelf: true });
+    });
+  }
+
   private hasUnsavedChanges(): boolean {
     const currentFormValue = this.personalDetailsForm.getRawValue();
     return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
@@ -156,4 +172,29 @@ export class PersonalDetailsComponent implements OnInit {
       this.showToast = false;
     }, 3000); // Hide toast after 3 seconds
   }
+
+  onCopyResidentialToPermanent(event: any): void {
+    if (event.target.checked) {
+      this.personalDetailsForm.patchValue({
+        PermanentHouseBlockLot: this.personalDetailsForm.get('ResidentialHouseBlockLot')?.value,
+        PermanentStreet: this.personalDetailsForm.get('ResidentialStreet')?.value,
+        PermanentSubdivisionVillage: this.personalDetailsForm.get('ResidentialSubdivisionVillage')?.value,
+        PermanentBarangay: this.personalDetailsForm.get('ResidentialBarangay')?.value,
+        PermanentCityMunicipality: this.personalDetailsForm.get('ResidentialCityMunicipality')?.value,
+        PermanentProvince: this.personalDetailsForm.get('ResidentialProvince')?.value,
+        PermanentZipCode: this.personalDetailsForm.get('ResidentialZipCode')?.value,
+      });
+    } else {
+      this.personalDetailsForm.patchValue({
+        PermanentHouseBlockLot: '',
+        PermanentStreet: '',
+        PermanentSubdivisionVillage: '',
+        PermanentBarangay: '',
+        PermanentCityMunicipality: '',
+        PermanentProvince: '',
+        PermanentZipCode: '',
+      });
+    }
+  }
 }
+
