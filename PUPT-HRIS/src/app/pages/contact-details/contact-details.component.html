@@ -37,17 +37,43 @@
         <div class="grid grid-cols-2 gap-6">
           <div class="form-control">
             <label class="label-text">Telephone Number</label>
-            <input formControlName="TelephoneNumber" class="input input-bordered" type="text" placeholder="Enter your landline telephone number">
+            <input 
+              formControlName="TelephoneNumber" 
+              class="input input-bordered" 
+              type="text" 
+              placeholder="Enter your landline telephone number">
           </div>
+
           <div class="form-control">
-            <label class="label-text">Mobile Number</label>
-            <input formControlName="MobileNumber" class="input input-bordered" type="text" placeholder="Enter your mobile phone number" required>
+            <label class="label-text">Mobile Number <span class="text-red-500">*</span></label>
+            <input 
+              formControlName="MobileNumber" 
+              class="input input-bordered" 
+              type="text" 
+              placeholder="Enter your mobile phone number" 
+              [ngClass]="{'border-red-500': contactDetailsForm.get('MobileNumber')?.invalid && submitted}"
+              required>
+            <div *ngIf="contactDetailsForm.get('MobileNumber')?.invalid && submitted" class="text-red-500 text-sm">
+              Mobile Number is required.
+            </div>
           </div>
+
           <div class="form-control">
-            <label class="label-text">Email Address</label>
-            <input formControlName="EmailAddress" class="input input-bordered" type="email" placeholder="Enter your email address (e.g., name@example.com)" required>
+            <label class="label-text">Email Address <span class="text-red-500">*</span></label>
+            <input 
+              formControlName="EmailAddress" 
+              class="input input-bordered" 
+              type="email" 
+              placeholder="Enter your email address (e.g., name@example.com)" 
+              [ngClass]="{'border-red-500': contactDetailsForm.get('EmailAddress')?.invalid && submitted}"
+              required>
+            <div *ngIf="contactDetailsForm.get('EmailAddress')?.invalid && submitted" class="text-red-500 text-sm">
+              <div *ngIf="contactDetailsForm.get('EmailAddress')?.errors?.['required']">Email Address is required.</div>
+              <div *ngIf="contactDetailsForm.get('EmailAddress')?.errors?.['email']">Please enter a valid email address.</div>
+            </div>
           </div>
         </div>
+
         <div class="flex justify-end mt-6">
           <button type="submit" class="btn btn-save mr-4">Save</button>
           <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
