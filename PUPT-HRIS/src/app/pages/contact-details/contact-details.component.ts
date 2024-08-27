@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ContactDetailsService } from '../../services/contact-details.service';
 import { AuthService } from '../../services/auth.service';
 import { ContactDetails } from '../../model/contact-details.model';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; // Correct import
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -23,6 +23,8 @@ export class ContactDetailsComponent implements OnInit {
   showToast: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'warning' = 'success';
+
+  submitted: boolean = false; // Track form submission
 
   constructor(
     private fb: FormBuilder,
@@ -74,15 +76,16 @@ export class ContactDetailsComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.submitted = true;
     if (!this.hasUnsavedChanges()) {
       this.showToastNotification('There are no current changes to be saved.', 'warning');
       return;
     }
-
+  
     if (this.contactDetailsForm.valid) {
       const details: ContactDetails = this.contactDetailsForm.value;
       details.UserID = this.userId;
-
+  
       if (this.contactDetails) {
         this.contactDetailsService.updateContactDetails(this.contactDetails.ContactDetailsID!, details).subscribe(
           (updatedDetails) => {
@@ -109,9 +112,10 @@ export class ContactDetailsComponent implements OnInit {
         );
       }
     } else {
-      console.log('Form is invalid');
+      this.showToastNotification('Please correct the highlighted errors before saving.', 'error');
     }
   }
+  
 
   private hasUnsavedChanges(): boolean {
     const currentFormValue = this.contactDetailsForm.getRawValue();
@@ -126,5 +130,12 @@ export class ContactDetailsComponent implements OnInit {
     setTimeout(() => {
       this.showToast = false;
     }, 3000);
+  }
+
+  private markAllAsTouched(): void {
+    Object.keys(this.contactDetailsForm.controls).forEach(field => {
+      const control = this.contactDetailsForm.get(field);
+      control?.markAsTouched({ onlySelf: true });
+    });
   }
 }

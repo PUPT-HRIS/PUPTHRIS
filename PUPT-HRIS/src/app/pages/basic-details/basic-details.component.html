@@ -5,6 +5,7 @@
     <h1 class="text-2xl font-bold">Basic Details</h1>
   </div>
 
+  <!-- Display Mode -->
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="basicDetails" class="p-6 space-y-8">
       <div class="p-6 bg-white rounded-lg shadow-lg">
@@ -35,51 +36,140 @@
     </div>
   </ng-container>
 
+  <!-- Edit Mode -->
   <ng-template #editForm>
     <div class="p-6">
       <form [formGroup]="basicDetailsForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <div class="grid grid-cols-2 gap-6">
+          
+          <!-- Last Name (Required) -->
           <div class="form-control">
-            <label class="label-text">Last Name</label>
-            <input formControlName="LastName" class="input input-bordered" type="text" placeholder="Last name of the employee.">
+            <label class="label-text">Last Name <span class="text-red-500">*</span></label>
+            <input 
+              formControlName="LastName" 
+              class="input input-bordered" 
+              [ngClass]="{'border-red-500': basicDetailsForm.get('LastName')?.invalid && basicDetailsForm.get('LastName')?.touched}" 
+              type="text" 
+              placeholder="Last name of the employee."
+            >
+            <!-- Validation Message -->
+            <div *ngIf="basicDetailsForm.get('LastName')?.invalid && basicDetailsForm.get('LastName')?.touched" class="text-red-500 text-sm">
+              Last Name is required.
+            </div>
           </div>
+
+          <!-- First Name (Required) -->
           <div class="form-control">
-            <label class="label-text">First Name</label>
-            <input formControlName="FirstName" class="input input-bordered" type="text" placeholder="Complete given name of the employee.">
+            <label class="label-text">First Name <span class="text-red-500">*</span></label>
+            <input 
+              formControlName="FirstName" 
+              class="input input-bordered" 
+              [ngClass]="{'border-red-500': basicDetailsForm.get('FirstName')?.invalid && basicDetailsForm.get('FirstName')?.touched}" 
+              type="text" 
+              placeholder="Complete given name of the employee."
+            >
+            <!-- Validation Message -->
+            <div *ngIf="basicDetailsForm.get('FirstName')?.invalid && basicDetailsForm.get('FirstName')?.touched" class="text-red-500 text-sm">
+              First Name is required.
+            </div>
           </div>
+
+          <!-- Middle Initial (Optional) -->
           <div class="form-control">
             <label class="label-text">Middle Initial</label>
-            <input formControlName="MiddleInitial" class="input input-bordered" type="text" placeholder="Middle initial.">
+            <input 
+              formControlName="MiddleInitial" 
+              class="input input-bordered" 
+              type="text" 
+              placeholder="Middle initial."
+            >
           </div>
+
+          <!-- Employee Number (Required) -->
           <div class="form-control">
-            <label class="label-text">Employee Number</label>
-            <input formControlName="EmployeeNo" class="input input-bordered" type="text" placeholder="Can be seen at the back of PUP ID.">
+            <label class="label-text">Employee Number <span class="text-red-500">*</span></label>
+            <input 
+              formControlName="EmployeeNo" 
+              class="input input-bordered" 
+              [ngClass]="{'border-red-500': basicDetailsForm.get('EmployeeNo')?.invalid && basicDetailsForm.get('EmployeeNo')?.touched}" 
+              type="text" 
+              placeholder="Can be seen at the back of PUP ID."
+            >
+            <!-- Validation Message -->
+            <div *ngIf="basicDetailsForm.get('EmployeeNo')?.invalid && basicDetailsForm.get('EmployeeNo')?.touched" class="text-red-500 text-sm">
+              Employee Number is required.
+            </div>
           </div>
+
+          <!-- Faculty Code (Optional) -->
           <div class="form-control">
             <label class="label-text">Faculty Code</label>
-            <input formControlName="FacultyCode" class="input input-bordered" type="text" placeholder="Your Faculty Code from your SIS Account.">
+            <input 
+              formControlName="FacultyCode" 
+              class="input input-bordered" 
+              type="text" 
+              placeholder="Your Faculty Code from your SIS Account."
+            >
           </div>
+
+          <!-- Honorific (Optional) -->
           <div class="form-control">
             <label class="label-text">Honorific</label>
-            <input formControlName="Honorific" class="input input-bordered" type="text" placeholder="Preferred and appropriate honorific (e.g., Mr., Ms., Dr.).">
+            <input 
+              formControlName="Honorific" 
+              class="input input-bordered" 
+              type="text" 
+              placeholder="Preferred and appropriate honorific (e.g., Mr., Ms., Dr.)."
+            >
           </div>
+
+          <!-- Date of Birth (Required) -->
           <div class="form-control">
-            <label class="label-text">Date of Birth</label>
-            <input formControlName="DateOfBirth" class="input input-bordered" type="date" placeholder="Your date of birth.">
+            <label class="label-text">Date of Birth <span class="text-red-500">*</span></label>
+            <input 
+              formControlName="DateOfBirth" 
+              class="input input-bordered" 
+              [ngClass]="{'border-red-500': basicDetailsForm.get('DateOfBirth')?.invalid && basicDetailsForm.get('DateOfBirth')?.touched}" 
+              type="date" 
+              placeholder="Your date of birth."
+            >
+            <!-- Validation Message -->
+            <div *ngIf="basicDetailsForm.get('DateOfBirth')?.invalid && basicDetailsForm.get('DateOfBirth')?.touched" class="text-red-500 text-sm">
+              Date of Birth is required.
+            </div>
           </div>
+
+          <!-- Sex (Required) -->
           <div class="form-control">
-            <label class="label-text">Sex</label>
-            <select formControlName="Sex" class="select select-bordered">
+            <label class="label-text">Sex <span class="text-red-500">*</span></label>
+            <select 
+              formControlName="Sex" 
+              class="select select-bordered" 
+              [ngClass]="{'border-red-500': basicDetailsForm.get('Sex')?.invalid && basicDetailsForm.get('Sex')?.touched}"
+            >
               <option value="">Select your Sex</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
+            <!-- Validation Message -->
+            <div *ngIf="basicDetailsForm.get('Sex')?.invalid && basicDetailsForm.get('Sex')?.touched" class="text-red-500 text-sm">
+              Sex is required.
+            </div>
           </div>
+
+          <!-- Name Extension (Optional) -->
           <div class="form-control">
             <label class="label-text">Name Extension</label>
-            <input formControlName="NameExtension" class="input input-bordered" type="text" placeholder="(e.g., Jr., Sr., III).">
+            <input 
+              formControlName="NameExtension" 
+              class="input input-bordered" 
+              type="text" 
+              placeholder="(e.g., Jr., Sr., III)."
+            >
           </div>
         </div>
+
+        <!-- Action Buttons -->
         <div class="flex justify-end mt-6">
           <button type="submit" class="btn btn-save mr-4">Save</button>
           <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
