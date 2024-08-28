@@ -20,7 +20,7 @@ export class EducationComponent implements OnInit {
   isEditing: boolean = false;
   currentEducationId: number | null = null;
   userId: number;
-  initialFormValue: any; // To store the initial form value
+  initialFormValue: any;
 
   showToast: boolean = false;
   toastMessage: string = '';
