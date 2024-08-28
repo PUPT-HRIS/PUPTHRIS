@@ -110,14 +110,21 @@
       <label class="label" for="Password">
         <span class="label-text font-bold">Password <span class="text-red-500">*</span></span>
       </label>
-      <input
-        type="text"
-        id="Password"
-        formControlName="Password"
-        placeholder="Enter Password"
-        class="input input-bordered w-full"
-      />
-      <button type="button" (click)="onGeneratePasswordClick()" class="absolute right-2 top-9 bg-gray-300 text-black px-4 py-2 rounded-lg">Generate</button>
+      <div class="flex">
+        <input
+          type="text"
+          id="Password"
+          formControlName="Password"
+          placeholder="Enter Password"
+          class="input input-bordered w-full"
+        />
+        <button 
+          type="button" 
+          (click)="onGeneratePasswordClick()" 
+          class="btn bg-black text-white ml-2">
+          Generate
+        </button>
+      </div>
     </div>
 
     <!-- Role -->
