@@ -34,10 +34,26 @@ exports.addUser = async (req, res) => {
   }
 };
 
+exports.getUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 // Get all users
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.findAll(); // Assuming you're using Sequelize, adjust as per your ORM or database query method
+    const users = await User.findAll();
     res.status(200).json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
