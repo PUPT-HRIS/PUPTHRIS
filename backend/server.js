@@ -23,6 +23,7 @@ const nonAcademicRoutes = require('./routes/nonAcademicRoutes');
 const membershipRoutes = require('./routes/membershipRoutes');
 const achievementAwardsRoutes = require('./routes/achievementAwardsRoutes');
 const officershipMembershipRoutes = require('./routes/officerMembershipRoutes');
+const departmentRoutes = require('./routes/departmentRoutes');
 
 dotenv.config();
 
@@ -53,6 +54,7 @@ app.use('/api/nonacademic', nonAcademicRoutes);
 app.use('/api/membership', membershipRoutes);
 app.use('/api/achievement-awards', achievementAwardsRoutes);
 app.use('/api/officership-membership', officershipMembershipRoutes);
+app.use('/api/department', departmentRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
