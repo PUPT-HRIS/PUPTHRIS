@@ -3,11 +3,12 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router'; // Import RouterModule
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule], // Include RouterModule here
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.css'],
 })
@@ -39,5 +40,10 @@ export class ForgotPasswordComponent {
       console.error('Form is invalid');
       this.errorMessage = 'Please enter a valid email address.';
     }
+  }
+
+  // Method to navigate back to login (if needed)
+  backToLogin() {
+    this.router.navigate(['/login']);
   }
 }
