@@ -1,16 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-new-account',
   templateUrl: './new-account.component.html',
   styleUrls: ['./new-account.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class NewAccountComponent implements OnInit {
   newAccountForm: FormGroup;
+  toastVisible: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' = 'success';
 
   constructor(
     private fb: FormBuilder,
@@ -35,13 +39,13 @@ export class NewAccountComponent implements OnInit {
       const departmentControl = this.newAccountForm.get('Department');
       if (role === 'staff') {
         departmentControl?.disable();
-        departmentControl?.clearValidators(); 
-        departmentControl?.setValue(''); 
+        departmentControl?.clearValidators();
+        departmentControl?.setValue('');
       } else {
         departmentControl?.enable();
-        departmentControl?.setValidators(Validators.required); 
+        departmentControl?.setValidators(Validators.required);
       }
-      departmentControl?.updateValueAndValidity(); 
+      departmentControl?.updateValueAndValidity();
     });
   }
 
@@ -61,14 +65,34 @@ export class NewAccountComponent implements OnInit {
     this.newAccountForm.get('Password')?.setValue(generatedPassword);
   }
 
+  showToast(type: 'success' | 'error', message: string): void {
+    this.toastType = type;
+    this.toastMessage = message;
+    this.toastVisible = true;
+
+    setTimeout(() => {
+      this.toastVisible = false;
+    }, 3000); // Hide the toast after 3 seconds
+  }
+
   onSubmit(): void {
     if (this.newAccountForm.valid) {
-      this.userService.addUser(this.newAccountForm.value).subscribe({
+      const formData = this.newAccountForm.value;
+
+      // Ensure the Department field is submitted with an empty string if the role is "Staff"
+      if (formData.Role === 'staff') {
+        formData.Department = ''; // Set to an empty string
+      }
+
+      this.userService.addUser(formData).subscribe({
         next: response => {
-          console.log('User added successfully', response);
+          this.showToast('success', 'Account created successfully');
+          this.newAccountForm.reset();
+          this.newAccountForm.markAsPristine();
         },
         error: error => {
-          console.error('Error adding user', error);
+          console.log("Backend error details:", error); // Log the exact error
+          this.showToast('error', 'Error creating account');
         }
       });
     }

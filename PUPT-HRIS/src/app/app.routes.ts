@@ -23,9 +23,11 @@ import { PersonalDetailsComponent } from './pages/personal-details/personal-deta
 import { ContactDetailsComponent } from './pages/contact-details/contact-details.component';
 import { AuthGuard } from './services/auth.guard';
 import { RoleGuard } from './services/role.guard';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component'; 
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },  
   {
     path: '',
     component: MainLayoutComponent,
