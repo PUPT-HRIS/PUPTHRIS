@@ -21,37 +21,45 @@ const OfficershipMembership = sequelize.define('OfficershipMembership', {
   },
   OrganizationAddress: {
     type: DataTypes.STRING(255),
+    allowNull: true,
   },
   Position: {
     type: DataTypes.STRING(255),
+    allowNull: true,
   },
   Level: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.ENUM('Local', 'National', 'International'),
+    allowNull: true,
   },
   Classification: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.ENUM(
+      'Learning and Development Interventions',
+      'Training Programs',
+      'Seminars',
+      'Conferences',
+      'Others'
+    ),
+    allowNull: true,
   },
   InclusiveDatesFrom: {
     type: DataTypes.DATE,
+    allowNull: true,
   },
   InclusiveDatesTo: {
     type: DataTypes.DATE,
-  },
-  CurrentOfficer: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
+    allowNull: true,
   },
   Remarks: {
-    type: DataTypes.STRING(500),
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
   SupportingDocument: {
     type: DataTypes.STRING(255),
-  },
-  DescriptionSupportingDocument: {
-    type: DataTypes.STRING(255),
+    allowNull: true,
   },
   Proof: {
     type: DataTypes.STRING(255),
+    allowNull: true,
   },
 }, {
   tableName: 'officershipmembership',

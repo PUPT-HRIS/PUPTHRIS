@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { OfficershipMembership } from '../model/officership-membership.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { OfficershipMembership } from '../model/officership-membership.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,36 +17,23 @@ export class OfficershipMembershipService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  getOfficershipMemberships(userId: number): Observable<OfficershipMembership[]> {
-    return this.http.get<OfficershipMembership[]>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() })
-      .pipe(
-        catchError(this.handleError)
-      );
+  addOfficershipMembership(membership: OfficershipMembership): Observable<OfficershipMembership> {
+    return this.http.post<OfficershipMembership>(`${this.apiUrl}/add`, membership, { headers: this.getHeaders() });
   }
 
-  addOfficershipMembership(data: OfficershipMembership): Observable<OfficershipMembership> {
-    return this.http.post<OfficershipMembership>(`${this.apiUrl}/add`, data, { headers: this.getHeaders() })
-      .pipe(
-        catchError(this.handleError)
-      );
+  updateOfficershipMembership(id: number, updates: Partial<OfficershipMembership>): Observable<OfficershipMembership> {
+    return this.http.patch<OfficershipMembership>(`${this.apiUrl}/update/${id}`, updates, { headers: this.getHeaders() });
   }
 
-  updateOfficershipMembership(id: number, data: OfficershipMembership): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/update/${id}`, data, { headers: this.getHeaders() })
-      .pipe(
-        catchError(this.handleError)
-      );
+  getOfficershipMembership(id: number): Observable<OfficershipMembership> {
+    return this.http.get<OfficershipMembership>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 
-  deleteOfficershipMembership(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete/${id}`, { headers: this.getHeaders() })
-      .pipe(
-        catchError(this.handleError)
-      );
+  getOfficershipMembershipsByUserId(userId: number): Observable<OfficershipMembership[]> {
+    return this.http.get<OfficershipMembership[]>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() });
   }
 
-  private handleError(error: any): Observable<never> {
-    console.error('An error occurred:', error);
-    return throwError(error);
+  deleteOfficershipMembership(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/delete/${id}`, { headers: this.getHeaders() });
   }
 }
