@@ -1,3 +1,5 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <form [formGroup]="newAccountForm" (ngSubmit)="onSubmit()" class="bg-base-200 rounded-lg shadow-lg max-w-6xl mx-auto mt-3">
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h2 class="text-xl font-bold">Create New Account</h2>
@@ -167,3 +169,13 @@
     <button type="submit" class="btn bg-black text-white" [disabled]="newAccountForm.invalid">Create Account</button>
   </div>
 </form>
+
+<!-- Toast Notifications -->
+<div class="toast" [ngClass]="{'show': toastVisible, 'hide': !toastVisible}">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+</div>
