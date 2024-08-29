@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { DepartmentService } from '../../services/department.service';
+import { Department } from '../../model/department.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -15,10 +17,12 @@ export class NewAccountComponent implements OnInit {
   toastVisible: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' = 'success';
+  departments: Department[] = []; // Array to store departments
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private departmentService: DepartmentService
   ) {
     this.newAccountForm = this.fb.group({
       Fcode: ['', Validators.required],
@@ -30,13 +34,15 @@ export class NewAccountComponent implements OnInit {
       EmploymentType: ['', Validators.required],
       Password: ['', [Validators.required, Validators.minLength(6)]],
       Role: ['', Validators.required],
-      Department: [{ value: '', disabled: true }]
+      DepartmentID: [{ value: '', disabled: true }]
     });
   }
 
   ngOnInit(): void {
+    this.loadDepartments();
+
     this.newAccountForm.get('Role')?.valueChanges.subscribe(role => {
-      const departmentControl = this.newAccountForm.get('Department');
+      const departmentControl = this.newAccountForm.get('DepartmentID');
       if (role === 'staff') {
         departmentControl?.disable();
         departmentControl?.clearValidators();
@@ -46,6 +52,13 @@ export class NewAccountComponent implements OnInit {
         departmentControl?.setValidators(Validators.required);
       }
       departmentControl?.updateValueAndValidity();
+    });
+  }
+
+  loadDepartments(): void {
+    this.departmentService.getDepartments().subscribe({
+      next: departments => this.departments = departments,
+      error: error => console.error('Error fetching departments', error)
     });
   }
 
@@ -79,9 +92,9 @@ export class NewAccountComponent implements OnInit {
     if (this.newAccountForm.valid) {
       const formData = this.newAccountForm.value;
 
-      // Ensure the Department field is submitted with an empty string if the role is "Staff"
+      // Ensure the DepartmentID field is submitted with an empty string if the role is "Staff"
       if (formData.Role === 'staff') {
-        formData.Department = ''; // Set to an empty string
+        formData.DepartmentID = null; // Set to null
       }
 
       this.userService.addUser(formData).subscribe({
