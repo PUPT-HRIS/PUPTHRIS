@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class DepartmentService {
-  private apiUrl = `${environment.apiBaseUrl}/departments`;
+  private apiUrl = `${environment.apiBaseUrl}/department`;
 
   constructor(private http: HttpClient) {}
 
@@ -29,7 +29,7 @@ export class DepartmentService {
   }
 
   addDepartment(department: Department): Observable<Department> {
-    return this.http.post<Department>(this.apiUrl, department, { headers: this.getHeaders() })
+    return this.http.post<Department>(`${this.apiUrl}/add`, department, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 

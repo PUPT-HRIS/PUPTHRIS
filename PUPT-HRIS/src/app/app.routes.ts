@@ -23,7 +23,8 @@ import { PersonalDetailsComponent } from './pages/personal-details/personal-deta
 import { ContactDetailsComponent } from './pages/contact-details/contact-details.component';
 import { AuthGuard } from './services/auth.guard';
 import { RoleGuard } from './services/role.guard';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component'; 
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { DepartmentManagementComponent } from './pages/department-management/department-management.component'; 
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -34,6 +35,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'departments', component: DepartmentManagementComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
       { path: 'employees', component: EmployeeComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
       { path: 'basic-details', component: BasicDetailsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'personal-details', component: PersonalDetailsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
