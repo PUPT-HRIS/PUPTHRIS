@@ -1,113 +1,114 @@
-<div class="form-container">
-    <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
-      <h1 class="text-2xl font-bold">Achievement Awards</h1>
-    </div>
-  
-    <ng-container *ngIf="!isEditing; else editForm">
-      <div *ngIf="achievementAwardsData.length > 0" class="p-6 space-y-6">
-        <div class="overflow-auto">
-          <div class="flex-1 mb-2">
-            <a class="text-lg font-normal">You are currently viewing the list/s of Achievement Awards.</a>
-          </div>
-          <table class="table table-zebra w-full border-separate border-spacing-0">
-            <thead>
-              <tr class="bg-maroon text-white">
-                <th class="p-4">#</th>
-                <th class="p-4">Nature of Achievement</th>
-                <th class="p-4">Classification</th>
-                <th class="p-4">Level</th>
-                <th class="p-4">Awarding Body</th>
-                <th class="p-4 w-36">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let award of achievementAwardsData; let i = index">
-                <th class="p-4">{{ i + 1 }}</th>
-                <td class="p-4">{{ award.NatureOfAchievement }}</td>
-                <td class="p-4">{{ award.Classification }}</td>
-                <td class="p-4">{{ award.Level }}</td>
-                <td class="p-4">{{ award.AwardingBody }}</td>
-                <td class="p-4">
-                  <div class="btn-container">
-                    <button (click)="editAchievementAward(award.AchievementID!)" class="btn btn-edit btn-sm">Edit</button>
-                    <button (click)="deleteAchievementAward(award.AchievementID!)" class="btn btn-delete btn-sm">Delete</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="mt-6">
-          <button class="btn btn-add-info text-white w-full" (click)="addNewAchievementAward()">Add Achievement Award</button>
-        </div>
-      </div>
-  
-      <div *ngIf="achievementAwardsData.length === 0" class="p-6 space-y-6">
-        <div class="p-6 bg-white rounded-lg shadow-lg">
-          <p class="text-lg">No achievement awards information available.</p>
-        </div>
-        <div class="flex justify-end">
-          <button class="btn btn-add-info w-full" (click)="addNewAchievementAward()">Add Achievement Award</button>
-        </div>
-      </div>
-    </ng-container>
-  
-    <ng-template #editForm>
-      <div class="p-6">
-        <form [formGroup]="achievementAwardForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="space-y-6">
-          <div class="grid grid-cols-2 gap-6">
-            <div class="form-control w-full">
-              <label for="NatureOfAchievement" class="label-text font-bold text-lg">Nature of Achievement</label>
-              <input id="NatureOfAchievement" formControlName="NatureOfAchievement" class="input input-bordered w-full" placeholder="Enter the nature of achievement">
-            </div>
-            <div class="form-control w-full">
-              <label for="Classification" class="label-text font-bold text-lg">Classification</label>
-              <input id="Classification" formControlName="Classification" class="input input-bordered w-full" placeholder="Enter the classification">
-            </div>
-            <div class="form-control w-full">
-              <label for="Level" class="label-text font-bold text-lg">Level</label>
-              <input id="Level" formControlName="Level" class="input input-bordered w-full" placeholder="Enter the level of achievement">
-            </div>
-            <div class="form-control w-full">
-              <label for="AwardingBody" class="label-text font-bold text-lg">Awarding Body</label>
-              <input id="AwardingBody" formControlName="AwardingBody" class="input input-bordered w-full" placeholder="Enter the awarding body">
-            </div>
-            <div class="form-control w-full">
-              <label for="Venue" class="label-text font-bold text-lg">Venue</label>
-              <input id="Venue" formControlName="Venue" class="input input-bordered w-full" placeholder="Enter the venue">
-            </div>
-            <div class="form-control w-full">
-              <label for="InclusiveDates" class="label-text font-bold text-lg">Inclusive Dates</label>
-              <input id="InclusiveDates" formControlName="InclusiveDates" class="input input-bordered w-full" placeholder="Enter the inclusive dates">
-            </div>
-            <div class="form-control w-full">
-              <label for="Remarks" class="label-text font-bold text-lg">Remarks</label>
-              <textarea id="Remarks" formControlName="Remarks" class="textarea textarea-bordered w-full" placeholder="Enter any remarks"></textarea>
-            </div>
-            <div class="form-control w-full">
-              <label for="SupportingDocument" class="label-text font-bold text-lg">Supporting Document</label>
-              <input id="SupportingDocument" type="file" (change)="onFileChange($event)" class="input input-bordered w-full">
-            </div>
-          </div>
-          <div class="flex justify-end mt-6">
-            <button type="submit" class="btn btn-save mr-4">{{ currentAchievementAwardId ? 'Update' : 'Add' }}</button>
-            <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
-          </div>
-        </form>
-      </div>
-    </ng-template>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Achievement Awards</h1>
   </div>
-  
-  <!-- Toast Notifications -->
-  <div *ngIf="showToast" class="toast toast-end">
-    <div *ngIf="toastType === 'success'" class="alert alert-success">
-      <span>{{ toastMessage }}</span>
+
+  <ng-container *ngIf="!isEditing; else editForm">
+    <div *ngIf="achievementAwardsData.length > 0" class="p-6 space-y-6">
+      <div class="overflow-auto">
+        <div class="flex-1 mb-2">
+          <a class="text-lg font-normal">You are currently viewing the list/s of Achievement Awards.</a>
+        </div>
+        <table class="table table-zebra w-full border-separate border-spacing-0">
+          <thead>
+            <tr class="bg-maroon text-white">
+              <th class="p-4">#</th>
+              <th class="p-4">Nature of Achievement</th>
+              <th class="p-4">Classification</th>
+              <th class="p-4">Level</th>
+              <th class="p-4">Awarding Body</th>
+              <th class="p-4 w-36">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let award of achievementAwardsData; let i = index">
+              <th class="p-4">{{ i + 1 }}</th>
+              <td class="p-4">{{ award.NatureOfAchievement }}</td>
+              <td class="p-4">{{ award.Classification }}</td>
+              <td class="p-4">{{ award.Level }}</td>
+              <td class="p-4">{{ award.AwardingBody }}</td>
+              <td class="p-4">
+                <div class="btn-container">
+                  <button (click)="editAchievementAward(award.AchievementID!)" class="btn btn-edit btn-sm">Edit</button>
+                  <button (click)="deleteAchievementAward(award.AchievementID!)" class="btn btn-delete btn-sm">Delete</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-6">
+        <button class="btn btn-add-info text-white w-full" (click)="addNewAchievementAward()">Add Achievement Award</button>
+      </div>
     </div>
-    <div *ngIf="toastType === 'error'" class="alert alert-error">
-      <span>{{ toastMessage }}</span>
+
+    <div *ngIf="achievementAwardsData.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No achievement awards information available.</p>
+      </div>
+      <div class="flex justify-end">
+        <button class="btn btn-add-info w-full" (click)="addNewAchievementAward()">Add Achievement Award</button>
+      </div>
     </div>
-    <div *ngIf="toastType === 'warning'" class="alert alert-warning">
-      <span>{{ toastMessage }}</span>
+  </ng-container>
+
+  <ng-template #editForm>
+    <div class="p-6">
+      <form [formGroup]="achievementAwardForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div class="form-control w-full">
+            <label for="NatureOfAchievement" class="label-text font-bold text-lg">Nature of Achievement</label>
+            <input id="NatureOfAchievement" formControlName="NatureOfAchievement" class="input input-bordered w-full" placeholder="Enter the nature of achievement">
+          </div>
+          <div class="form-control w-full">
+            <label for="Classification" class="label-text font-bold text-lg">Classification</label>
+            <input id="Classification" formControlName="Classification" class="input input-bordered w-full" placeholder="Enter the classification">
+          </div>
+          <div class="form-control w-full">
+            <label for="Level" class="label-text font-bold text-lg">Level</label>
+            <input id="Level" formControlName="Level" class="input input-bordered w-full" placeholder="Enter the level of achievement">
+          </div>
+          <div class="form-control w-full">
+            <label for="AwardingBody" class="label-text font-bold text-lg">Awarding Body</label>
+            <input id="AwardingBody" formControlName="AwardingBody" class="input input-bordered w-full" placeholder="Enter the awarding body">
+          </div>
+          <div class="form-control w-full">
+            <label for="Venue" class="label-text font-bold text-lg">Venue</label>
+            <input id="Venue" formControlName="Venue" class="input input-bordered w-full" placeholder="Enter the venue">
+          </div>
+          <div class="form-control w-full">
+            <label for="InclusiveDates" class="label-text font-bold text-lg">Inclusive Dates</label>
+            <input id="InclusiveDates" formControlName="InclusiveDates" class="input input-bordered w-full" placeholder="Enter the inclusive dates">
+          </div>
+          <div class="form-control w-full">
+            <label for="Remarks" class="label-text font-bold text-lg">Remarks</label>
+            <textarea id="Remarks" formControlName="Remarks" class="textarea textarea-bordered w-full" placeholder="Enter any remarks"></textarea>
+          </div>
+          <div class="form-control w-full">
+            <label for="SupportingDocument" class="label-text font-bold text-lg">Supporting Document</label>
+            <input id="SupportingDocument" type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full">
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="submit" class="btn btn-save mr-4">{{ currentAchievementAwardId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
+        </div>
+      </form>
     </div>
+  </ng-template>
+</div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
   </div>
-      
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
+  </div>
+</div>

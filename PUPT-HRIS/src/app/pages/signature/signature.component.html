@@ -1,1 +1,21 @@
-<p>signature works!</p>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="container bg-base-200 rounded-lg shadow-lg p-6 mx-auto max-w-3xl">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Upload Digital Signature</h1>
+  </div>
+
+  <div class="p-6 space-y-6">
+    <form [formGroup]="signatureForm" (ngSubmit)="onSave()" class="space-y-6">
+      <div class="form-control w-full">
+        <label for="SignatureImage" class="label-text font-bold text-lg">Signature</label>
+        <p class="text-sm text-gray-600 mb-2">Please upload your digital signature in JPEG format. The file size should be less than 100kb.</p>
+        <input type="file" id="SignatureImage" (change)="onFileSelected($event)" class="file-input file-input-bordered w-full" accept="image/jpeg">
+      </div>
+
+      <div class="flex justify-end mt-6">
+        <button type="submit" class="btn btn-add bg-black text-white mr-4">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

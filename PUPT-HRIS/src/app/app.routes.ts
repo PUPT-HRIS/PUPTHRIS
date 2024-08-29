@@ -17,7 +17,7 @@ import { OfficershipMembershipComponent } from './pages/membership/membership.co
 import { AchievementAwardComponent } from './pages/achievement/achievement.component';
 import { QuestionsComponent } from './pages/questions/questions.component';
 import { ReferenceComponent } from './pages/reference/reference.component';
-import { SignatureComponent } from './pages/signature/signature.component';
+import { UserSignatureComponent } from './pages/signature/signature.component';
 import { BasicDetailsComponent } from './pages/basic-details/basic-details.component';
 import { PersonalDetailsComponent } from './pages/personal-details/personal-details.component';
 import { ContactDetailsComponent } from './pages/contact-details/contact-details.component';
@@ -54,7 +54,7 @@ export const routes: Routes = [
       { path: 'officer-membership', component: OfficershipMembershipComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'additional-question', component: QuestionsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'character-reference', component: ReferenceComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
-      { path: 'signature', component: SignatureComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
+      { path: 'signature', component: UserSignatureComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'new-account', component: NewAccountComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ]
