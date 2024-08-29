@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const sequelize = require('./config/db.config');
+
 const educationRoutes = require('./routes/educationRoutes');
 const familybackgroundRoutes = require('./routes/familybackgroundRoutes');
 const civilserviceeligibilityRoutes = require('./routes/civilserviceeligibilityRoutes');
@@ -24,6 +26,8 @@ const membershipRoutes = require('./routes/membershipRoutes');
 const achievementAwardsRoutes = require('./routes/achievementAwardsRoutes');
 const officershipMembershipRoutes = require('./routes/officerMembershipRoutes');
 const departmentRoutes = require('./routes/departmentRoutes');
+
+require('./models/associations');
 
 dotenv.config();
 
@@ -56,6 +60,13 @@ app.use('/api/achievement-awards', achievementAwardsRoutes);
 app.use('/api/officership-membership', officershipMembershipRoutes);
 app.use('/api/department', departmentRoutes);
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+sequelize.sync().then(() => {
+  console.log('Database synced successfully');
+  
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/`);
+  });
+}).catch(err => {
+  console.error('Unable to sync database:', err);
 });
+

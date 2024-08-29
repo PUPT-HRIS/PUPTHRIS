@@ -1,8 +1,7 @@
-const sequelize = require('../config/db.config');
 const { Sequelize } = require('sequelize');
 const User = require('../models/userModel');
 const BasicDetails = require('../models/basicDetailsModel');
-
+const Department = require('../models/departmentModel');
 
 exports.getDashboardData = async (req, res) => {
   try {
@@ -14,12 +13,17 @@ exports.getDashboardData = async (req, res) => {
     const faculty = await User.count({ where: { Role: 'faculty' } });
     const staff = await User.count({ where: { Role: 'staff' } });
 
-    const departments = await User.findAll({
+    const departments = await Department.findAll({
+      include: [{
+        model: User,
+        as: 'Users',
+        attributes: [],
+      }],
       attributes: [
-        'Department',
-        [Sequelize.fn('COUNT', Sequelize.col('Department')), 'count'],
+        'DepartmentName',
+        [Sequelize.fn('COUNT', Sequelize.col('Users.DepartmentID')), 'count'],
       ],
-      group: ['Department'],
+      group: ['DepartmentName'],
       raw: true,
     });
 
@@ -31,10 +35,11 @@ exports.getDashboardData = async (req, res) => {
       temporary,
       faculty,
       staff,
-      departments
+      departments,
     });
   } catch (error) {
     console.error('Error fetching dashboard data:', error);
     res.status(500).json({ message: 'Error fetching dashboard data', error: error.message });
   }
 };
+

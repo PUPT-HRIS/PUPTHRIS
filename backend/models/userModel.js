@@ -34,13 +34,11 @@ const User = sequelize.define('User', {
   },
   DepartmentID: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     references: {
-      model: Department,
+      model: Department, 
       key: 'DepartmentID',
     },
-    onUpdate: 'CASCADE',
-    onDelete: 'SET NULL',
   },
   Surname: {
     type: DataTypes.STRING(50),
