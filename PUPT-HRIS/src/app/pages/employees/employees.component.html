@@ -25,7 +25,7 @@
           {{ user.FirstName }} {{ user.MiddleName }} {{ user.Surname }} {{ user.NameExtension }}
         </td>        
         <td class="p-4">{{ user.Role }}</td>      
-        <td class="p-4">{{ user.Department }}</td>
+        <td class="p-4">{{ user.Department?.DepartmentName }}</td>
         <td class="p-4">{{ user.EmploymentType }}</td>
         <td class="p-4">
           <button class="btn btn-primary btn-sm" (click)="openModal(user)">View Info</button>

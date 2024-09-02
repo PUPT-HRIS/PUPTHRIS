@@ -28,7 +28,7 @@ export class UserService {
   }
 
   getUserById(userId: number): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${userId}`);
+    return this.http.get<User>(`${this.apiUrl}/${userId}`, { headers: this.getHeaders() });
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
