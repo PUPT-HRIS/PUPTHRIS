@@ -61,6 +61,14 @@ const User = sequelize.define('User', {
     defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     allowNull: false,
   },
+  resetPasswordToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  resetPasswordExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 }, {
   tableName: 'users',
   timestamps: false,

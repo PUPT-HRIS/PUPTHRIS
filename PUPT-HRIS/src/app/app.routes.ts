@@ -24,11 +24,13 @@ import { ContactDetailsComponent } from './pages/contact-details/contact-details
 import { AuthGuard } from './services/auth.guard';
 import { RoleGuard } from './services/role.guard';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { DepartmentManagementComponent } from './pages/department-management/department-management.component'; 
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { DepartmentManagementComponent } from './pages/department-management/department-management.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent },  
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   {
     path: '',
     component: MainLayoutComponent,
@@ -49,7 +51,6 @@ export const routes: Routes = [
       { path: 'work-experience', component: WorkExperienceComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'voluntary-works', component: VoluntaryWorkComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'other-information', component: OtherInformationComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
-      { path: 'trainings-and-seminars', component: TrainingSeminarsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'outstanding-achievement', component: AchievementAwardComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'officer-membership', component: OfficershipMembershipComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'additional-question', component: QuestionsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },

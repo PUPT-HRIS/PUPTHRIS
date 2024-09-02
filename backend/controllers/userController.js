@@ -82,7 +82,7 @@ const sendEmail = async (toEmail, password, firstName) => {
         service: process.env.EMAIL_SERVICE,
         auth: {
           user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD,
+          pass: process.env.EMAIL_PASSWORD, // App-specific password if using Gmail
         },
       });
     } else {
@@ -113,3 +113,4 @@ const sendEmail = async (toEmail, password, firstName) => {
     console.error('Error sending email:', error);
   }
 };
+
