@@ -25,7 +25,7 @@ jobs:
       run: CI=false npm run build
 
     - name: Verify Build Directory
-      run: ls -al dist/PUPT-HRIS
+      run: ls -al dist/pupt-hris
 
     - name: Transfer Build Folder to EC2 Instance (main)
       uses: easingthemes/ssh-deploy@v2.1.4
