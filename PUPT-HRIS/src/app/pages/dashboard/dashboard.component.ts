@@ -15,8 +15,6 @@ export class DashboardComponent implements AfterViewInit {
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
-  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef){}
-
   public totalFemale: number = 0;
   public totalMale: number = 0;
   public partTime: number = 0;
@@ -47,7 +45,7 @@ export class DashboardComponent implements AfterViewInit {
       }
     }
   };
-  public pieChartLabels: string[] = ['Math', 'IT', 'English'];
+  public pieChartLabels: string[] = [];
   public pieChartType: ChartType = 'pie';
   public pieChartLegend = true;
   public pieChartData: ChartData<'pie'> = {
@@ -60,10 +58,12 @@ export class DashboardComponent implements AfterViewInit {
     ]
   };
 
+  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef){}
+
   ngAfterViewInit(): void {
     this.dashboardService.getDashboardData().subscribe(data => {
       console.log('Dashboard Data:', data);
-  
+
       this.totalFemale = data.totalFemale;
       this.totalMale = data.totalMale;
       this.partTime = data.partTime;
@@ -71,11 +71,14 @@ export class DashboardComponent implements AfterViewInit {
       this.temporary = data.temporary;
       this.faculty = data.faculty;
       this.staff = data.staff;
-  
+
       if (data.departments && Array.isArray(data.departments)) {
-        const departments: DepartmentCount[] = data.departments;
+        const departments: DepartmentCount[] = data.departments.map((dept: { DepartmentName: string, count: number }) => ({
+          Department: dept.DepartmentName,
+          count: dept.count,
+        }));
         console.log('Departments Data:', departments);
-  
+
         this.pieChartLabels = departments.map(dept => dept.Department);
         this.pieChartData = {
           labels: this.pieChartLabels,
@@ -87,7 +90,7 @@ export class DashboardComponent implements AfterViewInit {
             })
           }]
         };
-  
+
         setTimeout(() => {
           if (this.chart) {
             this.chart?.chart?.resize();
@@ -100,5 +103,4 @@ export class DashboardComponent implements AfterViewInit {
       }
     });
   }
-  
 }

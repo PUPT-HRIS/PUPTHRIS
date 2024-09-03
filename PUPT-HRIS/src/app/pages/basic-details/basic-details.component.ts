@@ -5,13 +5,14 @@ import { AuthService } from '../../services/auth.service';
 import { BasicDetails } from '../../model/basic-details.model';
 import {jwtDecode} from 'jwt-decode';
 import { CommonModule } from '@angular/common';
+import { ProfileImageComponent } from '../profile-image/profile-image.component';
 
 @Component({
   selector: 'app-basic-details',
   templateUrl: './basic-details.component.html',
   styleUrls: ['./basic-details.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, ProfileImageComponent]
 })
 export class BasicDetailsComponent implements OnInit {
   basicDetailsForm: FormGroup;

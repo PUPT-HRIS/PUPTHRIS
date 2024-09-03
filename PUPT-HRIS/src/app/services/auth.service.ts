@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { jwtDecode } from 'jwt-decode'; 
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { environment } from '../../environments/environment';
 export class AuthService {
   private apiUrl = `${environment.apiBaseUrl}/auth`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { email, password }).pipe(
@@ -28,8 +29,20 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  // New forgotPassword method
-  forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  private getUserId(): number | null {
+    const token = this.getToken();
+    if (token) {
+        const decodedToken: any = jwtDecode(token);
+        return decodedToken.userId;
+    }
+    return null;
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    const userId = this.getUserId();
+    if (!userId) {
+      throw new Error('User ID is missing from token');
+    }
+    return this.http.post(`${this.apiUrl}/change-password`, { userId, currentPassword, newPassword });
   }
 }

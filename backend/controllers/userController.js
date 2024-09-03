@@ -1,12 +1,12 @@
 const nodemailer = require('nodemailer');
 const User = require('../models/userModel');
+const { Department } = require('../models/associations');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
-// Add a new user
 exports.addUser = async (req, res) => {
   try {
-    const { Fcode, Surname, FirstName, MiddleName, NameExtension, Email, EmploymentType, Password, Role, Department } = req.body;
+    const { Fcode, Surname, FirstName, MiddleName, NameExtension, Email, EmploymentType, Password, Role, DepartmentID } = req.body;
     const salt = await bcrypt.genSalt(10);
     const PasswordHash = await bcrypt.hash(Password, salt);
 
@@ -21,10 +21,9 @@ exports.addUser = async (req, res) => {
       PasswordHash,
       Salt: salt,
       Role,
-      Department,
+      DepartmentID,
     });
 
-    // Send an email with the user's email, password, and link to the site
     await sendEmail(Email, Password, FirstName);
 
     res.status(201).json(newUser);
@@ -34,16 +33,45 @@ exports.addUser = async (req, res) => {
   }
 };
 
-// Get all users
+
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.findAll(); // Assuming you're using Sequelize, adjust as per your ORM or database query method
+    const users = await User.findAll({
+      include: [{
+        model: Department,
+        as: 'Department',
+        attributes: ['DepartmentName']
+      }]
+    });
     res.status(200).json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).send('Internal Server Error');
   }
 };
+
+exports.getUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findByPk(userId, {
+      include: [{
+        model: Department,
+        as: 'Department',
+        attributes: ['DepartmentName']
+      }]
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 
 const sendEmail = async (toEmail, password, firstName) => {
   try {
@@ -54,7 +82,7 @@ const sendEmail = async (toEmail, password, firstName) => {
         service: process.env.EMAIL_SERVICE,
         auth: {
           user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD,
+          pass: process.env.EMAIL_PASSWORD, // App-specific password if using Gmail
         },
       });
     } else {
@@ -85,3 +113,4 @@ const sendEmail = async (toEmail, password, firstName) => {
     console.error('Error sending email:', error);
   }
 };
+

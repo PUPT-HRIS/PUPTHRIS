@@ -20,7 +20,7 @@ export class EducationComponent implements OnInit {
   isEditing: boolean = false;
   currentEducationId: number | null = null;
   userId: number;
-  initialFormValue: any; // To store the initial form value
+  initialFormValue: any;
 
   showToast: boolean = false;
   toastMessage: string = '';
@@ -31,7 +31,9 @@ export class EducationComponent implements OnInit {
     'SECONDARY',
     'VOCATIONAL / TRADE COURSE',
     'COLLEGE',
-    'GRADUATE STUDIES'
+    'GRADUATE STUDIES',
+    `MASTER'S`,
+    'DOCTORATE'
   ];
 
   constructor(private fb: FormBuilder, private educationService: EducationService, private authService: AuthService) {

@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
+const Department = require('./departmentModel');
 
 const User = sequelize.define('User', {
   UserID: {
@@ -31,9 +32,13 @@ const User = sequelize.define('User', {
     type: DataTypes.ENUM('fulltime', 'parttime', 'temporary'),
     allowNull: false,
   },
-  Department: {
-    type: DataTypes.ENUM('math', 'IT', 'english'),
-    allowNull: false,
+  DepartmentID: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: Department, 
+      key: 'DepartmentID',
+    },
   },
   Surname: {
     type: DataTypes.STRING(50),
@@ -55,6 +60,14 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE,
     defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     allowNull: false,
+  },
+  resetPasswordToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  resetPasswordExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
   },
 }, {
   tableName: 'users',

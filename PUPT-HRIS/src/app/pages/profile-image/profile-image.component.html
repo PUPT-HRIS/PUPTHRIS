@@ -1,0 +1,23 @@
+<div class="profile-image-container">
+  <h3>Profile Image</h3>
+
+  <ng-container *ngIf="profileImage$ | async as profileImage; else noImage">
+    <img [src]="profileImage.ImagePath" alt="Profile Image" class="profile-img" />
+    <button (click)="deleteProfileImage()" class="btn btn-danger">Delete Image</button>
+  </ng-container>
+
+  <ng-template #noImage>
+    <p>No profile image found.</p>
+  </ng-template>
+
+  <div class="file-upload">
+    <label for="profileImageUpload" class="btn btn-primary">
+      Upload New Image
+    </label>
+    <input type="file" id="profileImageUpload" (change)="onFileSelected($event)" hidden>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+</div>

@@ -27,6 +27,10 @@ export class UserService {
     return this.http.get<User[]>(this.apiUrl, { headers: this.getHeaders() });
   }
 
+  getUserById(userId: number): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${userId}`, { headers: this.getHeaders() });
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);
     return throwError(error.message || 'Server error');

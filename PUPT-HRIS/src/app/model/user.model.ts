@@ -6,6 +6,9 @@ export interface User {
   Surname: string;
   NameExtension?: string;
   Role: string;
-  Department: string;
   EmploymentType: string;
+  Department?: {
+    DepartmentID: number;
+    DepartmentName: string;
+  };
 }

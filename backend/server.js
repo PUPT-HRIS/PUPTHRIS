@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const sequelize = require('./config/db.config');
+
 const educationRoutes = require('./routes/educationRoutes');
 const familybackgroundRoutes = require('./routes/familybackgroundRoutes');
 const civilserviceeligibilityRoutes = require('./routes/civilserviceeligibilityRoutes');
@@ -18,10 +20,15 @@ const additionalQuestionRoutes = require('./routes/additionalQuestionRoutes');
 const personalDetailsRoutes = require('./routes/personalDetailsRoutes');
 const trainingsRoutes = require('./routes/trainingsRoute');
 const dashboardRoutes = require('./routes/dashboardRoutes');
-
 const specialSkillRoutes = require('./routes/specialSkillRoutes');
 const nonAcademicRoutes = require('./routes/nonAcademicRoutes');
 const membershipRoutes = require('./routes/membershipRoutes');
+const achievementAwardsRoutes = require('./routes/achievementAwardsRoutes');
+const officershipMembershipRoutes = require('./routes/officerMembershipRoutes');
+const departmentRoutes = require('./routes/departmentRoutes');
+const profileImageRoutes = require('./routes/profileImageRoutes');
+
+require('./models/associations');
 
 dotenv.config();
 
@@ -47,11 +54,21 @@ app.use('/api/children', childrenRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
-
 app.use('/api/specialskills', specialSkillRoutes);
 app.use('/api/nonacademic', nonAcademicRoutes);
 app.use('/api/membership', membershipRoutes);
+app.use('/api/achievement-awards', achievementAwardsRoutes);
+app.use('/api/officership-membership', officershipMembershipRoutes);
+app.use('/api/department', departmentRoutes);
+app.use('/api/profile-image', profileImageRoutes);
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+sequelize.sync().then(() => {
+  console.log('Database synced successfully');
+  
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/`);
+  });
+}).catch(err => {
+  console.error('Unable to sync database:', err);
 });
+
