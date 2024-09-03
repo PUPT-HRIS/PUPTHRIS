@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { jwtDecode } from 'jwt-decode'; 
 
 @Injectable({
   providedIn: 'root'
@@ -28,11 +29,20 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  private getUserId(): number | null {
+    const token = this.getToken();
+    if (token) {
+        const decodedToken: any = jwtDecode(token);
+        return decodedToken.userId;
+    }
+    return null;
   }
 
-  resetPassword(token: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reset-password/${token}`, { newPassword });
-  }  
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    const userId = this.getUserId();
+    if (!userId) {
+      throw new Error('User ID is missing from token');
+    }
+    return this.http.post(`${this.apiUrl}/change-password`, { userId, currentPassword, newPassword });
+  }
 }

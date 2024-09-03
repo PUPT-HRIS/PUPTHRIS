@@ -1,0 +1,51 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="min-h-screen bg-gray-100 flex items-center justify-center">
+  <div class="flex flex-col bg-white rounded-lg shadow-lg p-8 max-w-lg w-full">
+    <h1 class="text-2xl font-bold mb-6">Change Password</h1>
+    <form [formGroup]="changePasswordForm" (ngSubmit)="onSubmit()">
+      <div class="form-control mb-4">
+        <label class="label-text">Current Password</label>
+        <input 
+          formControlName="currentPassword" 
+          type="password" 
+          class="input input-bordered w-full" 
+          placeholder="Enter your current password"
+        >
+        <div *ngIf="changePasswordForm.get('currentPassword')?.invalid && changePasswordForm.get('currentPassword')?.touched" class="text-red-500 text-sm">
+          Current password is required.
+        </div>
+      </div>
+
+      <div class="form-control mb-4">
+        <label class="label-text">New Password</label>
+        <input 
+          formControlName="newPassword" 
+          type="password" 
+          class="input input-bordered w-full" 
+          placeholder="Enter your new password"
+        >
+        <div *ngIf="changePasswordForm.get('newPassword')?.invalid && changePasswordForm.get('newPassword')?.touched" class="text-red-500 text-sm">
+          New password must be at least 8 characters long.
+        </div>
+      </div>
+
+      <div class="form-control mb-6">
+        <label class="label-text">Confirm New Password</label>
+        <input 
+          formControlName="confirmPassword" 
+          type="password" 
+          class="input input-bordered w-full" 
+          placeholder="Confirm your new password"
+        >
+        <div *ngIf="changePasswordForm.get('confirmPassword')?.invalid && changePasswordForm.get('confirmPassword')?.touched" class="text-red-500 text-sm">
+          Passwords do not match.
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-block bg-black text-white" [disabled]="changePasswordForm.invalid">Change Password</button>
+      <div *ngIf="errorMessage" class="text-red-500 text-sm mt-4">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="text-green-500 text-sm mt-4">{{ successMessage }}</div>
+    </form>
+  </div>
+</div>

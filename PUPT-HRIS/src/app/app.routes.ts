@@ -27,6 +27,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { DepartmentManagementComponent } from './pages/department-management/department-management.component';
 import { ProfileImageComponent } from './pages/profile-image/profile-image.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -39,6 +40,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'departments', component: DepartmentManagementComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
+      { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
       { path: 'employees', component: EmployeeComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
       { path: 'basic-details', component: BasicDetailsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'personal-details', component: PersonalDetailsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
@@ -58,7 +60,7 @@ export const routes: Routes = [
       { path: 'character-reference', component: ReferenceComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'signature', component: UserSignatureComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'new-account', component: NewAccountComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
-      { path: 'profile-image', component: ProfileImageComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },  // Added profile image route
+      { path: 'profile-image', component: ProfileImageComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ]
   },
