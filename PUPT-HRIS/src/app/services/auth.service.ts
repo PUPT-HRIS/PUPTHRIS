@@ -38,6 +38,14 @@ export class AuthService {
     return null;
   }
 
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password/${token}`, { newPassword });
+  } 
+
   changePassword(currentPassword: string, newPassword: string): Observable<any> {
     const userId = this.getUserId();
     if (!userId) {
