@@ -26,11 +26,12 @@ import { RoleGuard } from './services/role.guard';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { DepartmentManagementComponent } from './pages/department-management/department-management.component';
+import { ProfileImageComponent } from './pages/profile-image/profile-image.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'reset-password/:token', component: ResetPasswordComponent },
   {
     path: '',
     component: MainLayoutComponent,
@@ -57,6 +58,7 @@ export const routes: Routes = [
       { path: 'character-reference', component: ReferenceComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'signature', component: UserSignatureComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },
       { path: 'new-account', component: NewAccountComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin'] } },
+      { path: 'profile-image', component: ProfileImageComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin'] } },  // Added profile image route
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ]
   },

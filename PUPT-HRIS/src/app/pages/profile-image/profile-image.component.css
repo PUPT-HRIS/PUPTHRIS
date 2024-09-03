@@ -1,0 +1,30 @@
+.profile-image-container {
+  text-align: center;
+}
+
+.profile-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.btn-danger {
+  background-color: red;
+  color: white;
+  margin-top: 10px;
+}
+
+.btn-primary {
+  background-color: blue;
+  color: white;
+}
+
+.file-upload {
+  margin-top: 15px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
