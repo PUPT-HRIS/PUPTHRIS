@@ -1,21 +1,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<div class="container bg-base-200 rounded-lg shadow-lg p-6 mx-auto max-w-3xl">
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h1 class="text-2xl font-bold">Upload Digital Signature</h1>
   </div>
 
-  <div class="p-6 space-y-6">
-    <form [formGroup]="signatureForm" (ngSubmit)="onSave()" class="space-y-6">
-      <div class="form-control w-full">
-        <label for="SignatureImage" class="label-text font-bold text-lg">Signature</label>
-        <p class="text-sm text-gray-600 mb-2">Please upload your digital signature in JPEG format. The file size should be less than 100kb.</p>
-        <input type="file" id="SignatureImage" (change)="onFileSelected($event)" class="file-input file-input-bordered w-full" accept="image/jpeg">
+  <!-- Display Section -->
+  <div class="p-6 space-y-8">
+    <form [formGroup]="signatureForm" (ngSubmit)="onSave()">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <!-- Signature Input -->
+        <div class="form-control w-full">
+          <label for="SignatureImage" class="label-text font-bold text-lg">Signature</label>
+          <p class="text-sm text-gray-600 mb-2">Please upload your digital signature in JPEG format. The file size should be less than 100kb.</p>
+          <input type="file" id="SignatureImage" (change)="onFileSelected($event)" class="file-input input-bordered w-full" accept="image/jpeg">
+        </div>
       </div>
 
+      <!-- Save Button only -->
       <div class="flex justify-end mt-6">
-        <button type="submit" class="btn btn-add bg-black text-white mr-4">Save</button>
+        <button type="submit" class="btn btn-save">Save</button>
       </div>
     </form>
   </div>
 </div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
+  </div>
+</div>
+
