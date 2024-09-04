@@ -1,8 +1,12 @@
 <div class="profile-image-container">
-  <h3>Profile Image</h3>
+  <div class="profile-header">
+    <h3>Profile Image</h3>
+  </div>
 
   <ng-container *ngIf="profileImage$ | async as profileImage; else noImage">
-    <img [src]="profileImage.ImagePath" alt="Profile Image" class="profile-img" />
+    <div class="profile-img-wrapper">
+      <img [src]="profileImage.ImagePath" alt="Profile Image" class="profile-img" />
+    </div>
     <button (click)="deleteProfileImage()" class="btn btn-danger">Delete Image</button>
   </ng-container>
 
