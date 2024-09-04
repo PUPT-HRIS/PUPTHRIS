@@ -1,6 +1,6 @@
 export interface UserSignature {
-  SignatureID?: number;
+  SignatureID: number;
   UserID: number;
-  SignatureImage: Blob | string;
-  SignatureDate?: Date;
+  SignatureImageURL: string;
+  SignatureDate: Date;
 }

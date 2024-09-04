@@ -27,6 +27,7 @@ const achievementAwardsRoutes = require('./routes/achievementAwardsRoutes');
 const officershipMembershipRoutes = require('./routes/officerMembershipRoutes');
 const departmentRoutes = require('./routes/departmentRoutes');
 const profileImageRoutes = require('./routes/profileImageRoutes');
+const userSignatureRoutes = require('./routes/userSignatureRoutes');
 
 require('./models/associations');
 
@@ -61,6 +62,7 @@ app.use('/api/achievement-awards', achievementAwardsRoutes);
 app.use('/api/officership-membership', officershipMembershipRoutes);
 app.use('/api/department', departmentRoutes);
 app.use('/api/profile-image', profileImageRoutes);
+app.use('/api/user-signature', userSignatureRoutes);
 
 sequelize.sync().then(() => {
   console.log('Database synced successfully');
