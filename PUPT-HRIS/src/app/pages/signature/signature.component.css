@@ -1,0 +1,58 @@
+* {
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* Container styling */
+  .form-container {
+    background-color: #f9f9f9; /* Light background for contrast */
+    border-radius: 0.5rem; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 2rem;
+    max-width: 800px; /* Limit width */
+    margin: 2rem auto; /* Center horizontally with margin */
+  }
+  
+  /* Heading */
+  .bg-maroon {
+    background-color: #800000; /* Maroon background */
+  }
+  
+  .text-white {
+    color: #ffffff; /* White text */
+  }
+  
+  /* Form field styling */
+  .form-control {
+    margin-bottom: 1rem; /* Space below each form control */
+  }
+  
+  .label-text {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  
+  .input, .select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 0.25rem; /* Slightly rounded corners */
+  }
+  
+  /* Button styling */
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+  }
+  
+  .btn-save {
+    background-color: #000000; /* Black background */
+    color: #ffffff; /* White text */
+  }
+  
+  .btn-cancel {
+    background-color: #800000; /* Maroon background */
+    color: #ffffff; /* White text */
+  }
+  
