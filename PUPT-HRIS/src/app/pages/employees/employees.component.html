@@ -2,7 +2,7 @@
 
 <div class="overflow-x-auto px-10">
   <div class="flex-1 mb-2">
-    <a class="text-lg font-normal">You are currently viewing the lists of Employees.</a>
+    <a class="text-lg font-normal">You are currently viewing the list of Employees.</a>
   </div>
   <table class="table table-zebra w-full border-separate border-spacing-0">
     <!-- head -->
@@ -18,13 +18,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users; let i = index">
-        <th class="p-4">{{ i + 1 }}</th>
+      <tr *ngFor="let user of paginatedUsers; let i = index">
+        <th class="p-4">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</th>
         <td class="p-4">{{ user.Fcode }}</td>
         <td class="p-4">
           {{ user.FirstName }} {{ user.MiddleName }} {{ user.Surname }} {{ user.NameExtension }}
-        </td>        
-        <td class="p-4">{{ user.Role }}</td>      
+        </td>
+        <td class="p-4">{{ user.Role }}</td>
         <td class="p-4">{{ user.Department?.DepartmentName }}</td>
         <td class="p-4">{{ user.EmploymentType }}</td>
         <td class="p-4">
@@ -33,6 +33,19 @@
       </tr>
     </tbody>
   </table>
+</div>
+
+<!-- Pagination Controls -->
+<div class="pagination-controls">
+  <button (click)="previousPage()" [disabled]="currentPage === 1" class="btn">Previous</button>
+
+  <span *ngFor="let page of [].constructor(totalPages); let i = index">
+    <button (click)="setPage(i + 1)" [class.active]="i + 1 === currentPage" class="btn">
+      {{ i + 1 }}
+    </button>
+  </span>
+
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn">Next</button>
 </div>
 
 <!-- Modal with Sections -->
@@ -234,6 +247,7 @@
       </table>
     </div>
 
+    <!-- Learning & Development Content -->
     <div *ngIf="activeTab === 'learning'">
       <table class="table w-full">
         <thead>
@@ -257,8 +271,8 @@
       </table>
     </div>
 
-     <!-- Work Experience Content -->
-     <div *ngIf="activeTab === 'work'">
+    <!-- Work Experience Content -->
+    <div *ngIf="activeTab === 'work'">
       <table class="table w-full">
         <thead>
           <tr>
@@ -285,8 +299,8 @@
       </table>
     </div>
 
-     <!-- Voluntary Work Content -->
-     <div *ngIf="activeTab === 'voluntary'">
+    <!-- Voluntary Work Content -->
+    <div *ngIf="activeTab === 'voluntary'">
       <table class="table w-full">
         <thead>
           <tr>
