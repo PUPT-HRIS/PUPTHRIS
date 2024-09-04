@@ -12,8 +12,9 @@ import { CommonModule } from '@angular/common';
 })
 export class SettingsComponent {
   changePasswordForm: FormGroup;
-  errorMessage: string | null = null;
-  successMessage: string | null = null;
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
 
   constructor(
     private fb: FormBuilder,
@@ -36,15 +37,25 @@ export class SettingsComponent {
     if (this.changePasswordForm.valid) {
       const { currentPassword, newPassword } = this.changePasswordForm.value;
       this.authService.changePassword(currentPassword, newPassword).subscribe({
-        next: (response) => {
-          this.successMessage = 'Password changed successfully!';
-          this.errorMessage = null;
+        next: () => {
+          this.showToastNotification('Password changed successfully!', 'success');
         },
-        error: (error) => {
-          this.errorMessage = 'Failed to change password. Please try again.';
-          this.successMessage = null;
+        error: () => {
+          this.showToastNotification('Failed to change password. Please try again.', 'error');
         }
       });
+    } else {
+      this.showToastNotification('Please correct the errors before submitting.', 'warning');
     }
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
   }
 }
