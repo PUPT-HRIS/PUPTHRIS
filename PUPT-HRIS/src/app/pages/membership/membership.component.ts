@@ -19,6 +19,7 @@ export class OfficershipMembershipComponent implements OnInit {
   isEditing: boolean = false;
   currentMembershipId: number | null = null;
   userId: number;
+  selectedFileName: string | null = null;
 
   showToast: boolean = false;
   toastMessage: string = '';
@@ -98,6 +99,15 @@ export class OfficershipMembershipComponent implements OnInit {
           console.error('Error adding membership', error);
         }
       );
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFileName = input.files[0].name;
+    } else {
+      this.selectedFileName = 'No file chosen';
     }
   }
 
