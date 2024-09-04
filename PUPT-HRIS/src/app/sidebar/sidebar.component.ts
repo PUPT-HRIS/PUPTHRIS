@@ -54,6 +54,8 @@ export class SidebarComponent implements OnInit {
   setActiveItemBasedOnRoute(url: string) {
     if (url.includes('dashboard')) {
       this.activeItem = 'dashboard';
+    } else if (url.includes('departments')) {
+      this.activeItem = 'department-management';
     } else if (url.includes('employees')) {
       this.activeItem = 'employees';
     } else if (url.includes('print-pds')) {
