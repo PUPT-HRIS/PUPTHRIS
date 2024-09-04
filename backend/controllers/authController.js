@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
+const Department = require('../models/departmentModel'); 
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -8,7 +9,16 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ where: { Email: email } });
+    const user = await User.findOne({
+      where: { Email: email },
+      include: [
+        {
+          model: Department,
+          as: 'Department',
+          attributes: ['DepartmentName'],
+        }
+      ]
+    });
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
@@ -30,5 +40,6 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
