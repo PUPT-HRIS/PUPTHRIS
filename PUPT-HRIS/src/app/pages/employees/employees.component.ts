@@ -34,6 +34,7 @@ import { CommonModule } from '@angular/common';
 })
 export class EmployeeComponent implements OnInit {
   users: User[] = [];
+  paginatedUsers: User[] = []; // To hold the users for the current page
   basicDetails: BasicDetails | null = null;
   educationDetails: Education[] | null = null;
   personalDetails: PersonalDetails | null = null;
@@ -47,6 +48,11 @@ export class EmployeeComponent implements OnInit {
   characterReferences: CharacterReference[] | null = null;
   isModalOpen: boolean = false;
   activeTab: string = 'basic';
+
+  // Pagination variables
+  currentPage: number = 1;
+  itemsPerPage: number = 10; // Set the number of users per page to 10
+  totalPages: number = 0;
 
   constructor(
     private userService: UserService,
@@ -70,15 +76,46 @@ export class EmployeeComponent implements OnInit {
   loadUsers(): void {
     this.userService.getUsers().subscribe(
       (data) => {
-        console.log('API Response:', data); // Log the full response
         this.users = data;
+        this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
+        this.paginateUsers();
       },
       (error) => {
         console.error('Error fetching users', error);
       }
     );
-  }  
-  
+  }
+
+  // Method to paginate users based on the current page
+  paginateUsers(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedUsers = this.users.slice(start, end);
+  }
+
+  // Method to go to the next page
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.paginateUsers();
+    }
+  }
+
+  // Method to go to the previous page
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.paginateUsers();
+    }
+  }
+
+  // Method to set a specific page
+  setPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.paginateUsers();
+    }
+  }
 
   openModal(user: User): void {
     this.isModalOpen = true;

@@ -1,0 +1,187 @@
+* {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Container styles */
+  .container {
+    background-color: #f9fafb;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .bg-maroon {
+    background-color: #800000;
+  }
+  
+  .table-zebra {
+    background-color: white;
+    border-radius: 8px;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Button container */
+  .btn-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  /* Button styles */
+  .btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+  }
+  
+  .btn-error {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+  }
+  
+  /* Add button with hover effect */
+  .btn-add {
+    background-color: black;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-add:hover {
+    background-color: #333333; /* Near black on hover */
+  }
+  
+  /* Cancel button with hover effect */
+  .btn-cancel {
+    background-color: #800000;
+    color: white;
+  }
+  
+  .btn-cancel:hover {
+    background-color: #600000; /* Slightly darker maroon on hover */
+  }
+  
+  /* Form controls */
+  .input,
+  .textarea,
+  .file-input {
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 14px;
+  }
+  
+  .input:focus,
+  .textarea:focus,
+  .file-input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .label-text {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .file-input {
+    padding: 6px;
+    cursor: pointer;
+  }
+  
+  /* Grid layout */
+  .grid {
+    display: grid;
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .gap-6 {
+    gap: 24px;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 24px;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .justify-end {
+    justify-content: flex-end;
+  }
+  
+  .mt-6 {
+    margin-top: 24px;
+  }
+  
+  .btn-add-info {
+    background-color: #000; /* Black background */
+    border-color: #000; /* Black border */
+    color: #fff; /* White text */
+    width: 100%; /* Full width */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  }
+  
+  .btn-add-info:hover {
+    background-color: #333; /* Slightly lighter black on hover */
+    transform: translateY(-1px); /* Slight lift effect */
+  }
+  
+  /* Hide the default file input appearance */
+.file-input {
+    display: none; /* This completely hides the default input field */
+  }
+  
+  /* Custom file input button styling */
+  .custom-file-label {
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #333333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+  }
+  
+  /* Hover effect for file input button */
+  .custom-file-label:hover {
+    background-color: #000000;
+  }
+  
+  /* Instructions text */
+  .file-input-instructions {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  
+  /* Wrapper for the chosen file name */
+  .file-name {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #6b7280;
+    display: inline-block;
+  }
+  
+  

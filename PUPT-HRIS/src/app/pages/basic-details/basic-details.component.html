@@ -1,7 +1,5 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<app-profile-image></app-profile-image>
-
 <div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h1 class="text-2xl font-bold">Basic Details</h1>
@@ -11,7 +9,8 @@
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="basicDetails" class="p-6 space-y-8">
       <div class="p-6 bg-white rounded-lg shadow-lg">
-        <div class="grid grid-cols-2 gap-x-12 gap-y-4">
+        <app-profile-image></app-profile-image>
+        <div class="grid grid-cols-2 gap-x-12 gap-y-4 my-6">
           <p class="text-lg"><strong>Last Name:</strong> {{ basicDetails?.LastName }}</p>
           <p class="text-lg"><strong>First Name:</strong> {{ basicDetails?.FirstName }}</p>
           <p class="text-lg"><strong>Middle Initial:</strong> {{ basicDetails?.MiddleInitial }}</p>

@@ -51,19 +51,19 @@
 }
 
 .tab {
-  padding: 10px; /* Ensuring enough padding around the text */
-  flex: 1; /* Equal space for each tab */
+  padding: 10px;
+  flex: 1;
   margin-right: 5px;
   cursor: pointer;
   border-radius: 0.5rem;
   background-color: #f7fafc;
   transition: background-color 0.2s;
   text-align: center;
-  white-space: nowrap; /* Ensure the text does not wrap */
+  white-space: nowrap;
 }
 
 .tab:last-child {
-  margin-right: 0; /* Remove margin from the last tab */
+  margin-right: 0;
 }
 
 .tab:hover {
@@ -88,6 +88,38 @@
   padding: 0.75rem;
   border-bottom: 1px solid #e2e8f0;
   text-align: left;
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  margin: 0 5px;
+  padding: 10px 15px;
+  background-color: maroon;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-controls button.active {
+  background-color: black; /* Active page is black */
+  color: white;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #a00000;
 }
 
 .font-semibold {
