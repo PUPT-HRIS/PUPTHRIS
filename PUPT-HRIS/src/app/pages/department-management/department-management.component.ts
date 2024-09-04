@@ -17,6 +17,11 @@ export class DepartmentManagementComponent implements OnInit {
   isEditing: boolean = false;
   currentDepartmentId: number | null = null;
 
+  // Toast variables
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
+
   constructor(
     private departmentService: DepartmentService,
     private fb: FormBuilder
@@ -37,6 +42,7 @@ export class DepartmentManagementComponent implements OnInit {
         this.departments = data;
       },
       (error) => {
+        this.showToastNotification('Error fetching departments', 'error');
         console.error('Error fetching departments', error);
       }
     );
@@ -44,6 +50,7 @@ export class DepartmentManagementComponent implements OnInit {
 
   onSubmit(): void {
     if (this.departmentForm.invalid) {
+      this.showToastNotification('Please fill out all required fields.', 'warning');
       return;
     }
 
@@ -54,8 +61,10 @@ export class DepartmentManagementComponent implements OnInit {
         () => {
           this.loadDepartments();
           this.resetForm();
+          this.showToastNotification('Department updated successfully', 'success');
         },
         (error) => {
+          this.showToastNotification('Error updating department', 'error');
           console.error('Error updating department', error);
         }
       );
@@ -64,8 +73,10 @@ export class DepartmentManagementComponent implements OnInit {
         () => {
           this.loadDepartments();
           this.resetForm();
+          this.showToastNotification('Department added successfully', 'success');
         },
         (error) => {
+          this.showToastNotification('Error adding department', 'error');
           console.error('Error adding department', error);
         }
       );
@@ -83,8 +94,10 @@ export class DepartmentManagementComponent implements OnInit {
       this.departmentService.deleteDepartment(id).subscribe(
         () => {
           this.loadDepartments();
+          this.showToastNotification('Department deleted successfully', 'success');
         },
         (error) => {
+          this.showToastNotification('Error deleting department', 'error');
           console.error('Error deleting department', error);
         }
       );
@@ -95,5 +108,16 @@ export class DepartmentManagementComponent implements OnInit {
     this.isEditing = false;
     this.currentDepartmentId = null;
     this.departmentForm.reset();
+  }
+
+  // Toast Notification Method
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Toast disappears after 3 seconds
   }
 }
