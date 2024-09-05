@@ -63,7 +63,7 @@ export class DashboardComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.dashboardService.getDashboardData().subscribe(data => {
       console.log('Dashboard Data:', data);
-
+  
       this.totalFemale = data.totalFemale;
       this.totalMale = data.totalMale;
       this.partTime = data.partTime;
@@ -71,26 +71,32 @@ export class DashboardComponent implements AfterViewInit {
       this.temporary = data.temporary;
       this.faculty = data.faculty;
       this.staff = data.staff;
-
+  
       if (data.departments && Array.isArray(data.departments)) {
         const departments: DepartmentCount[] = data.departments.map((dept: { DepartmentName: string, count: number }) => ({
           Department: dept.DepartmentName,
           count: dept.count,
         }));
         console.log('Departments Data:', departments);
-
+  
         this.pieChartLabels = departments.map(dept => dept.Department);
+  
+        // Extend the color palette to 20 vibrant colors
+        const colors = [
+          '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+          '#FFCD56', '#4BC0C0', '#36A2EB', '#FF6384', '#C9CBCF', '#6B486B',
+          '#A9A9A9', '#C71585', '#3CB371', '#FFD700', '#8B008B', '#7FFFD4',
+          '#FF4500', '#32CD32'
+        ];
+  
         this.pieChartData = {
           labels: this.pieChartLabels,
           datasets: [{
             data: departments.map(dept => dept.count),
-            backgroundColor: departments.map((dept, index) => {
-              const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'];
-              return colors[index % colors.length];
-            })
+            backgroundColor: departments.map((dept, index) => colors[index % colors.length])
           }]
         };
-
+  
         setTimeout(() => {
           if (this.chart) {
             this.chart?.chart?.resize();
@@ -102,5 +108,5 @@ export class DashboardComponent implements AfterViewInit {
         console.error('Departments data is missing or not an array');
       }
     });
-  }
+  }  
 }
