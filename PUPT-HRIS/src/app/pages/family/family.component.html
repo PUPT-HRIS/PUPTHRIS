@@ -6,13 +6,13 @@
   <ng-container *ngIf="!isEditing; else editForm">
     <div *ngIf="familyData" class="p-6 space-y-6">
       <div class="p-6 bg-white rounded-lg shadow-lg space-y-4">
-        <p class="text-lg"><strong>Spouse Name:</strong> {{ familyData?.SpouseFirstName }} {{ familyData?.SpouseMiddleName }} {{ familyData?.SpouseLastName }}</p>
-        <p class="text-lg"><strong>Spouse Occupation:</strong> {{ familyData?.SpouseOccupation }}</p>
-        <p class="text-lg"><strong>Spouse Employer Name:</strong> {{ familyData?.SpouseEmployerName }}</p>
-        <p class="text-lg"><strong>Spouse Business Address:</strong> {{ familyData?.SpouseBusinessAddress }}</p>
-        <p class="text-lg"><strong>Spouse Telephone Number:</strong> {{ familyData?.SpouseTelephoneNumber }}</p>
-        <p class="text-lg"><strong>Father's Name:</strong> {{ familyData?.FatherFirstName }} {{ familyData?.FatherMiddleName }} {{ familyData?.FatherLastName }}</p>
-        <p class="text-lg"><strong>Mother's Name:</strong> {{ familyData?.MotherFirstName }} {{ familyData?.MotherMiddleName }} {{ familyData?.MotherLastName }}</p>
+        <p class="text-lg"><strong>Spouse Name:</strong> {{ familyData.SpouseFirstName }} {{ familyData.SpouseMiddleName }} {{ familyData.SpouseLastName }}</p>
+        <p class="text-lg"><strong>Spouse Occupation:</strong> {{ familyData.SpouseOccupation }}</p>
+        <p class="text-lg"><strong>Spouse Employer Name:</strong> {{ familyData.SpouseEmployerName }}</p>
+        <p class="text-lg"><strong>Spouse Business Address:</strong> {{ familyData.SpouseBusinessAddress }}</p>
+        <p class="text-lg"><strong>Spouse Telephone Number:</strong> {{ familyData.SpouseTelephoneNumber }}</p>
+        <p class="text-lg"><strong>Father's Name:</strong> {{ familyData.FatherFirstName }} {{ familyData.FatherMiddleName }} {{ familyData.FatherLastName }}</p>
+        <p class="text-lg"><strong>Mother's Name:</strong> {{ familyData.MotherFirstName }} {{ familyData.MotherMiddleName }} {{ familyData.MotherLastName }}</p>
       </div>
       <div class="flex justify-end">
         <button class="btn bg-black text-white" (click)="toggleForm()">Edit</button>
