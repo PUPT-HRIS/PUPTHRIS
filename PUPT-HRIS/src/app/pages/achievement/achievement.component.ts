@@ -11,22 +11,30 @@ import { CommonModule } from '@angular/common';
   templateUrl: './achievement.component.html',
   styleUrls: ['./achievement.component.css'],
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class AchievementAwardComponent implements OnInit {
   achievementAwardForm: FormGroup;
-  achievementAwardsData: AchievementAward[] = [];
+  achievementAwards: AchievementAward[] = [];
   isEditing: boolean = false;
-  currentAchievementAwardId: number | null | undefined = null;
+  currentAchievementId: number | null = null;
   userId: number;
-  initialFormValue: any; // To store the initial form value
   fileToUpload: File | null = null;
+  selectedFileName: string | null = null;
+  isModalOpen: boolean = false;
+
+  selectedProofUrl: string | null = null;
+  selectedSupportingDocument: string | null = null;
 
   showToast: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'warning' = 'success';
 
-  constructor(private fb: FormBuilder, private achievementAwardService: AchievementAwardService, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private achievementAwardService: AchievementAwardService,
+    private authService: AuthService
+  ) {
     const token = this.authService.getToken();
     if (token) {
       const decoded: any = jwtDecode(token);
@@ -42,7 +50,9 @@ export class AchievementAwardComponent implements OnInit {
       AwardingBody: [''],
       Venue: [''],
       InclusiveDates: [''],
-      Remarks: ['']
+      Remarks: [''],
+      SupportingDocument: [''], 
+      Proof: ['']           
     });
   }
 
@@ -51,87 +61,72 @@ export class AchievementAwardComponent implements OnInit {
   }
 
   loadAchievementAwards(): void {
-    this.achievementAwardService.getAchievementAwards(this.userId).subscribe(
-      data => {
-        this.achievementAwardsData = data;
+    this.achievementAwardService.getAchievementsByUserId(this.userId).subscribe(
+      (data) => {
+        if (data && data.length === 0) {
+          this.achievementAwards = [];
+          console.log('No achievement awards available for this user.');
+        } else {
+          this.achievementAwards = data;
+        }
       },
-      error => {
-        this.showToastNotification('Error fetching achievement awards data.', 'error');
+      (error) => {
+        if (error.status !== 404) {
+          this.showToastNotification('Error fetching achievement awards data.', 'error');
+        }
         console.error('Error fetching achievement awards data', error);
       }
     );
   }
-
-  editAchievementAward(id: number): void {
-    const award = this.achievementAwardsData.find(a => a.AchievementID === id);
-    if (award) {
-      this.isEditing = true;
-      this.currentAchievementAwardId = id;
-      this.achievementAwardForm.patchValue(award);
-      this.initialFormValue = this.achievementAwardForm.getRawValue(); // Store the initial form value
-    }
+  
+  addNewAchievementAward(): void {
+    this.resetForm(false);
+    this.isEditing = true;
   }
 
-  toggleForm(): void {
-    this.isEditing = !this.isEditing;
-
-    if (this.isEditing) {
-      this.achievementAwardForm.reset();
-      this.currentAchievementAwardId = null;
-      this.initialFormValue = this.achievementAwardForm.getRawValue(); // Store the initial form value for new form
-    } else {
-      if (this.hasUnsavedChanges()) { // Check for unsaved changes before canceling
-        this.showToastNotification('The changes are not saved.', 'error');
-      }
+  editAchievementAward(id: number): void {
+    const award = this.achievementAwards.find(a => a.AchievementID === id);
+    if (award) {
+      this.isEditing = true;
+      this.currentAchievementId = id;
+      this.achievementAwardForm.patchValue(award);
     }
   }
 
   onSubmit(): void {
-    if (!this.hasUnsavedChanges()) {
-      this.showToastNotification('There are no current changes to be saved.', 'warning');
-      return;
-    }
-
     const formData = new FormData();
-    
-    // Append form fields to FormData
-    formData.append('NatureOfAchievement', this.achievementAwardForm.get('NatureOfAchievement')?.value || '');
-    formData.append('Classification', this.achievementAwardForm.get('Classification')?.value || '');
-    formData.append('Level', this.achievementAwardForm.get('Level')?.value || '');
-    formData.append('AwardingBody', this.achievementAwardForm.get('AwardingBody')?.value || '');
-    formData.append('Venue', this.achievementAwardForm.get('Venue')?.value || '');
-    formData.append('InclusiveDates', this.achievementAwardForm.get('InclusiveDates')?.value || '');
-    formData.append('Remarks', this.achievementAwardForm.get('Remarks')?.value || '');
 
-    // Append the UserID manually
+    Object.keys(this.achievementAwardForm.value).forEach((key) => {
+      formData.append(key, this.achievementAwardForm.get(key)?.value || '');
+    });    
+
     formData.append('UserID', this.userId.toString());
 
-    // Append file to FormData if there is one
     if (this.fileToUpload) {
-      formData.append('SupportingDocument', this.fileToUpload);
+      formData.append('proof', this.fileToUpload);
     }
 
-    if (this.currentAchievementAwardId) {
-      this.achievementAwardService.updateAchievementAward(this.currentAchievementAwardId, formData).subscribe(
-        response => {
+    if (this.currentAchievementId) {
+      this.achievementAwardService.updateAchievement(this.currentAchievementId, formData).subscribe(
+        (response) => {
           this.loadAchievementAwards();
           this.resetForm();
           this.showToastNotification('Achievement award updated successfully.', 'success');
         },
-        error => {
-          this.showToastNotification('There is an error saving/updating the changes.', 'error');
+        (error) => {
+          this.showToastNotification('Error updating achievement award.', 'error');
           console.error('Error updating achievement award', error);
         }
       );
     } else {
-      this.achievementAwardService.addAchievementAward(formData).subscribe(
-        response => {
+      this.achievementAwardService.addAchievement(formData).subscribe(
+        (response) => {
           this.loadAchievementAwards();
           this.resetForm();
           this.showToastNotification('Achievement award added successfully.', 'success');
         },
-        error => {
-          this.showToastNotification('There is an error saving/updating the changes.', 'error');
+        (error) => {
+          this.showToastNotification('Error adding achievement award.', 'error');
           console.error('Error adding achievement award', error);
         }
       );
@@ -142,53 +137,63 @@ export class AchievementAwardComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.fileToUpload = file;
+      this.selectedFileName = file.name;
     }
   }
 
-  deleteAchievementAward(id: number): void {
-    if (confirm('Are you sure you want to delete this record?')) {
-      this.achievementAwardService.deleteAchievementAward(id).subscribe(
-        response => {
-          this.loadAchievementAwards();
-          this.showToastNotification('Achievement award deleted successfully.', 'success');
-        },
-        error => {
-          this.showToastNotification('There is an error deleting the record.', 'error');
-          console.error('Error deleting achievement award', error);
-        }
-      );
-    }
+deleteAchievementAward(id: number): void {
+  if (confirm('Are you sure you want to delete this record?')) {
+    this.achievementAwardService.deleteAchievement(id).subscribe(
+      (response) => {
+        this.achievementAwards = this.achievementAwards.filter(award => award.AchievementID !== id);
+        this.showToastNotification('Achievement award deleted successfully.', 'success');
+      },
+      (error) => {
+        this.showToastNotification('Error deleting achievement award.', 'error');
+        console.error('Error deleting achievement award', error);
+      }
+    );
+  }
+}
+
+  openProofModal(proofUrl: string, supportingDocument?: string): void {
+    this.selectedProofUrl = proofUrl;
+    this.selectedSupportingDocument = supportingDocument || 'No description available';
+    this.isModalOpen = true;
   }
 
-  addNewAchievementAward(): void {
-    this.resetForm(false); // Reset form without showing a toast
-    this.isEditing = true;
-    this.initialFormValue = this.achievementAwardForm.getRawValue(); // Set initial value for the new form
+  closeModal(): void {
+    this.selectedProofUrl = null;
+    this.isModalOpen = false;
   }
 
   resetForm(showToast: boolean = true): void {
-    if (showToast && this.hasUnsavedChanges()) {
-      this.showToastNotification('The changes are not saved.', 'error');
-    }
     this.achievementAwardForm.reset();
     this.fileToUpload = null;
-    this.currentAchievementAwardId = null;
+    this.selectedFileName = null;
+    this.currentAchievementId = null;
     this.isEditing = false;
-    this.initialFormValue = this.achievementAwardForm.getRawValue(); // Reset initial form value after reset
+    if (showToast) {
+      this.showToastNotification('Form reset', 'warning');
+    }
   }
 
-  private hasUnsavedChanges(): boolean {
-    const currentFormValue = this.achievementAwardForm.getRawValue();
-    return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
+  isImage(url: string): boolean {
+    return /\.(jpg|jpeg|png|gif)$/.test(url);
   }
 
-  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
-    this.toastMessage = message;
-    this.toastType = type;
-    this.showToast = true;
-
-    setTimeout(() => {
-      this.showToast = false;
-    }, 3000); // Hide toast after 3 seconds
+  onImageError(): void {
+    alert('Failed to load image. Please check the URL.');
   }
+
+  showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    if (type !== 'warning') {
+      this.toastMessage = message;
+      this.toastType = type;
+      this.showToast = true;
+      setTimeout(() => {
+        this.showToast = false;
+      }, 3000);
+    }
+  }  
 }
