@@ -17,10 +17,15 @@ import { jwtDecode } from 'jwt-decode';
 export class WorkExperienceComponent implements OnInit {
   workExperienceForm: FormGroup;
   workExperienceData: WorkExperience[] = [];
+  paginatedWorkExperienceData: WorkExperience[] = [];
   isEditing: boolean = false;
   currentExperienceId: number | null = null;
   userId: number;
   initialFormValue: any;
+
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   showToast: boolean = false;
   toastMessage: string = '';
@@ -55,12 +60,76 @@ export class WorkExperienceComponent implements OnInit {
     this.workService.getWorkExperiences(this.userId).subscribe(
       data => {
         this.workExperienceData = data;
+        this.totalPages = Math.ceil(this.workExperienceData.length / this.itemsPerPage);
+        this.updatePaginatedData();
       },
       error => {
         this.showToastNotification('Error fetching work experiences.', 'error');
         console.error('Error fetching work experiences', error);
       }
     );
+  }
+
+  updatePaginatedData(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedWorkExperienceData = this.workExperienceData.slice(startIndex, endIndex);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedData();
+    }
+  }
+
+  get totalPagesArray(): number[] {
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
+  }
+
+  editExperience(id: number): void {
+    const experience = this.workExperienceData.find(ex => ex.WorkExperienceID === id);
+    if (experience) {
+      this.workExperienceForm.patchValue(experience);
+      this.currentExperienceId = id;
+      this.isEditing = true;
+      this.initialFormValue = this.workExperienceForm.getRawValue(); // Store the initial form value
+    }
+  }
+
+  deleteExperience(id: number): void {
+    if (confirm('Are you sure you want to delete this record?')) {
+      this.workService.deleteWorkExperience(id).subscribe(
+        response => {
+          this.workExperienceData = this.workExperienceData.filter(ex => ex.WorkExperienceID !== id);
+          this.showToastNotification('Work experience deleted successfully.', 'error');
+        },
+        error => {
+          this.showToastNotification('There is an error deleting the record.', 'error');
+          console.error('Error deleting work experience', error);
+        }
+      );
+    }
+  }
+
+  addNewExperience(): void {
+    this.resetForm(false); // Avoid showing the toast on the first click
+    this.isEditing = true;
+    this.initialFormValue = this.workExperienceForm.getRawValue(); // Store the initial form value for new form
   }
 
   resetForm(showToast: boolean = true): void {
@@ -105,37 +174,6 @@ export class WorkExperienceComponent implements OnInit {
         }
       );
     }
-  }
-
-  editExperience(id: number): void {
-    const experience = this.workExperienceData.find(ex => ex.WorkExperienceID === id);
-    if (experience) {
-      this.workExperienceForm.patchValue(experience);
-      this.currentExperienceId = id;
-      this.isEditing = true;
-      this.initialFormValue = this.workExperienceForm.getRawValue(); // Store the initial form value
-    }
-  }
-
-  deleteExperience(id: number): void {
-    if (confirm('Are you sure you want to delete this record?')) {
-      this.workService.deleteWorkExperience(id).subscribe(
-        response => {
-          this.workExperienceData = this.workExperienceData.filter(ex => ex.WorkExperienceID !== id);
-          this.showToastNotification('Work experience deleted successfully.', 'error');
-        },
-        error => {
-          this.showToastNotification('There is an error deleting the record.', 'error');
-          console.error('Error deleting work experience', error);
-        }
-      );
-    }
-  }
-
-  addNewExperience(): void {
-    this.resetForm(false); // Avoid showing the toast on the first click
-    this.isEditing = true;
-    this.initialFormValue = this.workExperienceForm.getRawValue(); // Store the initial form value for new form
   }
 
   private hasUnsavedChanges(): boolean {
