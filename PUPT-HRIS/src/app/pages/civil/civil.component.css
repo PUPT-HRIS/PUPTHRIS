@@ -1,3 +1,32 @@
+/* Pagination Buttons */
+.btn-pagination {
+  background-color: #800000;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.btn-pagination.active {
+  background-color: black;
+  color: white;
+}
+
+.btn-pagination.active:hover {
+  background-color: #800000;
+}
+
+.btn-pagination:hover:not(.active) {
+  background-color: #9f0303;
+}
+
+.btn-pagination[disabled] {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
 /* Container styling */
 .form-container {
   background-color: #f9f9f9;
@@ -33,22 +62,22 @@
 }
 
 .btn-edit {
-  background-color: #3b82f6; /* Blue background */
-  color: #ffffff; /* White text */
+  background-color: #3b82f6;
+  color: #ffffff;
 }
 
 .btn-edit:hover {
-  background-color: #2563eb; /* Darker blue on hover */
+  background-color: #2563eb;
   transform: translateY(-1px);
 }
 
 .btn-delete {
-  background-color: #ef4444; /* Red background */
-  color: #ffffff; /* White text */
+  background-color: #ef4444;
+  color: #ffffff;
 }
 
 .btn-delete:hover {
-  background-color: #dc2626; /* Darker red on hover */
+  background-color: #dc2626;
   transform: translateY(-1px);
 }
 
@@ -74,7 +103,6 @@
   transform: translateY(-1px);
 }
 
-/* Add Info button */
 .btn-add-info {
   background-color: #000;
   border-color: #000;
@@ -109,4 +137,10 @@
 
 .table tbody tr:nth-child(even) {
   background-color: #ffffff;
+}
+
+/* Center pagination */
+.flex {
+  display: flex;
+  justify-content: center;
 }

@@ -22,8 +22,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let eligibility of civilServiceData; let i = index" class="hover:bg-gray-100">
-                <th class="p-4">{{ i + 1 }}</th>
+            <tr *ngFor="let eligibility of paginatedCivilServiceData; let i = index" class="hover:bg-gray-100">
+                <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
                 <td class="p-4">{{ eligibility.CareerService }}</td>
                 <td class="p-4">{{ eligibility.Rating }}</td>
                 <td class="p-4">{{ eligibility.DateOfExamination | date }}</td>
@@ -40,8 +40,16 @@
           </tbody>        
         </table>
       </div>
-      <div class="flex justify-end mt-4">
-        <button class="btn btn-add-info bg-black text-white" (click)="addNewEligibility()">Add New</button>
+      <div class="mt-4">
+        <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewEligibility()">Add New</button>
+      </div>
+      <!-- Pagination -->
+      <div class="flex justify-center mt-4">
+        <button class="btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button class="btn-pagination" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <button class="btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
     </div>
 
