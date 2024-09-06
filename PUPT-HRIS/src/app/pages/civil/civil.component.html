@@ -23,33 +23,33 @@
           </thead>
           <tbody>
             <tr *ngFor="let eligibility of paginatedCivilServiceData; let i = index" class="hover:bg-gray-100">
-                <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
-                <td class="p-4">{{ eligibility.CareerService }}</td>
-                <td class="p-4">{{ eligibility.Rating }}</td>
-                <td class="p-4">{{ eligibility.DateOfExamination | date }}</td>
-                <td class="p-4">{{ eligibility.PlaceOfExamination }}</td>
-                <td class="p-4">{{ eligibility.LicenseNumber }}</td>
-                <td class="p-4">{{ eligibility.LicenseValidityDate | date }}</td>
-                <td class="p-4">
-                    <div class="btn-container">
-                        <button class="btn btn-edit btn-sm" (click)="editEligibility(eligibility.CivilServiceEligibilityID!)">Edit</button>
-                        <button class="btn btn-delete btn-sm" (click)="deleteEligibility(eligibility.CivilServiceEligibilityID!)">Delete</button>
-                    </div>
-                </td>
+              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
+              <td class="p-4">{{ eligibility.CareerService }}</td>
+              <td class="p-4">{{ eligibility.Rating }}</td>
+              <td class="p-4">{{ eligibility.DateOfExamination | date }}</td>
+              <td class="p-4">{{ eligibility.PlaceOfExamination }}</td>
+              <td class="p-4">{{ eligibility.LicenseNumber }}</td>
+              <td class="p-4">{{ eligibility.LicenseValidityDate | date }}</td>
+              <td class="p-4">
+                <div class="btn-container">
+                  <button class="btn btn-edit btn-sm" (click)="editEligibility(eligibility.CivilServiceEligibilityID!)">Edit</button>
+                  <button class="btn btn-delete btn-sm" (click)="deleteEligibility(eligibility.CivilServiceEligibilityID!)">Delete</button>
+                </div>
+              </td>
             </tr>
-          </tbody>        
+          </tbody>
         </table>
       </div>
       <div class="mt-4">
         <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewEligibility()">Add New</button>
       </div>
       <!-- Pagination -->
-      <div class="flex justify-center mt-4">
-        <button class="btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
-        <button class="btn-pagination" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+      <div class="pagination-controls">
+        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
           {{ page }}
         </button>
-        <button class="btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+        <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
     </div>
 
