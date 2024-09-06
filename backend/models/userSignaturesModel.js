@@ -15,8 +15,9 @@ const UserSignatures = sequelize.define('UserSignatures', {
       key: 'UserID',
     },
   },
-  SignatureImage: {
-    type: DataTypes.BLOB,
+  SignatureImageURL: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   SignatureDate: {
     type: DataTypes.DATE,

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AchievementAward } from '../model/achievement-awards.model';
 import { environment } from '../../environments/environment';
+import { AchievementAward } from '../model/achievement-awards.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,47 +11,45 @@ import { environment } from '../../environments/environment';
 export class AchievementAwardService {
   private apiUrl = `${environment.apiBaseUrl}/achievement-awards`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  private getHeaders(isFormData: boolean = false): HttpHeaders {
+  private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
-    let headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    if (!isFormData) {
-      headers = headers.set('Content-Type', 'application/json');
-    }
-    return headers;
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  getAchievementAwards(userId: number): Observable<AchievementAward[]> {
+  addAchievement(achievement: FormData): Observable<AchievementAward> {
+    return this.http.post<AchievementAward>(`${this.apiUrl}/add`, achievement, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  updateAchievement(id: number, achievement: FormData): Observable<AchievementAward> {
+    return this.http.patch<AchievementAward>(`${this.apiUrl}/${id}`, achievement, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  getAchievementsByUserId(userId: number): Observable<AchievementAward[]> {
     return this.http.get<AchievementAward[]>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
-  }
+  }  
 
-  addAchievementAward(data: FormData | AchievementAward): Observable<AchievementAward> {
-    return this.http.post<AchievementAward>(`${this.apiUrl}/add`, data, { headers: this.getHeaders(data instanceof FormData) })
-      .pipe(
-        catchError(this.handleError)
-      );
+  deleteAchievement(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
   }
-
-  updateAchievementAward(id: number, data: FormData | AchievementAward): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/update/${id}`, data, { headers: this.getHeaders(data instanceof FormData) })
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  deleteAchievementAward(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete/${id}`, { headers: this.getHeaders() })
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
+  
   private handleError(error: any): Observable<never> {
-    console.error('An error occurred:', error);
-    return throwError(error);
+    console.error('Server Error:', error);
+    let errorMessage = 'An unexpected error occurred. Please try again later.';
+    
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Client-side error: ${error.error.message}`;
+    } else {
+      errorMessage = `Server-side error: ${error.status} - ${error.message}`;
+    }
+
+    return throwError(errorMessage);
   }
 }
