@@ -9,7 +9,7 @@ export class RoleGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    const expectedRoles = route.data['expectedRoles'];
+    const expectedRoles: string[] = route.data['expectedRoles']; // roles passed from route data
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -18,9 +18,12 @@ export class RoleGuard implements CanActivate {
     }
 
     const decodedToken: any = jwtDecode(token);
-    const role = decodedToken.role;
+    const userRoles: string[] = decodedToken.roles; // This is now an array of roles
 
-    if (!expectedRoles.includes(role)) {
+    // Check if the user has any of the expected roles
+    const hasRole = expectedRoles.some((role: string) => userRoles.includes(role));
+
+    if (!hasRole) {
       this.router.navigate(['/dashboard']);
       return false;
     }

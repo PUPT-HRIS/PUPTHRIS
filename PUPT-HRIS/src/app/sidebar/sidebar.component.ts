@@ -13,7 +13,7 @@ import { jwtDecode } from 'jwt-decode';
 export class SidebarComponent implements OnInit {
   activeItem: string = '';
   isProfileDropdownOpen: boolean = false;
-  role: string | null = null;
+  roles: string[] = [];
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
@@ -27,14 +27,36 @@ export class SidebarComponent implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken: any = jwtDecode(token);
-      this.role = decodedToken.role;
+      this.roles = decodedToken.roles; // This is now an array of roles
     }
 
     // Set active item based on the initial route
     this.setActiveItemBasedOnRoute(this.router.url);
   }
 
+  hasRole(role: string): boolean {
+    return this.roles.includes(role);
+  }
+
+  // Sidebar items visibility logic
+  get canManageDepartments(): boolean {
+    return this.hasRole('superadmin');
+  }
+
+  get canManageEmployees(): boolean {
+    return this.hasRole('superadmin') || this.hasRole('admin');
+  }
+
+  get canAccessProfile(): boolean {
+    return this.hasRole('faculty') || this.hasRole('staff') || this.hasRole('admin') || this.hasRole('superadmin');
+  }
+
+  get canPrintPds(): boolean {
+    return this.hasRole('faculty') || this.hasRole('staff') || this.hasRole('admin') || this.hasRole('superadmin');
+  }
+
   get isProfileActive(): boolean {
+    // This method determines if the profile section should be active or not
     return this.activeItem.startsWith('my-profile') || this.isProfileDropdownOpen;
   }
 
@@ -119,8 +141,6 @@ export class SidebarComponent implements OnInit {
       this.activeItem = '';
     }
   }
-  
-  
 
   logout() {
     localStorage.removeItem('token');
