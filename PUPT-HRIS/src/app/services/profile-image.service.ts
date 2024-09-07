@@ -1,30 +1,38 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { ProfileImage } from '../model/profile-image.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ProfileImageService {
   private apiUrl = `${environment.apiBaseUrl}/profile-image`;
 
   constructor(private http: HttpClient) {}
 
-  uploadProfileImage(userID: number, file: File): Observable<ProfileImage> {
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
+  uploadProfileImage(userId: number, file: File): Observable<any> {
     const formData = new FormData();
-    formData.append('userID', userID.toString());
+    formData.append('userId', userId.toString());
     formData.append('profileImage', file);
 
-    return this.http.post<ProfileImage>(`${this.apiUrl}/upload`, formData);
+    return this.http.post<any>(`${this.apiUrl}/upload`, formData, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
   }
 
-  getProfileImage(userID: number): Observable<ProfileImage> {
-    return this.http.get<ProfileImage>(`${this.apiUrl}/user/${userID}`);
+  getProfileImage(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${userId}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
   }
 
-  deleteProfileImage(userID: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/user/${userID}`);
+  private handleError(error: any): Observable<never> {
+    console.error('An error occurred:', error);
+    return throwError(error.message || 'Server error');
   }
 }

@@ -1,90 +1,85 @@
-const AWS = require('aws-sdk');
 const multer = require('multer');
-const multerS3 = require('multer-s3');
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const ProfileImage = require('../models/profileImageModel');
-require('dotenv').config();
+const { S3_BUCKET_NAME } = process.env;
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION
-});
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage });
 
-const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: process.env.S3_BUCKET_NAME,
-    acl: 'public-read', 
-    metadata: (req, file, cb) => {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: (req, file, cb) => {
-      cb(null, `profile-pictures/${Date.now().toString()}-${file.originalname}`);
+const s3Client = new S3Client({ region: process.env.AWS_REGION });
+
+async function deleteOldImageFromS3(imageUrl) {
+  if (imageUrl) {
+    const urlParts = imageUrl.split('/');
+    const fileName = urlParts[urlParts.length - 1];
+
+    const deleteParams = {
+      Bucket: S3_BUCKET_NAME,
+      Key: fileName,
+    };
+
+    try {
+      await s3Client.send(new DeleteObjectCommand(deleteParams));
+      console.log('Old profile image deleted successfully:', fileName);
+    } catch (error) {
+      console.error('Error deleting old profile image from S3:', error);
     }
-  })
-}).single('profileImage');
+  }
+}
 
-exports.uploadProfileImage = async (req, res) => {
-  try {
-    upload(req, res, async (err) => {
-      if (err) {
-        return res.status(500).send({ message: 'File upload failed.', error: err });
+exports.uploadProfileImage = [
+  upload.single('profileImage'),
+  async (req, res) => {
+    try {
+      const { userId } = req.body;
+      if (!req.file) {
+        return res.status(400).send('No file uploaded');
       }
 
-      const { userID } = req.body;
-      const imagePath = req.file.location;
+      const existingProfileImage = await ProfileImage.findOne({ where: { UserID: userId } });
 
-      const newProfileImage = await ProfileImage.create({
-        UserID: userID,
-        ImagePath: imagePath
-      });
+      if (existingProfileImage && existingProfileImage.ImagePath) {
+        await deleteOldImageFromS3(existingProfileImage.ImagePath);
+      }
 
-      res.status(201).json(newProfileImage);
-    });
-  } catch (error) {
-    console.error('Error uploading profile image:', error);
-    res.status(500).send('Internal Server Error');
+      const fileName = `${Date.now()}_${req.file.originalname}`;
+      const params = {
+        Bucket: S3_BUCKET_NAME,
+        Key: fileName,
+        Body: req.file.buffer,
+      };
+
+      const command = new PutObjectCommand(params);
+      await s3Client.send(command);
+      const imageUrl = `https://${S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+
+      if (existingProfileImage) {
+        existingProfileImage.ImagePath = imageUrl;
+        await existingProfileImage.save();
+      } else {
+        await ProfileImage.create({ UserID: userId, ImagePath: imageUrl });
+      }
+
+      res.status(201).json({ message: 'Profile image uploaded successfully', imageUrl });
+    } catch (error) {
+      console.error('Error uploading profile image:', error);
+      res.status(500).send('Internal Server Error');
+    }
   }
-};
+];
 
 exports.getProfileImage = async (req, res) => {
   try {
-    const { userID } = req.params;
-    const profileImage = await ProfileImage.findOne({ where: { UserID: userID } });
+    const { userId } = req.params;
+    const profileImage = await ProfileImage.findOne({ where: { UserID: userId } });
 
-    if (!profileImage) {
-      return res.status(404).json({ message: 'Profile image not found.' });
+    if (profileImage) {
+      res.status(200).json(profileImage);
+    } else {
+      res.status(404).send('Profile image not found');
     }
-
-    res.status(200).json(profileImage);
   } catch (error) {
     console.error('Error fetching profile image:', error);
-    res.status(500).send('Internal Server Error');
-  }
-};
-
-exports.deleteProfileImage = async (req, res) => {
-  try {
-    const { userID } = req.params;
-    const profileImage = await ProfileImage.findOne({ where: { UserID: userID } });
-
-    if (!profileImage) {
-      return res.status(404).json({ message: 'Profile image not found.' });
-    }
-
-    const imagePath = profileImage.ImagePath;
-    const s3Key = imagePath.split('.com/')[1];
-
-    await s3.deleteObject({
-      Bucket: process.env.S3_BUCKET_NAME,
-      Key: s3Key,
-    }).promise();
-
-    await profileImage.destroy();
-
-    res.status(200).json({ message: 'Profile image deleted successfully.' });
-  } catch (error) {
-    console.error('Error deleting profile image:', error);
     res.status(500).send('Internal Server Error');
   }
 };

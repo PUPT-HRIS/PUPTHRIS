@@ -6,8 +6,8 @@ export interface OfficershipMembership {
   Position?: string;
   Level?: 'Local' | 'National' | 'International';
   Classification?: 'Learning and Development Interventions' | 'Training Programs' | 'Seminars' | 'Conferences' | 'Others';
-  InclusiveDatesFrom?: Date;
-  InclusiveDatesTo?: Date;
+  InclusiveDatesFrom?: string;
+  InclusiveDatesTo?: string;
   Remarks?: string;
   SupportingDocument?: string;
   Proof?: string;

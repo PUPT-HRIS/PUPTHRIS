@@ -3,25 +3,27 @@
     <h3>Profile Image</h3>
   </div>
 
-  <ng-container *ngIf="profileImage$ | async as profileImage; else noImage">
+  <ng-container *ngIf="profileImageUrl; else noImage">
     <div class="profile-img-wrapper">
-      <img [src]="profileImage.ImagePath" alt="Profile Image" class="profile-img" />
+      <img [src]="profileImageUrl" alt="Profile Image" class="profile-img" />
     </div>
-    <button (click)="deleteProfileImage()" class="btn btn-danger">Delete Image</button>
+    <div class="mt-4">
+      <button (click)="startUpdatingImage()" class="btn btn-save">Update Image</button>
+    </div>
   </ng-container>
 
   <ng-template #noImage>
     <p>No profile image found.</p>
+    <div class="file-upload mt-4">
+      <label for="profileImageUpload" class="btn btn-primary">Upload New Image</label>
+      <input type="file" id="profileImageUpload" (change)="onFileSelected($event)" hidden>
+    </div>
   </ng-template>
 
-  <div class="file-upload">
-    <label for="profileImageUpload" class="btn btn-primary">
-      Upload New Image
-    </label>
+  <div class="file-upload mt-4" *ngIf="isUpdatingImage">
+    <label for="profileImageUpload" class="btn btn-primary">Upload New Image</label>
     <input type="file" id="profileImageUpload" (change)="onFileSelected($event)" hidden>
-  </div>
 
-  <div *ngIf="errorMessage" class="error-message">
-    <p>{{ errorMessage }}</p>
+    <button type="button" class="btn btn-danger" (click)="cancelUpdateImage()">Cancel</button>
   </div>
 </div>

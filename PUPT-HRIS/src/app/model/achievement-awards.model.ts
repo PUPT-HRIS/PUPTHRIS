@@ -1,6 +1,6 @@
 export interface AchievementAward {
   AchievementID?: number;
-  UserID?: number;
+  UserID: number;
   NatureOfAchievement: string;
   Classification: string;
   Level: string;
@@ -9,4 +9,5 @@ export interface AchievementAward {
   InclusiveDates?: string;
   Remarks?: string;
   SupportingDocument?: string;
+  Proof?: string;
 }

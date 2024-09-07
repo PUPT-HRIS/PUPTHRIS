@@ -1,6 +1,5 @@
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h1 class="text-2xl font-bold">Officership and Memberships</h1>
   </div>
@@ -11,6 +10,7 @@
         <div class="flex-1 mb-2">
           <a class="text-lg font-normal">You are currently viewing the list/s of Officerships/Memberships.</a>
         </div>
+
         <table class="table table-zebra w-full border-separate border-spacing-0">
           <thead>
             <tr class="bg-maroon text-white">
@@ -21,18 +21,26 @@
               <th class="p-4">Classification</th>
               <th class="p-4">Inclusive Dates From</th>
               <th class="p-4">Inclusive Dates To</th>
+              <th class="p-4">Proof</th>
               <th class="p-4 w-36">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let membership of memberships; let i = index">
               <th class="p-4">{{ i + 1 }}</th>
-              <td class="p-4">{{ membership.OrganizationName }}<br>{{ membership.OrganizationAddress }}</td>
+              <td class="p-4">
+                {{ membership.OrganizationName }}<br>
+                {{ membership.OrganizationAddress }}
+              </td>
               <td class="p-4">{{ membership.Position }}</td>
               <td class="p-4">{{ membership.Level }}</td>
               <td class="p-4">{{ membership.Classification }}</td>
               <td class="p-4">{{ membership.InclusiveDatesFrom | date }}</td>
               <td class="p-4">{{ membership.InclusiveDatesTo | date }}</td>
+              <td class="p-4">
+                <button *ngIf="membership.Proof" (click)="openProofModal(membership.Proof, membership.SupportingDocument)" class="btn btn-link">View Proof</button>
+                <span *ngIf="!membership.Proof">No Proof Uploaded</span>
+              </td>
               <td class="p-4">
                 <div class="btn-container">
                   <button (click)="editMembership(membership.OfficershipMembershipID!)" class="btn btn-primary btn-sm">Edit</button>
@@ -43,6 +51,7 @@
           </tbody>
         </table>
       </div>
+
       <div class="mt-6">
         <button class="btn btn-add text-white w-full" (click)="addNewMembership()">Add Officership/Membership</button>
       </div>
@@ -76,11 +85,31 @@
           </div>
           <div class="form-control w-full">
             <label for="Level" class="label-text font-bold text-lg">Level</label>
-            <input id="Level" formControlName="Level" class="input input-bordered w-full" placeholder="Enter the level">
+            <div class="relative">
+              <select id="Level" formControlName="Level" class="input input-bordered w-full appearance-none pr-10">
+                <option value="Local">Local</option>
+                <option value="National">National</option>
+                <option value="International">International</option>
+              </select>
+              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
           </div>
           <div class="form-control w-full">
             <label for="Classification" class="label-text font-bold text-lg">Classification</label>
-            <input id="Classification" formControlName="Classification" class="input input-bordered w-full" placeholder="Enter the classification">
+            <div class="relative">
+              <select id="Classification" formControlName="Classification" class="input input-bordered w-full appearance-none pr-10">
+                <option value="Learning and Development Interventions">Learning and Development Interventions</option>
+                <option value="Training Programs">Training Programs</option>
+                <option value="Seminars">Seminars</option>
+                <option value="Conferences">Conferences</option>
+                <option value="Others">Others</option>
+              </select>
+              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
           </div>
           <div class="form-control w-full">
             <label for="InclusiveDatesFrom" class="label-text font-bold text-lg">Inclusive Dates From</label>
@@ -100,23 +129,15 @@
           </div>
           <div class="form-control w-full file-input-container">
             <label for="Proof" class="label-text">Proof</label>
-            
             <div class="file-input-wrapper">
-              <!-- Custom label styled as a button -->
               <label for="Proof" class="custom-file-label">Choose File</label>
-              
-              <!-- Actual file input hidden -->
               <input id="Proof" type="file" formControlName="Proof" class="file-input" (change)="onFileSelected($event)">
-              
-              <!-- Display selected file name -->
               <span class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</span>
             </div>
-            
             <small class="file-input-instructions">
-              Certificate of Registration / Diploma / TOR. Attachments should be an image in JPEG format and less than 100kb in file size.
+              Attachments should be an image in JPEG format and less than 100kb in file size.
             </small>
           </div>
-               
         </div>
         <div class="flex justify-end mt-6">
           <button type="submit" class="btn btn-add bg-black text-white mr-4">{{ currentMembershipId ? 'Update' : 'Add' }}</button>
@@ -125,4 +146,28 @@
       </form>
     </div>
   </ng-template>
+</div>
+
+<div class="modal" [ngClass]="{'modal-open': isModalOpen}">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg">Proof Document</h3>
+
+    <div class="modal-body">
+      <p class="py-4">
+        <strong>Description:</strong> {{ selectedSupportingDocument || 'No description available' }}
+      </p>
+
+      <ng-container *ngIf="isImage(selectedProofUrl || ''); else pdfTemplate">
+        <img [src]="selectedProofUrl || ''" alt="Proof Image" class="img-fluid" (error)="onImageError()" />
+      </ng-container>
+
+      <ng-template #pdfTemplate>
+        <iframe [src]="selectedProofUrl || ''" width="100%" height="500px"></iframe>
+      </ng-template>
+    </div>
+
+    <div class="modal-action">
+      <button class="btn" (click)="closeModal()">Close</button>
+    </div>
+  </div>
 </div>
