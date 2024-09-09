@@ -20,6 +20,11 @@
     [class.active]="activeItem === 'department-management'"><i class="fas fa-building mr-3"></i>Departments</a>
   </li>
 
+  <li *ngIf="canManageEmployees">
+    <a id="user-management" class="sidebar-link" routerLink="/user-management" (click)="setActive('user-management')"
+    [class.active]="activeItem === 'user-management'"><i class="fas fa-user-cog mr-3"></i>User Management</a>
+  </li>
+
   <!-- Employees - Visible to Admin and Super Admin -->
   <li *ngIf="canManageEmployees">
     <a id="employees" class="sidebar-link" routerLink="/employees" (click)="setActive('employees')"

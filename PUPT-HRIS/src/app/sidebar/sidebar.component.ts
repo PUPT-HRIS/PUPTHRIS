@@ -51,6 +51,10 @@ export class SidebarComponent implements OnInit {
     return this.hasRole('faculty') || this.hasRole('staff') || this.hasRole('admin') || this.hasRole('superadmin');
   }
 
+  get canManageUserManagement(): boolean {
+    return this.hasRole('superadmin') || this.hasRole('admin');
+  }
+
   get canPrintPds(): boolean {
     return this.hasRole('faculty') || this.hasRole('staff') || this.hasRole('admin') || this.hasRole('superadmin');
   }

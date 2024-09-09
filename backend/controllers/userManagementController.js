@@ -3,7 +3,6 @@ const Role = require('../models/roleModel');
 const { Department } = require('../models/associations');
 require('dotenv').config();
 
-// Update a user's employment type
 exports.updateEmploymentType = async (req, res) => {
   try {
     const { UserID, EmploymentType } = req.body;
@@ -23,7 +22,6 @@ exports.updateEmploymentType = async (req, res) => {
   }
 };
 
-// Update a user's roles
 exports.updateUserRoles = async (req, res) => {
   try {
     const { UserID, Roles } = req.body;
@@ -45,7 +43,6 @@ exports.updateUserRoles = async (req, res) => {
   }
 };
 
-// Get user details including roles and employment type
 exports.getUserDetails = async (req, res) => {
   try {
     const { UserID } = req.params;
@@ -73,6 +70,41 @@ exports.getUserDetails = async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     console.error('Error fetching user details:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      include: [
+        {
+          model: Department,
+          as: 'Department',
+          attributes: ['DepartmentName'],
+        },
+        {
+          model: Role,
+          as: 'Roles',
+          through: { attributes: [] },
+          attributes: ['RoleID', 'RoleName'],
+        },
+      ],
+    });
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.getAllRoles = async (req, res) => {
+  try {
+    const roles = await Role.findAll();
+    res.status(200).json(roles);
+  } catch (error) {
+    console.error('Error fetching roles:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };

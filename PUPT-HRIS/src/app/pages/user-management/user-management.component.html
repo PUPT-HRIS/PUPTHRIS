@@ -1,0 +1,50 @@
+<div class="overflow-x-auto w-full">
+  <h2 class="text-2xl font-bold mb-4">User Management</h2>
+
+  <table class="table w-full">
+    <thead class="bg-red-900 text-white">
+      <tr>
+        <th class="text-center">#</th>
+        <th>Name</th>
+        <th>Employment Type</th>
+        <th>Roles</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users; let i = index" class="hover:bg-gray-100">
+        <td class="text-center">{{ i + 1 }}</td>
+        <td>{{ user.FirstName }} {{ user.Surname }}</td>
+        <td>
+          <select 
+            class="select select-bordered select-sm w-full max-w-xs"
+            [(ngModel)]="user.EmploymentType">
+            <option value="fulltime">Fulltime</option>
+            <option value="parttime">Part-time</option>
+            <option value="temporary">Temporary</option>
+          </select>
+        </td>
+        <td>
+          <div *ngFor="let role of availableRoles">
+            <label class="cursor-pointer">
+              <input 
+                type="checkbox" 
+                class="checkbox checkbox-primary"
+                [checked]="isUserRoleSelected(user, role.RoleID)"
+                (change)="toggleUserRole(user, role.RoleID)" 
+              />
+              {{ role.RoleName }}
+            </label>
+          </div>
+        </td>
+        <td class="flex justify-center space-x-2">
+          <button class="btn btn-sm btn-primary" (click)="saveUserDetails(user)">
+            Save
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!users.length" class="text-center text-red-600 mt-4">No users found</p>
+</div>

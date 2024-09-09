@@ -28,6 +28,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { DepartmentManagementComponent } from './pages/department-management/department-management.component';
 import { ProfileImageComponent } from './pages/profile-image/profile-image.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { UserManagementComponent } from './pages/user-management/user-management.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -43,6 +44,7 @@ export const routes: Routes = [
 
       { path: 'employees', component: EmployeeComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin', 'admin'] } },
       { path: 'new-account', component: NewAccountComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin', 'admin'] } },
+      { path: 'user-management', component: UserManagementComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin', 'admin'] } },
 
       { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
       
