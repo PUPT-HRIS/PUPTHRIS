@@ -129,21 +129,20 @@
       </div>
     </div>
 
-    <!-- Role -->
+    <!-- Roles (Checkboxes for multi-select) -->
     <div class="form-control w-full">
-      <label class="label" for="Role">
-        <span class="label-text font-bold">Role <span class="text-red-500">*</span></span>
-      </label>
-      <select
-        id="Role"
-        formControlName="Role"
-        class="select select-bordered w-full"
-      >
-        <option value="" disabled selected>- Please Select Option -</option>
-        <option value="faculty">Faculty</option>
-        <option value="staff">Staff</option>
-        <option value="admin">Admin</option>
-      </select>
+      <label class="label-text font-bold">Roles <span class="text-red-500">*</span></label>
+      <div *ngFor="let role of roles">
+        <label class="label">
+          <input
+            type="checkbox"
+            [value]="role.RoleID"
+            (change)="onRoleCheckboxChange($event)"
+            [checked]="newAccountForm.value.Roles.includes(role.RoleID)"
+          />
+          <span class="label-text">{{ role.RoleName }}</span>
+        </label>
+      </div>      
     </div>
 
     <!-- Department -->
@@ -151,17 +150,13 @@
       <label class="label" for="DepartmentID">
         <span class="label-text font-bold">Department <span class="text-red-500">*</span></span>
       </label>
-      <select
-        id="DepartmentID"
-        formControlName="DepartmentID"
-        class="select select-bordered w-full"
-        [disabled]="newAccountForm.get('Role')?.value === 'staff'"
-      >
+      <select id="DepartmentID" formControlName="DepartmentID" class="select select-bordered w-full">
         <option value="" disabled selected>- Please Select Option -</option>
+        <option value="na">Not Applicable</option> <!-- New Option -->
         <option *ngFor="let department of departments" [value]="department.DepartmentID">
           {{ department.DepartmentName }}
         </option>
-      </select>
+      </select>      
     </div>
   </div>
 
