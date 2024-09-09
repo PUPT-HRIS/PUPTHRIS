@@ -21,13 +21,6 @@
   color: #ffffff; /* White text */
 }
 
-/* Heading */
-h2 {
-  font-size: 1.5rem;
-  color: #333; /* Dark text color */
-  margin-bottom: 1rem;
-}
-
 /* Form controls */
 .form-control {
   margin-bottom: 1.5rem; /* Space between fields */
@@ -48,20 +41,6 @@ h2 {
 }
 
 .input-bordered:focus {
-  border-color: #3b82f6; /* Change this to your desired color */
-  outline: none; /* Remove default outline */
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
-}
-
-/* Select fields */
-.select-bordered {
-  border: 1px solid #ddd; /* Light border */
-  border-radius: 0.375rem; /* Slightly rounded corners */
-  padding: 0.75rem; /* Padding for better spacing */
-  transition: border-color 0.3s ease; /* Smooth border color transition */
-}
-
-.select-bordered:focus {
   border-color: #3b82f6; /* Change this to your desired color */
   outline: none; /* Remove default outline */
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
@@ -138,28 +117,6 @@ h2 {
   transform: translateY(-1px); /* Slight lift effect */
 }
 
-/* Flex container for buttons */
-.flex-end {
-  display: flex;
-  justify-content: flex-end; /* Align buttons to the right */
-}
-
-/* Grid layout for display fields */
-.grid {
-  display: grid;
-  gap: 1rem; /* Space between grid items */
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-}
-
-@media (max-width: 768px) {
-  .grid-cols-2 {
-    grid-template-columns: 1fr; /* Stack columns on small screens */
-  }
-}
-
 /* Zebra striping for table rows */
 .table tbody tr:nth-child(odd) {
   background-color: #ececec; /* Light gray background for odd rows */
@@ -181,4 +138,39 @@ h2 {
 
 .btn-sm {
   padding: 0.375rem 0.75rem; /* Adjusted padding for smaller buttons */
+}
+
+/* Pagination styles */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  background-color: #800000; /* Maroon background */
+  color: #ffffff; /* White text */
+  padding: 0.5rem 1rem;
+  margin: 0 5px;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Remove transform to prevent movement */
+  border: none;
+  font-weight: bold;
+}
+
+.pagination-btn:hover {
+  background-color: #9f0303; /* Slightly lighter maroon */
+}
+
+.pagination-btn:disabled {
+  background-color: #e2e8f0; /* Gray for disabled */
+  cursor: not-allowed;
+  color: #aaa;
+}
+
+.active {
+  background-color: #000000; /* Black background for active page */
+  color: #ffffff;
 }

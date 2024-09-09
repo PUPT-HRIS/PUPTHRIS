@@ -22,6 +22,11 @@ export class ChildrenComponent implements OnInit {
   userId: number;
   initialFormValue: any; // To store the initial form value
 
+  currentPage = 1;
+  totalPages = 0;
+  pageSize = 5;
+  pages: number[] = [];
+
   showToast: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'warning' = 'success';
@@ -49,12 +54,35 @@ export class ChildrenComponent implements OnInit {
     this.childrenService.getChildren(this.userId).subscribe(
       data => {
         this.childrenData = data;
+        this.totalPages = Math.ceil(this.childrenData.length / this.pageSize);
+        this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
       },
       error => {
         this.showToastNotification('Error fetching children data.', 'error');
         console.error('Error fetching children data', error);
       }
     );
+  }
+
+  get paginatedChildrenData() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.childrenData.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
   }
 
   editChild(child: Children): void {

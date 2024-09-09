@@ -1,3 +1,43 @@
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  margin: 0 5px;
+  padding: 10px 15px;
+  background-color: maroon;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-controls button.active {
+  background-color: black;
+  color: white;
+}
+
+.pagination-controls button.active:hover {
+  background-color: #800000;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #a00000;
+}
+
 /* Container styling */
 .form-container {
   background-color: #f9f9f9;
@@ -33,22 +73,22 @@
 }
 
 .btn-edit {
-  background-color: #3b82f6; /* Blue background */
-  color: #ffffff; /* White text */
+  background-color: #3b82f6;
+  color: #ffffff;
 }
 
 .btn-edit:hover {
-  background-color: #2563eb; /* Darker blue on hover */
+  background-color: #2563eb;
   transform: translateY(-1px);
 }
 
 .btn-delete {
-  background-color: #ef4444; /* Red background */
-  color: #ffffff; /* White text */
+  background-color: #ef4444;
+  color: #ffffff;
 }
 
 .btn-delete:hover {
-  background-color: #dc2626; /* Darker red on hover */
+  background-color: #dc2626;
   transform: translateY(-1px);
 }
 
@@ -74,7 +114,6 @@
   transform: translateY(-1px);
 }
 
-/* Add Info button */
 .btn-add-info {
   background-color: #000;
   border-color: #000;
@@ -109,4 +148,10 @@
 
 .table tbody tr:nth-child(even) {
   background-color: #ffffff;
+}
+
+/* Center pagination */
+.flex {
+  display: flex;
+  justify-content: center;
 }

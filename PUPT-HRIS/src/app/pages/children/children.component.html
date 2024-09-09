@@ -4,7 +4,7 @@
   </div>
 
   <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="childrenData.length > 0" class="p-6 space-y-6">
+    <div *ngIf="paginatedChildrenData.length > 0" class="p-6 space-y-6">
       <div class="overflow-x-auto px-10">
         <div class="flex-1 mb-2">
           <a class="text-lg font-normal">You are currently viewing the list/s of Children's information.</a>
@@ -19,8 +19,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let child of childrenData; let i = index" class="hover:bg-gray-100">
-              <th class="p-4">{{ i + 1 }}</th>
+            <tr *ngFor="let child of paginatedChildrenData; let i = index" class="hover:bg-gray-100">
+              <th class="p-4">{{ (currentPage - 1) * pageSize + i + 1 }}</th>
               <td class="p-4">{{ child.ChildName }}</td>
               <td class="p-4">{{ child.BirthDate | date }}</td>
               <td class="p-4">
@@ -32,6 +32,14 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <!-- Pagination -->
+      <div class="pagination-container">
+        <button class="pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button *ngFor="let page of pages" class="pagination-btn" [ngClass]="{ 'active': page === currentPage }" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
       <div class="mt-4 px-10">
         <button class="btn btn-add-info bg-black text-white w-full" (click)="toggleForm()">Add Child</button>

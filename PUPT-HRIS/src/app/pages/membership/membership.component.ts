@@ -2,8 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { OfficershipMembershipService } from '../../services/officership-membership.service';
 import { AuthService } from '../../services/auth.service';
-import { jwtDecode } from 'jwt-decode';
 import { CommonModule } from '@angular/common';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-officership-membership',
@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 export class OfficershipMembershipComponent implements OnInit {
   membershipForm: FormGroup;
   memberships: any[] = [];
+  paginatedMemberships: any[] = [];
   isEditing: boolean = false;
   currentMembershipId: number | null = null;
   userId: number;
@@ -23,6 +24,9 @@ export class OfficershipMembershipComponent implements OnInit {
   selectedProofUrl: string | null = null;
   selectedSupportingDocument: string | null = null;
   isModalOpen: boolean = false;
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   showToast: boolean = false;
   toastMessage: string = '';
@@ -64,6 +68,8 @@ export class OfficershipMembershipComponent implements OnInit {
     this.membershipService.getMembershipsByUserId(this.userId).subscribe(
       (data) => {
         this.memberships = data;
+        this.totalPages = Math.ceil(this.memberships.length / this.itemsPerPage);
+        this.updatePaginatedData();
       },
       (error) => {
         console.error('Error fetching memberships:', error);
@@ -71,8 +77,38 @@ export class OfficershipMembershipComponent implements OnInit {
     );
   }
 
+  updatePaginatedData(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedMemberships = this.memberships.slice(startIndex, endIndex);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedData();
+    }
+  }
+
+  get totalPagesArray(): number[] {
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
+  }
+
   openProofModal(proofUrl: string, supportingDocument?: string): void {
-    console.log('Opening modal with proof URL:', proofUrl);
     this.selectedProofUrl = proofUrl;
     this.selectedSupportingDocument = supportingDocument || 'No description available';
     this.isModalOpen = true;
@@ -80,7 +116,6 @@ export class OfficershipMembershipComponent implements OnInit {
   }
 
   closeModal(): void {
-    console.log('Closing modal');
     this.selectedProofUrl = null;
     this.isModalOpen = false;
     this.cdr.detectChanges();
@@ -91,8 +126,7 @@ export class OfficershipMembershipComponent implements OnInit {
   }
 
   onImageError(): void {
-    console.error('Failed to load image from URL:', this.selectedProofUrl);
-    alert('Could not load the image. Please check if the URL is valid or contact support.');
+    alert('Failed to load image. Please check the URL.');
   }
 
   resetForm(showToast: boolean = true): void {
@@ -164,9 +198,7 @@ export class OfficershipMembershipComponent implements OnInit {
   }
 
   editMembership(id: number): void {
-    const membership = this.memberships.find(
-      (m) => m.OfficershipMembershipID === id
-    );
+    const membership = this.memberships.find((m) => m.OfficershipMembershipID === id);
     if (membership) {
       this.membershipForm.patchValue(membership);
       this.currentMembershipId = id;
@@ -181,7 +213,7 @@ export class OfficershipMembershipComponent implements OnInit {
           this.memberships = this.memberships.filter(
             (m) => m.OfficershipMembershipID !== id
           );
-          this.showToastNotification('Membership deleted successfully.', 'error');
+          this.showToastNotification('Membership deleted successfully.', 'success');
         },
         (error) => {
           this.showToastNotification('There is an error deleting the record.', 'error');

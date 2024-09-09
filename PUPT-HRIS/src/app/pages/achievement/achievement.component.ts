@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 export class AchievementAwardComponent implements OnInit {
   achievementAwardForm: FormGroup;
   achievementAwards: AchievementAward[] = [];
+  paginatedAchievementAwards: AchievementAward[] = [];
   isEditing: boolean = false;
   currentAchievementId: number | null = null;
   userId: number;
@@ -29,6 +30,10 @@ export class AchievementAwardComponent implements OnInit {
   showToast: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'warning' = 'success';
+
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -63,12 +68,9 @@ export class AchievementAwardComponent implements OnInit {
   loadAchievementAwards(): void {
     this.achievementAwardService.getAchievementsByUserId(this.userId).subscribe(
       (data) => {
-        if (data && data.length === 0) {
-          this.achievementAwards = [];
-          console.log('No achievement awards available for this user.');
-        } else {
-          this.achievementAwards = data;
-        }
+        this.achievementAwards = data;
+        this.totalPages = Math.ceil(this.achievementAwards.length / this.itemsPerPage);
+        this.updatePaginatedData();
       },
       (error) => {
         if (error.status !== 404) {
@@ -78,7 +80,38 @@ export class AchievementAwardComponent implements OnInit {
       }
     );
   }
-  
+
+  updatePaginatedData(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedAchievementAwards = this.achievementAwards.slice(startIndex, endIndex);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedData();
+    }
+  }
+
+  get totalPagesArray(): number[] {
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
+  }
+
   addNewAchievementAward(): void {
     this.resetForm(false);
     this.isEditing = true;
@@ -98,7 +131,7 @@ export class AchievementAwardComponent implements OnInit {
 
     Object.keys(this.achievementAwardForm.value).forEach((key) => {
       formData.append(key, this.achievementAwardForm.get(key)?.value || '');
-    });    
+    });
 
     formData.append('UserID', this.userId.toString());
 
@@ -141,20 +174,20 @@ export class AchievementAwardComponent implements OnInit {
     }
   }
 
-deleteAchievementAward(id: number): void {
-  if (confirm('Are you sure you want to delete this record?')) {
-    this.achievementAwardService.deleteAchievement(id).subscribe(
-      (response) => {
-        this.achievementAwards = this.achievementAwards.filter(award => award.AchievementID !== id);
-        this.showToastNotification('Achievement award deleted successfully.', 'success');
-      },
-      (error) => {
-        this.showToastNotification('Error deleting achievement award.', 'error');
-        console.error('Error deleting achievement award', error);
-      }
-    );
+  deleteAchievementAward(id: number): void {
+    if (confirm('Are you sure you want to delete this record?')) {
+      this.achievementAwardService.deleteAchievement(id).subscribe(
+        (response) => {
+          this.achievementAwards = this.achievementAwards.filter(award => award.AchievementID !== id);
+          this.showToastNotification('Achievement award deleted successfully.', 'success');
+        },
+        (error) => {
+          this.showToastNotification('Error deleting achievement award.', 'error');
+          console.error('Error deleting achievement award', error);
+        }
+      );
+    }
   }
-}
 
   openProofModal(proofUrl: string, supportingDocument?: string): void {
     this.selectedProofUrl = proofUrl;
@@ -187,13 +220,11 @@ deleteAchievementAward(id: number): void {
   }
 
   showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
-    if (type !== 'warning') {
-      this.toastMessage = message;
-      this.toastType = type;
-      this.showToast = true;
-      setTimeout(() => {
-        this.showToast = false;
-      }, 3000);
-    }
-  }  
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000);
+  }
 }

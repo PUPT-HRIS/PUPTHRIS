@@ -1,3 +1,43 @@
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  margin: 0 5px;
+  padding: 10px 15px;
+  background-color: maroon;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-controls button.active {
+  background-color: black;
+  color: white;
+}
+
+.pagination-controls button.active:hover {
+  background-color: #800000;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #a00000;
+}
+
 /* Container styling */
 .form-container {
   background-color: #f9f9f9;
@@ -81,9 +121,17 @@
   color: white;
 }
 
+.btn-edit:hover {
+  background-color: #2563eb;
+}
+
 .btn-delete {
   background-color: #ef4444;
   color: white;
+}
+
+.btn-delete:hover {
+  background-color: #dc2626;
 }
 
 .btn-add-info {
@@ -91,14 +139,26 @@
   color: white;
 }
 
+.btn-add-info:hover {
+  background-color: #333;
+}
+
 .btn-save {
   background-color: #000;
   color: white;
 }
 
+.btn-save:hover {
+  background-color: #333;
+}
+
 .btn-cancel {
   background-color: #800000;
   color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #9f0303;
 }
 
 .grid {

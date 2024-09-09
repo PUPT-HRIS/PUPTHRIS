@@ -1,5 +1,4 @@
 <div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
-
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h1 class="text-2xl font-bold">Officership and Memberships</h1>
   </div>
@@ -26,8 +25,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let membership of memberships; let i = index">
-              <th class="p-4">{{ i + 1 }}</th>
+            <tr *ngFor="let membership of paginatedMemberships; let i = index">
+              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
               <td class="p-4">
                 {{ membership.OrganizationName }}<br>
                 {{ membership.OrganizationAddress }}
@@ -54,6 +53,15 @@
 
       <div class="mt-6">
         <button class="btn btn-add text-white w-full" (click)="addNewMembership()">Add Officership/Membership</button>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls mt-4">
+        <button class="btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button class="btn-pagination" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <button class="btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
     </div>
 
@@ -123,7 +131,7 @@
             <label for="Remarks" class="label-text font-bold text-lg">Remarks</label>
             <textarea id="Remarks" formControlName="Remarks" class="textarea textarea-bordered w-full" placeholder="Enter remarks"></textarea>
           </div>
-          <div class="form-control w-full">
+          <div class="form-control w-full file-input-container">
             <label for="SupportingDocument" class="label-text font-bold text-lg">Supporting Document</label>
             <input id="SupportingDocument" formControlName="SupportingDocument" class="input input-bordered w-full" placeholder="Enter a description of the supporting document">
           </div>
@@ -148,24 +156,19 @@
   </ng-template>
 </div>
 
+<!-- Modal for Viewing Proof -->
 <div class="modal" [ngClass]="{'modal-open': isModalOpen}">
   <div class="modal-box">
     <h3 class="font-bold text-lg">Proof Document</h3>
-
     <div class="modal-body">
-      <p class="py-4">
-        <strong>Description:</strong> {{ selectedSupportingDocument || 'No description available' }}
-      </p>
-
+      <p class="py-4"><strong>Description:</strong> {{ selectedSupportingDocument || 'No description available' }}</p>
       <ng-container *ngIf="isImage(selectedProofUrl || ''); else pdfTemplate">
         <img [src]="selectedProofUrl || ''" alt="Proof Image" class="img-fluid" (error)="onImageError()" />
       </ng-container>
-
       <ng-template #pdfTemplate>
         <iframe [src]="selectedProofUrl || ''" width="100%" height="500px"></iframe>
       </ng-template>
     </div>
-
     <div class="modal-action">
       <button class="btn" (click)="closeModal()">Close</button>
     </div>

@@ -24,8 +24,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let voluntaryWork of voluntaryWorkData; let i = index">
-              <th class="p-4">{{ i + 1 }}</th>
+            <tr *ngFor="let voluntaryWork of paginatedVoluntaryWorkData; let i = index">
+              <th class="p-4">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</th>
               <td class="p-4">{{ voluntaryWork.OrganizationNameAddress }}</td>
               <td class="p-4">{{ voluntaryWork.InclusiveDatesFrom | date }}</td>
               <td class="p-4">{{ voluntaryWork.InclusiveDatesTo | date }}</td>
@@ -46,13 +46,13 @@
       </div>
     </div>
 
-    <div *ngIf="voluntaryWorkData.length === 0" class="p-6 space-y-6">
-      <div class="p-6 bg-white rounded-lg shadow-lg">
-        <p class="text-lg">No voluntary work information available.</p>
-      </div>
-      <div class="flex justify-end">
-        <button class="btn bg-black text-white w-full" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
-      </div>
+    <!-- Pagination Controls -->
+    <div class="pagination-controls mt-4 pb-8">
+      <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+      <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+        {{ page }}
+      </button>
+      <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
     </div>
   </ng-container>
 

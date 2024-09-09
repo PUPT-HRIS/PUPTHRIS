@@ -21,13 +21,6 @@
   color: #ffffff; /* White text */
 }
 
-/* Heading */
-h2 {
-  font-size: 1.5rem;
-  color: #333; /* Dark text color */
-  margin-bottom: 1rem;
-}
-
 /* Form controls */
 .form-control {
   margin-bottom: 1.5rem; /* Space between fields */
@@ -48,7 +41,7 @@ h2 {
 }
 
 .input-bordered:focus {
-  border-color: #3b82f6; /* Change this to your desired color */
+  border-color: #3b82f6; /* Focus border color */
   outline: none; /* Remove default outline */
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
 }
@@ -62,7 +55,7 @@ h2 {
 }
 
 .select-bordered:focus {
-  border-color: #3b82f6; /* Change this to your desired color */
+  border-color: #3b82f6; /* Focus border color */
   outline: none; /* Remove default outline */
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
 }
@@ -181,4 +174,85 @@ h2 {
 
 .btn-sm {
   padding: 0.375rem 0.75rem; /* Adjusted padding for smaller buttons */
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  margin: 0 5px;
+  padding: 10px 15px;
+  background-color: maroon;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-controls button.active {
+  background-color: black; /* Active page is black */
+  color: white;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #a00000;
+}
+
+/* Modal styling */
+.modal-open .modal-box {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-box {
+  position: relative;
+  max-width: 500px;
+  margin: auto;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-body {
+  padding: 1rem 0;
+}
+
+.toast {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 50;
+}
+
+.toast .alert {
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.toast .alert-success {
+  background-color: #4caf50;
+  color: white;
+}
+
+.toast .alert-error {
+  background-color: #f44336;
+  color: white;
+}
+
+.toast .alert-warning {
+  background-color: #ff9800;
+  color: white;
 }

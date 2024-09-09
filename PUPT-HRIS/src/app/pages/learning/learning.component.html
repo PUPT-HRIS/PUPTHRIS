@@ -25,8 +25,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let learning of learningData; let i = index" class="hover:bg-gray-100">
-              <th class="p-4">{{ i + 1 }}</th>
+            <tr *ngFor="let learning of paginatedLearningData; let i = index" class="hover:bg-gray-100">
+              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
               <td class="p-4">{{ learning.TitleOfLearningDevelopment }}</td>
               <td class="p-4">{{ learning.InclusiveDatesFrom | date }}</td>
               <td class="p-4">{{ learning.InclusiveDatesTo | date }}</td>
@@ -45,6 +45,17 @@
       </div>
       <div class="mt-4 px-10">
         <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewLearning()">Add Info</button>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls">
+        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button *ngFor="let page of totalPagesArray" 
+                [class.active]="page === currentPage"
+                (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
     </div>
 

@@ -16,10 +16,15 @@ import { CommonModule } from '@angular/common';
 export class ReferenceComponent implements OnInit {
   referenceForm: FormGroup;
   referenceData: CharacterReference[] = [];
+  paginatedReferenceData: CharacterReference[] = [];
   currentReferenceId: number | null = null;
   isEditing: boolean = false;
   userId: number;
   initialFormValue: any; // To store the initial form value
+
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   showToast: boolean = false;
   toastMessage: string = '';
@@ -53,9 +58,42 @@ export class ReferenceComponent implements OnInit {
     this.characterReferenceService.getReferences(this.userId).subscribe(
       (references) => {
         this.referenceData = references;
+        this.totalPages = Math.ceil(this.referenceData.length / this.itemsPerPage);
+        this.updatePaginatedData();
       },
       (error) => this.showToastNotification('Error fetching references.', 'error')
     );
+  }
+
+  updatePaginatedData(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedReferenceData = this.referenceData.slice(startIndex, endIndex);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedData();
+    }
+  }
+
+  get totalPagesArray(): number[] {
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
   }
 
   onSubmit(): void {
@@ -121,7 +159,7 @@ export class ReferenceComponent implements OnInit {
             );
         }
     }
-}
+  }
 
   cancelEdit(): void {
     this.resetForm();

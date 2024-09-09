@@ -22,8 +22,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let reference of referenceData; let i = index" class="hover:bg-gray-100">
-              <th class="p-4">{{ i + 1 }}</th>
+            <tr *ngFor="let reference of paginatedReferenceData; let i = index" class="hover:bg-gray-100">
+              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
               <td class="p-4">{{ reference.Name }}</td>
               <td class="p-4">{{ reference.Address }}</td>
               <td class="p-4">{{ reference.TelephoneNumber }}</td>
@@ -37,11 +37,17 @@
           </tbody>
         </table>
       </div>
-      <div *ngIf="referenceData.length < 3" class="mt-4 px-10">
+      <!-- Add Info Button above Pagination -->
+      <div class="mt-4 px-10">
         <button class="btn btn-add-info bg-black text-white w-full" (click)="toggleForm()">Add Info</button>
       </div>
-      <div *ngIf="referenceData.length === 3" class="mt-4 px-10">
-        <p class="text-red-600 text-center">You can only add up to 3 references.</p>
+      <!-- Pagination Controls -->
+      <div class="pagination-controls mt-4">
+        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
     </div>
 

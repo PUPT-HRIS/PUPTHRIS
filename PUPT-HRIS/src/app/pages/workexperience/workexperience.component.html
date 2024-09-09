@@ -27,8 +27,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let experience of workExperienceData; let i = index" class="hover:bg-gray-100">
-              <th class="p-4">{{ i + 1 }}</th>
+            <tr *ngFor="let experience of paginatedWorkExperienceData; let i = index" class="hover:bg-gray-100">
+              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
               <td class="p-4">{{ experience.InclusiveDatesFrom | date }}</td>
               <td class="p-4">{{ experience.InclusiveDatesTo | date }}</td>
               <td class="p-4">{{ experience.PositionTitle }}</td>
@@ -49,6 +49,15 @@
       </div>
       <div class="mt-4 px-10">
         <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewExperience()">Add Info</button>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-controls">
+        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
     </div>
 
@@ -100,7 +109,7 @@
               <option [ngValue]="true">Yes</option>
               <option [ngValue]="false">No</option>
             </select>
-          </div>          
+          </div>
         </div>
         <div class="flex justify-end mt-6">
           <button type="submit" class="btn btn-save mr-4">{{ currentExperienceId ? 'Update' : 'Add' }}</button>

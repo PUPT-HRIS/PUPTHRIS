@@ -16,6 +16,7 @@ import { jwtDecode } from 'jwt-decode';
 export class VoluntaryWorkComponent implements OnInit {
   voluntaryWorkForm: FormGroup;
   voluntaryWorkData: VoluntaryWork[] = [];
+  paginatedVoluntaryWorkData: VoluntaryWork[] = [];
   isEditing: boolean = false;
   currentVoluntaryWorkId: number | null = null;
   userId: number;
@@ -24,6 +25,12 @@ export class VoluntaryWorkComponent implements OnInit {
   showToast: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'warning' = 'success';
+
+  // Pagination
+  currentPage: number = 1;
+  itemsPerPage: number = 5; // You can adjust this value for number of records per page
+  totalPages: number = 1;
+  totalPagesArray: number[] = [];
 
   constructor(private fb: FormBuilder, private voluntaryWorkService: VoluntaryWorkService, private authService: AuthService) {
     const token = this.authService.getToken();
@@ -51,12 +58,44 @@ export class VoluntaryWorkComponent implements OnInit {
     this.voluntaryWorkService.getVoluntaryWorks(this.userId).subscribe(
       data => {
         this.voluntaryWorkData = data;
+        this.calculatePagination(); // Calculate pagination after data load
       },
       error => {
         this.showToastNotification('Error fetching voluntary works.', 'error');
         console.error('Error fetching voluntary works', error);
       }
     );
+  }
+
+  calculatePagination(): void {
+    this.totalPages = Math.ceil(this.voluntaryWorkData.length / this.itemsPerPage);
+    this.totalPagesArray = Array(this.totalPages).fill(0).map((x, i) => i + 1);
+    this.paginateData();
+  }
+
+  paginateData(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedVoluntaryWorkData = this.voluntaryWorkData.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number): void {
+    this.currentPage = page;
+    this.paginateData();
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.paginateData();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.paginateData();
+    }
   }
 
   resetForm(showToast: boolean = true): void {
@@ -119,6 +158,7 @@ export class VoluntaryWorkComponent implements OnInit {
         response => {
           this.voluntaryWorkData = this.voluntaryWorkData.filter(vw => vw.VoluntaryWorkID !== id);
           this.showToastNotification('Voluntary work deleted successfully.', 'error');
+          this.calculatePagination(); // Recalculate pagination after deletion
         },
         error => {
           this.showToastNotification('There is an error deleting the record.', 'error');
