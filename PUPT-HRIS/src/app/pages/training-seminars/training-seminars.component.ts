@@ -17,10 +17,14 @@ import { jwtDecode } from 'jwt-decode';
 export class TrainingSeminarsComponent implements OnInit {
   trainingForm: FormGroup;
   trainingData: TrainingSeminar[] = [];
+  paginatedTrainingData: TrainingSeminar[] = [];
   isEditing: boolean = false;
   currentTrainingId: number | null | undefined = null;
   userId: number;
   initialFormValue: any;
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   showToast: boolean = false;
   toastMessage: string = '';
@@ -51,12 +55,45 @@ export class TrainingSeminarsComponent implements OnInit {
     this.trainingService.getTrainings(this.userId).subscribe(
       data => {
         this.trainingData = data;
+        this.totalPages = Math.ceil(this.trainingData.length / this.itemsPerPage);
+        this.updatePaginatedData();
       },
       error => {
         this.showToastNotification('Error fetching trainings data.', 'error');
         console.error('Error fetching trainings data', error);
       }
     );
+  }
+
+  updatePaginatedData(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedTrainingData = this.trainingData.slice(startIndex, endIndex);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedData();
+    }
+  }
+
+  get totalPagesArray(): number[] {
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
   }
 
   editTraining(training: TrainingSeminar): void {
@@ -115,20 +152,25 @@ export class TrainingSeminarsComponent implements OnInit {
     }
   }
 
-  deleteTraining(id: number): void {
+  deleteTraining(id: number | undefined): void {
+    if (id === undefined) {
+      this.showToastNotification('Invalid Training ID.', 'error');
+      return;
+    }
+  
     if (confirm('Are you sure you want to delete this training?')) {
       this.trainingService.deleteTraining(id).subscribe(
         response => {
           this.loadTrainings();
-          this.showToastNotification('Training record deleted successfully.', 'error');
+          this.showToastNotification('Training record deleted successfully.', 'success');
         },
         error => {
-          this.showToastNotification('There is an error deleting the record.', 'error');
+          this.showToastNotification('There was an error deleting the training.', 'error');
           console.error('Error deleting training', error);
         }
       );
     }
-  }
+  }  
 
   private hasUnsavedChanges(): boolean {
     const currentFormValue = this.trainingForm.getRawValue();
@@ -142,6 +184,6 @@ export class TrainingSeminarsComponent implements OnInit {
 
     setTimeout(() => {
       this.showToast = false;
-    }, 3000);
+    }, 3000); // Hide toast after 3 seconds
   }
 }

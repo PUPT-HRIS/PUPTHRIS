@@ -17,10 +17,15 @@ import { jwtDecode } from 'jwt-decode';
 export class LearningComponent implements OnInit {
   learningForm: FormGroup;
   learningData: LearningDevelopment[] = [];
+  paginatedLearningData: LearningDevelopment[] = [];
   isEditing: boolean = false;
   currentLearningId: number | null = null;
   userId: number;
   initialFormValue: any; // To store the initial form value
+
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   showToast: boolean = false;
   toastMessage: string = '';
@@ -51,14 +56,47 @@ export class LearningComponent implements OnInit {
 
   loadLearningDevelopments(): void {
     this.learningService.getLearningDevelopments(this.userId).subscribe(
-      data => {
+      (data: LearningDevelopment[]) => {
         this.learningData = data;
+        this.totalPages = Math.ceil(this.learningData.length / this.itemsPerPage);
+        this.updatePaginatedData();
       },
       error => {
         this.showToastNotification('Error fetching learning developments.', 'error');
         console.error('Error fetching learning developments', error);
       }
     );
+  }
+
+  updatePaginatedData(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedLearningData = this.learningData.slice(startIndex, endIndex);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedData();
+    }
+  }
+
+  get totalPagesArray(): number[] {
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
   }
 
   resetForm(showToast: boolean = true): void {
@@ -68,7 +106,7 @@ export class LearningComponent implements OnInit {
     this.learningForm.reset();
     this.currentLearningId = null;
     this.isEditing = false;
-    this.initialFormValue = this.learningForm.getRawValue(); // Store the initial form value for new form
+    this.initialFormValue = this.learningForm.getRawValue();
   }
 
   onSubmit(): void {

@@ -4,7 +4,7 @@
   </div>
 
   <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="achievementAwards.length > 0" class="p-6 space-y-6">
+    <div *ngIf="paginatedAchievementAwards.length > 0" class="p-6 space-y-6">
       <div class="overflow-auto">
         <div class="flex-1 mb-2">
           <a class="text-lg font-normal">You are currently viewing the list/s of Achievement Awards.</a>
@@ -23,8 +23,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let award of achievementAwards; let i = index">
-              <th class="p-4">{{ i + 1 }}</th>
+            <tr *ngFor="let award of paginatedAchievementAwards; let i = index">
+              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
               <td class="p-4">{{ award.NatureOfAchievement }}</td>
               <td class="p-4">{{ award.Classification }}</td>
               <td class="p-4">{{ award.Level }}</td>
@@ -42,21 +42,31 @@
               </td>
             </tr>
           </tbody>
-        </table>        
+        </table>
       </div>
+
       <div class="mt-6">
         <button class="btn btn-add-info text-white w-full" (click)="addNewAchievementAward()">Add Achievement Award</button>
       </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls mt-4">
+        <button class="btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button class="btn-pagination" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <button class="btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+      </div>
     </div>
 
-    <div *ngIf="achievementAwards.length === 0" class="p-6 space-y-6">
+    <div *ngIf="paginatedAchievementAwards.length === 0" class="p-6 space-y-6">
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <p class="text-lg">No achievement awards information available.</p>
       </div>
       <div class="flex justify-end">
         <button class="btn btn-add-info w-full" (click)="addNewAchievementAward()">Add Achievement Award</button>
       </div>
-    </div>    
+    </div>
   </ng-container>
 
   <ng-template #editForm>
@@ -84,7 +94,7 @@
               </span>
             </div>
           </div>
-          
+
           <div class="form-control w-full">
             <label for="Level" class="label-text font-bold text-lg">Level</label>
             <div class="relative">
@@ -99,7 +109,7 @@
               </span>
             </div>
           </div>
-          
+
           <div class="form-control w-full">
             <label for="AwardingBody" class="label-text font-bold text-lg">Awarding Body</label>
             <input id="AwardingBody" formControlName="AwardingBody" class="input input-bordered w-full" placeholder="Enter the awarding body">
@@ -163,6 +173,7 @@
   </div>
 </div>
 
+<!-- Toast Notifications -->
 <div *ngIf="showToast" class="toast toast-end">
   <div *ngIf="toastType === 'success'" class="alert alert-success">
     <span>{{ toastMessage }}</span>
