@@ -27,7 +27,7 @@ const User = sequelize.define('User', {
     allowNull: false,
   },
   EmploymentType: {
-    type: DataTypes.ENUM('fulltime', 'parttime', 'temporary'),
+    type: DataTypes.ENUM('fulltime', 'parttime', 'temporary', 'designee'),
     allowNull: false,
   },
   DepartmentID: {

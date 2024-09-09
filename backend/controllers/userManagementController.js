@@ -7,13 +7,18 @@ exports.updateEmploymentType = async (req, res) => {
   try {
     const { UserID, EmploymentType } = req.body;
 
+    console.log('Received request to update Employment Type for User:', UserID, 'to', EmploymentType); // Log request
+
     const user = await User.findByPk(UserID);
     if (!user) {
+      console.log('User not found:', UserID);
       return res.status(404).json({ message: 'User not found' });
     }
 
     user.EmploymentType = EmploymentType;
     await user.save();
+
+    console.log('Employment Type updated successfully for User:', UserID, EmploymentType); // Log successful update
 
     res.status(200).json({ message: 'Employment type updated successfully', user });
   } catch (error) {

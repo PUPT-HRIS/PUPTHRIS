@@ -16,13 +16,15 @@
         <td class="text-center">{{ i + 1 }}</td>
         <td>{{ user.FirstName }} {{ user.Surname }}</td>
         <td>
-          <select 
+            <select 
             class="select select-bordered select-sm w-full max-w-xs"
             [(ngModel)]="user.EmploymentType">
             <option value="fulltime">Fulltime</option>
             <option value="parttime">Part-time</option>
             <option value="temporary">Temporary</option>
-          </select>
+            <option value="designee">Designee</option>
+          </select>          
+              
         </td>
         <td>
           <div *ngFor="let role of availableRoles">

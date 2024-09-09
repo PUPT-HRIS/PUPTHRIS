@@ -15,23 +15,26 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class UserManagementComponent implements OnInit {
   users: User[] = [];
   availableRoles: Role[] = [];
-  selectedUser: User | null = null;
+  employmentTypes: string[] = ['fulltime', 'parttime', 'temporary', 'designee'];
 
   constructor(private userManagementService: UserManagementService) {}
 
   ngOnInit(): void {
     this.fetchAllUsers();
     this.fetchAvailableRoles();
+    this.logEmploymentTypes();
   }
 
   fetchAllUsers(): void {
     this.userManagementService.getAllUsers().subscribe({
       next: (users) => {
         this.users = users;
+        this.users.forEach(user => console.log(user.EmploymentType));
       },
       error: (error) => console.error('Error fetching users', error),
     });
   }
+  
 
   fetchAvailableRoles(): void {
     this.userManagementService.getAllRoles().subscribe({
@@ -40,6 +43,10 @@ export class UserManagementComponent implements OnInit {
       },
       error: (error) => console.error('Error fetching roles', error),
     });
+  }
+
+  logEmploymentTypes(): void {
+    console.log('Available Employment Types:', this.employmentTypes);
   }
 
   isUserRoleSelected(user: User, roleID: number): boolean {
@@ -77,6 +84,5 @@ export class UserManagementComponent implements OnInit {
     });
   }
 
-  deleteUser(userID: number): void {
-  }
+  deleteUser(userID: number): void {}
 }
