@@ -19,9 +19,11 @@ export class PersonalDetailsService {
   }
 
   getPersonalDetails(userId: number): Observable<PersonalDetails> {
+    console.log(`Fetching personal details for user ${userId}`); // Add this to log when it's called
     return this.http.get<PersonalDetails>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
+  
 
   addPersonalDetails(data: PersonalDetails): Observable<PersonalDetails> {
     return this.http.post<PersonalDetails>(`${this.apiUrl}/add`, data, { headers: this.getHeaders() })
