@@ -82,6 +82,8 @@ export class SidebarComponent implements OnInit {
       this.activeItem = 'dashboard';
     } else if (url.includes('departments')) {
       this.activeItem = 'department-management';
+    } else if (url.includes('user-management')) {
+      this.activeItem = 'user-management';
     } else if (url.includes('employees')) {
       this.activeItem = 'employees';
     } else if (url.includes('print-pds')) {
