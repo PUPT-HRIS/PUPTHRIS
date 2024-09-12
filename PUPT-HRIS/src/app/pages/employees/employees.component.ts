@@ -156,7 +156,10 @@ export class EmployeeComponent implements OnInit {
 
   fetchPersonalDetails(userId: number): void {
     this.personalDetailsService.getPersonalDetails(userId).subscribe(
-      (details) => (this.personalDetails = details),
+      (details) => {
+        console.log('Fetched personal details:', details); // Log to check if details are fetched
+        this.personalDetails = details;
+      },
       (error) => {
         console.error('Error fetching personal details', error);
         this.personalDetails = null;

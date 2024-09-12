@@ -1,15 +1,21 @@
 const nodemailer = require('nodemailer');
 const User = require('../models/userModel');
 const { Department } = require('../models/associations');
+const Role = require('../models/roleModel'); // Add this line
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 exports.addUser = async (req, res) => {
   try {
-    const { Fcode, Surname, FirstName, MiddleName, NameExtension, Email, EmploymentType, Password, Role, DepartmentID } = req.body;
+    const { Fcode, Surname, FirstName, MiddleName, NameExtension, Email, EmploymentType, Password, Roles, DepartmentID } = req.body;
+    
+    // If DepartmentID is 'na' (Not Applicable), set it to null
+    const finalDepartmentID = DepartmentID === 'na' ? null : DepartmentID;
+
     const salt = await bcrypt.genSalt(10);
     const PasswordHash = await bcrypt.hash(Password, salt);
 
+    // Create a new user
     const newUser = await User.create({
       Fcode,
       Surname,
@@ -20,9 +26,14 @@ exports.addUser = async (req, res) => {
       EmploymentType,
       PasswordHash,
       Salt: salt,
-      Role,
-      DepartmentID,
+      DepartmentID: finalDepartmentID, // Use the updated department value
     });
+
+    // Assign roles to the user
+    if (Roles && Roles.length > 0) {
+      const roles = await Role.findAll({ where: { RoleID: Roles } }); // Find selected roles by ID
+      await newUser.setRoles(roles); // Associate roles with the user
+    }
 
     await sendEmail(Email, Password, FirstName);
 
@@ -33,15 +44,22 @@ exports.addUser = async (req, res) => {
   }
 };
 
-
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.findAll({
-      include: [{
-        model: Department,
-        as: 'Department',
-        attributes: ['DepartmentName']
-      }]
+      include: [
+        {
+          model: Department,
+          as: 'Department',
+          attributes: ['DepartmentName']
+        },
+        {
+          model: Role, // Include the roles in the response
+          as: 'Roles', 
+          through: { attributes: [] }, // Include roles without join table attributes
+          attributes: ['RoleName']
+        }
+      ]
     });
     res.status(200).json(users);
   } catch (error) {
@@ -54,11 +72,19 @@ exports.getUserById = async (req, res) => {
   try {
     const userId = req.params.id;
     const user = await User.findByPk(userId, {
-      include: [{
-        model: Department,
-        as: 'Department',
-        attributes: ['DepartmentName']
-      }]
+      include: [
+        {
+          model: Department,
+          as: 'Department',
+          attributes: ['DepartmentName']
+        },
+        {
+          model: Role, // Include the roles in the response
+          as: 'Roles', 
+          through: { attributes: [] }, // Exclude the join table attributes
+          attributes: ['RoleName'], // Only fetch the role names
+        },
+      ],
     });
 
     if (!user) {
@@ -71,7 +97,6 @@ exports.getUserById = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
 
 const sendEmail = async (toEmail, password, firstName) => {
   try {
@@ -102,7 +127,7 @@ const sendEmail = async (toEmail, password, firstName) => {
 
     let mailOptions = {
       from: process.env.EMAIL_USERNAME,
-      to: toEmail, // list of receivers
+      to: toEmail,
       subject: 'Your Account Details',
       text: `Hello ${firstName},\n\nYour account has been created successfully!\n\nHere are your account details:\n\nEmail: ${toEmail}\nPassword: ${password}\n\nYou can log in using the following link:\n${siteLink}\n\nPlease change your password after your first login.\n\nBest regards,\nPUP Taguig Human Resources System`,
     };
@@ -113,4 +138,3 @@ const sendEmail = async (toEmail, password, firstName) => {
     console.error('Error sending email:', error);
   }
 };
-

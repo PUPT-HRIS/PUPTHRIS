@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { UserService } from '../../services/user.service';
 import { DepartmentService } from '../../services/department.service';
 import { Department } from '../../model/department.model';
+import { Role } from '../../model/role.model'; // Import the Role model
 import { CommonModule } from '@angular/common';
+import { RoleService } from '../../services/role.service';
 
 @Component({
   selector: 'app-new-account',
@@ -18,11 +20,13 @@ export class NewAccountComponent implements OnInit {
   toastMessage: string = '';
   toastType: 'success' | 'error' = 'success';
   departments: Department[] = []; // Array to store departments
+  roles: Role[] = []; // Use the Role model here
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private departmentService: DepartmentService
+    private departmentService: DepartmentService,
+    private roleService: RoleService
   ) {
     this.newAccountForm = this.fb.group({
       Fcode: ['', Validators.required],
@@ -33,25 +37,26 @@ export class NewAccountComponent implements OnInit {
       Email: ['', [Validators.required, Validators.email]],
       EmploymentType: ['', Validators.required],
       Password: ['', [Validators.required, Validators.minLength(6)]],
-      Role: ['', Validators.required],
+      Roles: [[], Validators.required], // Multi-select for roles
       DepartmentID: [{ value: '', disabled: true }]
     });
   }
 
   ngOnInit(): void {
     this.loadDepartments();
+    this.loadRoles();  // Load roles on initialization
 
-    this.newAccountForm.get('Role')?.valueChanges.subscribe(role => {
-      const departmentControl = this.newAccountForm.get('DepartmentID');
-      if (role === 'staff') {
-        departmentControl?.disable();
-        departmentControl?.clearValidators();
-        departmentControl?.setValue('');
-      } else {
-        departmentControl?.enable();
-        departmentControl?.setValidators(Validators.required);
-      }
-      departmentControl?.updateValueAndValidity();
+    this.newAccountForm.get('Roles')?.valueChanges.subscribe((selectedRoles: string[]) => {
+      this.handleRoleSelection(selectedRoles);
+    });
+  }
+
+  loadRoles(): void {
+    this.roleService.getRoles().subscribe({
+      next: roles => {
+        this.roles = roles;
+      },
+      error: error => console.error('Error fetching roles', error)
     });
   }
 
@@ -60,6 +65,37 @@ export class NewAccountComponent implements OnInit {
       next: departments => this.departments = departments,
       error: error => console.error('Error fetching departments', error)
     });
+  }
+
+  // Handle role selection logic
+  handleRoleSelection(selectedRoles: string[]): void {
+    const departmentControl = this.newAccountForm.get('DepartmentID');
+
+    // Check if "staff" role is selected
+    const isStaffSelected = selectedRoles.includes('staff'); // Adjust to your exact RoleID value for 'staff'
+
+    if (isStaffSelected) {
+      departmentControl?.disable();
+      departmentControl?.setValue(''); // Clear department value when staff is selected
+    } else {
+      departmentControl?.enable();
+    }
+  }
+
+  // Update selected roles when checkbox changes
+  onRoleCheckboxChange(event: any): void {
+    const selectedRoles = this.newAccountForm.get('Roles')?.value || [];
+    const roleValue = event.target.value;
+
+    if (event.target.checked) {
+      selectedRoles.push(roleValue); // Add role if checked
+    } else {
+      const index = selectedRoles.indexOf(roleValue);
+      if (index > -1) {
+        selectedRoles.splice(index, 1); // Remove role if unchecked
+      }
+    }
+    this.newAccountForm.get('Roles')?.setValue(selectedRoles); // Update the form control value
   }
 
   generatePassword(): string {
@@ -92,9 +128,9 @@ export class NewAccountComponent implements OnInit {
     if (this.newAccountForm.valid) {
       const formData = this.newAccountForm.value;
 
-      // Ensure the DepartmentID field is submitted with an empty string if the role is "Staff"
-      if (formData.Role === 'staff') {
-        formData.DepartmentID = null; // Set to null
+      // Ensure the DepartmentID field is submitted with null if the role is "Staff"
+      if (formData.Roles.includes('staff')) {
+        formData.DepartmentID = null; // Set to null if staff is selected
       }
 
       this.userService.addUser(formData).subscribe({

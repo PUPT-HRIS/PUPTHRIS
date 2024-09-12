@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
 const Department = require('../models/departmentModel'); 
+const Role = require('../models/roleModel'); // Ensure Role is included
+const UserRole = require('../models/userRoleModel'); // Ensure UserRole is included
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -16,6 +18,10 @@ exports.login = async (req, res) => {
           model: Department,
           as: 'Department',
           attributes: ['DepartmentName'],
+        },
+        {
+          model: Role, // Include roles
+          through: { attributes: [] }, // No need for UserRole attributes
         }
       ]
     });
@@ -30,7 +36,11 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ userId: user.UserID, role: user.Role }, secretKey, {
+    // Extract roles as an array of role names
+    const roles = user.Roles.map(role => role.RoleName);
+
+    // Add roles to token payload
+    const token = jwt.sign({ userId: user.UserID, roles }, secretKey, {
       expiresIn: '1h',
     });
 

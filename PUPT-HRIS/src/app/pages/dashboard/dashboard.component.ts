@@ -3,13 +3,15 @@ import { ChartOptions, ChartType, ChartData } from 'chart.js';
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
 import { DashboardService } from '../../services/dashboard.service';
 import { DepartmentCount } from '../../model/departmentCount.model';
+import { AuthService } from '../../services/auth.service'; 
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   standalone: true,
-  imports: [NgChartsModule]
+  imports: [NgChartsModule, CommonModule]
 })
 export class DashboardComponent implements AfterViewInit {
 
@@ -58,9 +60,22 @@ export class DashboardComponent implements AfterViewInit {
     ]
   };
 
-  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef){}
+  public userRole: string = '';
+
+  constructor(
+    private dashboardService: DashboardService, 
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
+  ){}
 
   ngAfterViewInit(): void {
+    const roles = this.authService.getUserRoles();
+
+  // Assuming you want to assign the first role or check for a specific role
+  if (roles.length > 0) {
+    this.userRole = roles.includes('admin') ? 'admin' : roles.includes('superadmin') ? 'superadmin' : 'user';
+  }
+
     this.dashboardService.getDashboardData().subscribe(data => {
       console.log('Dashboard Data:', data);
   

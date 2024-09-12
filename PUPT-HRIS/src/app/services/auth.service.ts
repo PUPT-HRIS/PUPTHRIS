@@ -53,4 +53,34 @@ export class AuthService {
     }
     return this.http.post(`${this.apiUrl}/change-password`, { userId, currentPassword, newPassword });
   }
+
+  getUserRoles(): string[] {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.roles || [];
+    }
+    return [];
+  }
+
+  isAdmin(): boolean {
+    const roles = this.getUserRoles();
+    return roles.includes('admin');
+  }
+
+  isSuperAdmin(): boolean {
+    const roles = this.getUserRoles();
+    return roles.includes('superadmin');
+  }
+
+  isFaculty(): boolean {
+    const roles = this.getUserRoles();
+    return roles.includes('faculty');
+  }
+
+  // Example of role checking
+  hasRole(role: string): boolean {
+    const roles = this.getUserRoles();
+    return roles.includes(role);
+  }
 }

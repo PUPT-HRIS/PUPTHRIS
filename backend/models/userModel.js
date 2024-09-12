@@ -1,6 +1,8 @@
+// userModel.js
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 const Department = require('./departmentModel');
+
 
 const User = sequelize.define('User', {
   UserID: {
@@ -24,12 +26,8 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING(100),
     allowNull: false,
   },
-  Role: {
-    type: DataTypes.ENUM('faculty', 'staff', 'admin'),
-    defaultValue: 'staff',
-  },
   EmploymentType: {
-    type: DataTypes.ENUM('fulltime', 'parttime', 'temporary'),
+    type: DataTypes.ENUM('fulltime', 'parttime', 'temporary', 'designee'),
     allowNull: false,
   },
   DepartmentID: {

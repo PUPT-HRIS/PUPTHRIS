@@ -24,7 +24,12 @@
         <td class="p-4">
           {{ user.FirstName }} {{ user.MiddleName }} {{ user.Surname }} {{ user.NameExtension }}
         </td>
-        <td class="p-4">{{ user.Role }}</td>
+        <td class="p-4">
+          <!-- Assuming Roles is an array of Role objects -->
+          <span *ngFor="let role of user.Roles; let isLast = last">
+            {{ role.RoleName }}<span *ngIf="!isLast">, </span>
+          </span>
+        </td>
         <td class="p-4">{{ user.Department?.DepartmentName }}</td>
         <td class="p-4">{{ user.EmploymentType }}</td>
         <td class="p-4">

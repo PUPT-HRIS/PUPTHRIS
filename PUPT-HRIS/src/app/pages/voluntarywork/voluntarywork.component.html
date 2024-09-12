@@ -6,7 +6,8 @@
   </div>
 
   <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="voluntaryWorkData.length > 0" class="p-6 space-y-6">
+    <!-- Display message or table based on voluntaryWorkData length -->
+    <div *ngIf="voluntaryWorkData.length > 0; else noVoluntaryWork" class="p-6 space-y-6">
       <div class="overflow-auto">
         <div class="flex-1 mb-2">
           <a class="text-lg font-normal">You are currently viewing the list/s of Voluntary Work/s.</a>
@@ -41,13 +42,22 @@
           </tbody>
         </table>
       </div>
-      <div class="mt-6">
-        <button class="btn btn-add-info text-white w-full" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
+    </div>
+
+    <!-- Message for when no voluntary work exists -->
+    <ng-template #noVoluntaryWork>
+      <div class="p-6 text-center">
+        <p class="text-lg text-gray-600">No voluntary work records found.</p>
       </div>
+    </ng-template>
+
+    <!-- Add button should always be visible -->
+    <div class="mt-6">
+      <button class="btn btn-add-info text-white w-full" (click)="addNewVoluntaryWork()">Add Voluntary Work</button>
     </div>
 
     <!-- Pagination Controls -->
-    <div class="pagination-controls mt-4 pb-8">
+    <div *ngIf="voluntaryWorkData.length > 0" class="pagination-controls mt-4 pb-8">
       <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
       <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
         {{ page }}
@@ -55,6 +65,7 @@
       <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
     </div>
   </ng-container>
+
 
   <ng-template #editForm>
     <div class="p-6">

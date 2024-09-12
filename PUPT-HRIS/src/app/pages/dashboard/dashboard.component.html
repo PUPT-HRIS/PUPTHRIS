@@ -1,5 +1,5 @@
 <div class="dashboard-content">
-  <!-- Cards Section -->
+  <div *ngIf="userRole === 'admin' || userRole === 'superadmin'; else userView">
   <div class="flex-1 mb-2">
     <a class="text-lg font-normal">You are currently viewing the Dashboard.</a>
   </div>
@@ -67,4 +67,14 @@
       </canvas>
     </div>
   </div>
+</div>
+
+<ng-template #userView>
+  <div class="flex-1 mb-2">
+    <a class="text-lg font-normal">You are currently viewing the User Dashboard.</a>
+  </div>
+  <!-- Add the non-admin content here -->
+  <p>Welcome to your personal dashboard. Here you will find some quick stats.</p>
+  <!-- You can add cards and content for non-admin users -->
+</ng-template>
 </div>

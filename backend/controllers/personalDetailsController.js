@@ -38,8 +38,9 @@ exports.updatePersonalDetails = async (req, res) => {
 
 exports.getPersonalDetails = async (req, res) => {
   try {
-    // Find the personal details for the logged-in user
-    const personalDetails = await PersonalDetails.findOne({ where: { UserID: req.user.userId } });
+    // Find the personal details for the user
+    const personalDetails = await PersonalDetails.findOne({ where: { UserID: req.params.userId } });
+    
     if (personalDetails) {
       res.status(200).json(personalDetails);
     } else {

@@ -8,4 +8,5 @@ router.post('/add', authenticateJWT, personalDetailsController.addPersonalDetail
 router.patch('/update/:id', authenticateJWT, personalDetailsController.updatePersonalDetails);
 router.get('/user/:userId', authenticateJWT, personalDetailsController.getPersonalDetails);
 
+
 module.exports = router;
