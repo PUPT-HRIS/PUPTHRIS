@@ -1,52 +1,53 @@
-<div class="overflow-x-auto w-full">
-  <h2 class="text-2xl font-bold mb-4">User Management</h2>
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">User Management</h1>
+  </div>
 
-  <table class="table w-full">
-    <thead class="bg-red-900 text-white">
-      <tr>
-        <th class="text-center">#</th>
-        <th>Name</th>
-        <th>Employment Type</th>
-        <th>Roles</th>
-        <th class="text-center">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users; let i = index" class="hover:bg-gray-100">
-        <td class="text-center">{{ i + 1 }}</td>
-        <td>{{ user.FirstName }} {{ user.Surname }}</td>
-        <td>
-            <select 
-            class="select select-bordered select-sm w-full max-w-xs"
-            [(ngModel)]="user.EmploymentType">
-            <option value="fulltime">Fulltime</option>
-            <option value="parttime">Part-time</option>
-            <option value="temporary">Temporary</option>
-            <option value="designee">Designee</option>
-          </select>          
-              
-        </td>
-        <td>
-          <div *ngFor="let role of availableRoles">
-            <label class="cursor-pointer">
-              <input 
-                type="checkbox" 
-                class="checkbox checkbox-primary"
-                [checked]="isUserRoleSelected(user, role.RoleID)"
-                (change)="toggleUserRole(user, role.RoleID)" 
-              />
-              {{ role.RoleName }}
-            </label>
-          </div>
-        </td>
-        <td class="flex justify-center space-x-2">
-          <button class="btn btn-sm btn-primary" (click)="saveUserDetails(user)">
-            Save
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="p-6 space-y-6">
+    <div *ngIf="users.length > 0" class="overflow-x-auto px-10">
+      <table class="table table-zebra w-full border-separate border-spacing-0">
+        <thead>
+          <tr class="bg-maroon text-white">
+            <th class="p-4">#</th>
+            <th class="p-4">Name</th>
+            <th class="p-4">Employment Type</th>
+            <th class="p-4">Roles</th>
+            <th class="p-4 w-36">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users; let i = index" class="hover:bg-gray-100">
+            <td class="p-4 text-center">{{ i + 1 }}</td>
+            <td class="p-4">{{ user.FirstName }} {{ user.Surname }}</td>
+            <td class="p-4">
+              <select class="select select-bordered select-sm w-full max-w-xs" [(ngModel)]="user.EmploymentType">
+                <option value="fulltime">Fulltime</option>
+                <option value="parttime">Part-time</option>
+                <option value="temporary">Temporary</option>
+                <option value="designee">Designee</option>
+              </select>
+            </td>
+            <td class="p-4">
+              <div *ngFor="let role of availableRoles">
+                <label class="cursor-pointer">
+                  <input type="checkbox" class="checkbox checkbox-primary" [checked]="isUserRoleSelected(user, role.RoleID)" (change)="toggleUserRole(user, role.RoleID)" />
+                  {{ role.RoleName }}
+                </label>
+              </div>
+            </td>
+            <td class="p-4 flex justify-center space-x-2">
+              <button class="btn btn-edit btn-sm" (click)="saveUserDetails(user)">Save</button>
+              <button class="btn btn-delete btn-sm" (click)="deleteUser(user.UserID)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <p *ngIf="!users.length" class="text-center text-red-600 mt-4">No users found</p>
+    <div *ngIf="users.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No users found.</p>
+      </div>
+    </div>
+  </div>
 </div>
