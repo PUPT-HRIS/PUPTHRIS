@@ -29,6 +29,7 @@ import { DepartmentManagementComponent } from './pages/department-management/dep
 import { ProfileImageComponent } from './pages/profile-image/profile-image.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { UserManagementComponent } from './pages/user-management/user-management.component';
+import { PdsComponent } from './pages/pds/pds.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -66,6 +67,7 @@ export const routes: Routes = [
       { path: 'character-reference', component: ReferenceComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
       { path: 'signature', component: UserSignatureComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
       { path: 'profile-image', component: ProfileImageComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
+      { path: 'print-pds', component: PdsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ]
   },
