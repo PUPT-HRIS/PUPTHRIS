@@ -11,7 +11,7 @@ function setFontAndAlignmentForCells(cells, worksheet, fontSettings, alignmentSe
 }
 
 // Function to fill the Excel template with user data
-async function fillExcelTemplate(userDetails) {
+async function fillExcelTemplate(userDetails, childrenDetails) {
     const workbook = new ExcelJS.Workbook();
     const templatePath = path.join(__dirname, '../templates/pds_template.xlsx');
     await workbook.xlsx.readFile(templatePath);
@@ -146,7 +146,16 @@ async function fillExcelTemplate(userDetails) {
     // Mother Details
     worksheet.getCell('D47').value = ' ' + (userDetails.MotherLastName || '');   // Mother Last Name
     worksheet.getCell('D48').value = ' ' + (userDetails.MotherFirstName || '');  // Mother First Name
-    worksheet.getCell('D49').value = ' ' + (userDetails.MotherMiddleName || ''); 
+    worksheet.getCell('D49').value = ' ' + (userDetails.MotherMiddleName || '');
+    
+     // Adding Children Details: I37 to I48 for names and M37 to M48 for birthdates
+     const childrenNameCells = ['I37', 'I38', 'I39', 'I40', 'I41', 'I42', 'I43', 'I44', 'I45', 'I46', 'I47', 'I48'];
+     const childrenBirthdateCells = ['M37', 'M38', 'M39', 'M40', 'M41', 'M42', 'M43', 'M44', 'M45', 'M46', 'M47', 'M48'];
+     
+     childrenDetails.slice(0, 12).forEach((child, index) => {
+        worksheet.getCell(childrenNameCells[index]).value = child.ChildName || ''; // Child Name
+        worksheet.getCell(childrenBirthdateCells[index]).value = child.BirthDate ? new Date(child.BirthDate).toISOString().split('T')[0] : ''; // Child Birthdate
+    });
 
     // Set Arial font settings
     const arialFontSettings = { name: 'Arial', size: 10 };
@@ -174,7 +183,7 @@ async function fillExcelTemplate(userDetails) {
         'D13', 'D15', 'D22', 'D24', 'D25', 'D27', 'D29', 'D31', 'D32', 'D33', 'D34', 'D16',
         'I17', 'L17', 'I19', 'L19', 'I22', 'L22', 'I24', 'I25', 'L25', 'I27', 'L27', 'I29', 'K29',
         'I31', 'I32', 'I33', 'I34', 'D36', 'D37', 'D38', 'D39', 'D40', 'D41', 'D42', 'D43', 'D44', 
-        'D45', 'D47', 'D48', 'D49'
+        'D45', 'D47', 'D48', 'D49', ...childrenNameCells, ...childrenBirthdateCells
     ], worksheet, arialFontSettings, centerAlignmentSettings);
 
     // Save the updated Excel file to a temporary path
