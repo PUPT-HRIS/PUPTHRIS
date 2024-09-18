@@ -6,6 +6,7 @@ const PersonalDetails = require('../models/personalDetailsModel');
 const ContactDetails = require('../models/contactDetailsModel');
 const FamilyBackground = require('../models/familybackgroundModel'); 
 const ChildrenDetails = require('../models/childrenModel');
+const EducationDetails = require('../models/educationModel');
 
 // Function to generate PDS for the logged-in user
 exports.generatePDS = async (req, res) => {
@@ -21,9 +22,10 @@ exports.generatePDS = async (req, res) => {
     const contactDetails = await ContactDetails.findOne({ where: { UserID: userId } });
     const familyBackground = await FamilyBackground.findOne({ where: { UserID: userId } });
     const childrenDetails = await ChildrenDetails.findAll({ where: { UserID: userId } });
+    const educationDetails = await EducationDetails.findAll({ where: { UserID: userId } });
     
 
-    if (!basicDetails || !personalDetails || !contactDetails || !familyBackground || !childrenDetails) {
+    if (!basicDetails || !personalDetails || !contactDetails || !familyBackground || !childrenDetails || !educationDetails) {
       return res.status(404).json({ message: 'User details not found' });
     }
 
@@ -36,7 +38,7 @@ exports.generatePDS = async (req, res) => {
     };
 
     // Use the utility function to fill the Excel template
-    const tempExcelFilePath = await fillExcelTemplate(userDetails, childrenDetails);
+    const tempExcelFilePath = await fillExcelTemplate(userDetails, childrenDetails, educationDetails);
 
     // Convert Excel file to PDF using LibreOffice
     const pdfBuffer = await convertExcelToPDF(tempExcelFilePath);
@@ -64,8 +66,9 @@ exports.generatePDSForUser = async (req, res) => {
     const contactDetails = await ContactDetails.findOne({ where: { UserID: userId } });
     const familyBackground = await FamilyBackground.findOne({ where: { UserID: userId } });
     const childrenDetails = await ChildrenDetails.findAll({ where: { UserID: userId } });
+    const educationDetails = await EducationDetails.findAll({ where: { UserID: userId } });
 
-    if (!basicDetails || !personalDetails || !contactDetails || !familyBackground || !childrenDetails) {
+    if (!basicDetails || !personalDetails || !contactDetails || !familyBackground || !childrenDetails|| !educationDetails) {
       return res.status(404).json({ message: 'User details not found' });
     }
 
@@ -78,7 +81,7 @@ exports.generatePDSForUser = async (req, res) => {
     };
 
     // Use the utility function to fill the Excel template
-    const tempExcelFilePath = await fillExcelTemplate(userDetails, childrenDetails);
+    const tempExcelFilePath = await fillExcelTemplate(userDetails, childrenDetails, educationDetails);
 
     // Convert Excel file to PDF using LibreOffice
     const pdfBuffer = await convertExcelToPDF(tempExcelFilePath);

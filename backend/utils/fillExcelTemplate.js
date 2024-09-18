@@ -11,7 +11,7 @@ function setFontAndAlignmentForCells(cells, worksheet, fontSettings, alignmentSe
 }
 
 // Function to fill the Excel template with user data
-async function fillExcelTemplate(userDetails, childrenDetails) {
+async function fillExcelTemplate(userDetails, childrenDetails, educationDetails) {
     const workbook = new ExcelJS.Workbook();
     const templatePath = path.join(__dirname, '../templates/pds_template.xlsx');
     await workbook.xlsx.readFile(templatePath);
@@ -147,14 +147,45 @@ async function fillExcelTemplate(userDetails, childrenDetails) {
     worksheet.getCell('D47').value = ' ' + (userDetails.MotherLastName || '');   // Mother Last Name
     worksheet.getCell('D48').value = ' ' + (userDetails.MotherFirstName || '');  // Mother First Name
     worksheet.getCell('D49').value = ' ' + (userDetails.MotherMiddleName || '');
+    worksheet.getCell('B56').value = 'VOCATIONAL / TRADE COURSE';
     
      // Adding Children Details: I37 to I48 for names and M37 to M48 for birthdates
      const childrenNameCells = ['I37', 'I38', 'I39', 'I40', 'I41', 'I42', 'I43', 'I44', 'I45', 'I46', 'I47', 'I48'];
      const childrenBirthdateCells = ['M37', 'M38', 'M39', 'M40', 'M41', 'M42', 'M43', 'M44', 'M45', 'M46', 'M47', 'M48'];
-     
+
      childrenDetails.slice(0, 12).forEach((child, index) => {
         worksheet.getCell(childrenNameCells[index]).value = child.ChildName || ''; // Child Name
         worksheet.getCell(childrenBirthdateCells[index]).value = child.BirthDate ? new Date(child.BirthDate).toISOString().split('T')[0] : ''; // Child Birthdate
+    });
+
+    // Adding Education Details
+    const educationLevelCells = {
+        "ELEMENTARY": {name: 'D54', degree: 'G54', from: 'J54', to: 'K54', units: 'L54', graduated: 'M54', honors: 'N54'},
+        "SECONDARY": {name: 'D55', degree: 'G55', from: 'J55', to: 'K55', units: 'L55', graduated: 'M55', honors: 'N55'},
+        "VOCATIONAL / TRADE COURSE": {name: 'D56', degree: 'G56', from: 'J56', to: 'K56', units: 'L56', graduated: 'M56', honors: 'N56'},
+        "COLLEGE": {name: 'D57', degree: 'G57', from: 'J57', to: 'K57', units: 'L57', graduated: 'M57', honors: 'N57'},
+        "GRADUATE STUDIES": {name: 'D58', degree: 'G58', from: 'J58', to: 'K58', units: 'L58', graduated: 'M58', honors: 'N58'}
+    };
+
+    educationDetails.forEach(education => {
+        let level = education.Level;
+
+        // Group Master's and Doctorate under Graduate Studies for PDS
+        if (level === "MASTER'S" || level === "DOCTORATE") {
+            level = "GRADUATE STUDIES";
+        }
+
+        const cellPositions = educationLevelCells[level];
+
+        if (cellPositions) {
+            worksheet.getCell(cellPositions.name).value = education.NameOfSchool || '';
+            worksheet.getCell(cellPositions.degree).value = education.BasicEducationDegreeCourse || '';
+            worksheet.getCell(cellPositions.from).value = education.PeriodOfAttendanceFrom ? new Date(education.PeriodOfAttendanceFrom).toISOString().split('T')[0] : '';
+            worksheet.getCell(cellPositions.to).value = education.PeriodOfAttendanceTo ? new Date(education.PeriodOfAttendanceTo).toISOString().split('T')[0] : '';
+            worksheet.getCell(cellPositions.units).value = education.HighestLevelUnitsEarned || '';
+            worksheet.getCell(cellPositions.graduated).value = education.YearGraduated || '';
+            worksheet.getCell(cellPositions.honors).value = education.AcademicHonors || '';
+        }
     });
 
     // Set Arial font settings
