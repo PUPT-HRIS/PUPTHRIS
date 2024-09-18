@@ -129,6 +129,25 @@ async function fillExcelTemplate(userDetails) {
     worksheet.getCell('I33').value = userDetails.MobileNumber || '';     // Mobile Number (I33)
     worksheet.getCell('I34').value = userDetails.EmailAddress || '';
 
+     // Spouse Details
+    worksheet.getCell('D36').value = ' ' + (userDetails.SpouseLastName || '');   // Spouse Last Name
+    worksheet.getCell('D37').value = ' ' + (userDetails.SpouseFirstName || '');  // Spouse First Name
+    worksheet.getCell('D38').value = ' ' + (userDetails.SpouseMiddleName || ''); // Spouse Middle Name
+    worksheet.getCell('D39').value = ' ' + (userDetails.SpouseOccupation || ''); // Spouse Occupation
+    worksheet.getCell('D40').value = ' ' + (userDetails.SpouseEmployerName || ''); // Spouse Employer Name
+    worksheet.getCell('D41').value = ' ' + (userDetails.SpouseBusinessAddress || ''); // Spouse Business Address
+    worksheet.getCell('D42').value = ' ' + (userDetails.SpouseTelephoneNumber || ''); // Spouse Telephone Number
+
+    // Father Details
+    worksheet.getCell('D43').value = ' ' + (userDetails.FatherLastName || '');   // Father Last Name
+    worksheet.getCell('D44').value = ' ' + (userDetails.FatherFirstName || '');  // Father First Name
+    worksheet.getCell('D45').value = ' ' + (userDetails.FatherMiddleName || ''); // Father Middle Name
+
+    // Mother Details
+    worksheet.getCell('D47').value = ' ' + (userDetails.MotherLastName || '');   // Mother Last Name
+    worksheet.getCell('D48').value = ' ' + (userDetails.MotherFirstName || '');  // Mother First Name
+    worksheet.getCell('D49').value = ' ' + (userDetails.MotherMiddleName || ''); 
+
     // Set Arial font settings
     const arialFontSettings = { name: 'Arial', size: 10 };
 
@@ -154,7 +173,8 @@ async function fillExcelTemplate(userDetails) {
     setFontAndAlignmentForCells([
         'D13', 'D15', 'D22', 'D24', 'D25', 'D27', 'D29', 'D31', 'D32', 'D33', 'D34', 'D16',
         'I17', 'L17', 'I19', 'L19', 'I22', 'L22', 'I24', 'I25', 'L25', 'I27', 'L27', 'I29', 'K29',
-        'I31', 'I32', 'I33', 'I34'
+        'I31', 'I32', 'I33', 'I34', 'D36', 'D37', 'D38', 'D39', 'D40', 'D41', 'D42', 'D43', 'D44', 
+        'D45', 'D47', 'D48', 'D49'
     ], worksheet, arialFontSettings, centerAlignmentSettings);
 
     // Save the updated Excel file to a temporary path

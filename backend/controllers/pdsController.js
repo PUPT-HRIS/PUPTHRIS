@@ -3,7 +3,8 @@ const libre = require('libreoffice-convert');
 const fs = require('fs-extra');
 const BasicDetails = require('../models/basicDetailsModel');
 const PersonalDetails = require('../models/personalDetailsModel');
-const ContactDetails = require('../models/contactDetailsModel'); 
+const ContactDetails = require('../models/contactDetailsModel');
+const FamilyBackground = require('../models/familybackgroundModel'); 
 
 // Function to generate PDS for the logged-in user
 exports.generatePDS = async (req, res) => {
@@ -17,8 +18,9 @@ exports.generatePDS = async (req, res) => {
     const basicDetails = await BasicDetails.findOne({ where: { UserID: userId } });
     const personalDetails = await PersonalDetails.findOne({ where: { UserID: userId } });
     const contactDetails = await ContactDetails.findOne({ where: { UserID: userId } });
+    const familyBackground = await FamilyBackground.findOne({ where: { UserID: userId } });
 
-    if (!basicDetails || !personalDetails || !contactDetails) {
+    if (!basicDetails || !personalDetails || !contactDetails || !familyBackground) {
       return res.status(404).json({ message: 'User details not found' });
     }
 
@@ -27,6 +29,7 @@ exports.generatePDS = async (req, res) => {
       ...basicDetails.get({ plain: true }),
       ...personalDetails.get({ plain: true }),
       ...contactDetails.get({ plain: true }),
+      ...familyBackground.get({ plain: true }),
     };
 
     // Use the utility function to fill the Excel template
@@ -56,8 +59,9 @@ exports.generatePDSForUser = async (req, res) => {
     const basicDetails = await BasicDetails.findOne({ where: { UserID: userId } });
     const personalDetails = await PersonalDetails.findOne({ where: { UserID: userId } });
     const contactDetails = await ContactDetails.findOne({ where: { UserID: userId } });
+    const familyBackground = await FamilyBackground.findOne({ where: { UserID: userId } });
 
-    if (!basicDetails || !personalDetails || !contactDetails) {
+    if (!basicDetails || !personalDetails || !contactDetails || !familyBackground) {
       return res.status(404).json({ message: 'User details not found' });
     }
 
@@ -66,6 +70,7 @@ exports.generatePDSForUser = async (req, res) => {
       ...basicDetails.get({ plain: true }),
       ...personalDetails.get({ plain: true }),
       ...contactDetails.get({ plain: true }),
+      ...familyBackground.get({ plain: true }),
     };
 
     // Use the utility function to fill the Excel template
