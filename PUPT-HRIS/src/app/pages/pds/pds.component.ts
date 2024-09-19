@@ -16,7 +16,13 @@ import { User } from '../../model/user.model';
 export class PdsComponent implements OnInit {
   userId: number | null = null;
   users: User[] = [];
+  paginatedUsers: User[] = [];
   isLoading: boolean = false;
+
+  // Pagination variables
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   // New properties for toast notification
   showToast: boolean = false;
@@ -43,9 +49,44 @@ export class PdsComponent implements OnInit {
     this.userService.getUsers().subscribe({
       next: (users) => {
         this.users = users;
+        this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
+        this.updatePaginatedUsers();
       },
       error: (error) => console.error('Error fetching users', error),
     });
+  }
+
+  // Update paginated users based on the current page
+  updatePaginatedUsers(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedUsers = this.users.slice(startIndex, endIndex);
+  }
+
+  // Pagination methods
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedUsers();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedUsers();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedUsers();
+    }
+  }
+
+  get totalPagesArray(): number[] {
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
   }
 
   viewPds(): void {
@@ -101,7 +142,6 @@ export class PdsComponent implements OnInit {
       }
     );
   }
-
 
   private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
     this.errorMessage = message;
