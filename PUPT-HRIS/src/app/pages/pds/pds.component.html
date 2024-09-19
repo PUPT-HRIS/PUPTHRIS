@@ -39,10 +39,10 @@
             <td class="p-4">{{ user.Fcode }}</td>
             <td class="p-4">{{ user.FirstName }} {{ user.Surname }}</td>
             <td class="p-4">
-                <span *ngFor="let role of user.Roles; let isLast = last">
-                  {{ role.RoleName }}<span *ngIf="!isLast">, </span>
-                </span>
-              </td>
+              <span *ngFor="let role of user.Roles; let isLast = last">
+                {{ role.RoleName }}<span *ngIf="!isLast">, </span>
+              </span>
+            </td>
             <td class="p-4">{{ user.Department?.DepartmentName }}</td>
             <td class="p-4 flex justify-center space-x-2">
               <button class="btn btn-sm btn-info" (click)="downloadUserPds(user.UserID)">Download PDS</button>
@@ -57,5 +57,18 @@
         <p class="text-lg">No users found.</p>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ errorMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ errorMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ errorMessage }}</span>
   </div>
 </div>

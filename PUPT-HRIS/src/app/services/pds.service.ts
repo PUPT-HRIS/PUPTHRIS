@@ -26,9 +26,11 @@ export class PdsService {
 
   downloadPDSForUser(userId: number): Observable<Blob> {
     const headers = this.getHeaders();
-    return this.http.get(`${this.apiUrl}/download-pds/${userId}`, {
+    const url = `${this.apiUrl}/download-pds/${userId}`;
+    console.log('Sending request to:', url);  // Log the constructed URL to verify it's correct
+    return this.http.get(url, {
       headers,
       responseType: 'blob',
     });
-  }
+  }   
 }
