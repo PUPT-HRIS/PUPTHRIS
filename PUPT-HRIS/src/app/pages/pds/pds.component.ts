@@ -18,6 +18,11 @@ export class PdsComponent implements OnInit {
   users: User[] = [];
   isLoading: boolean = false;
 
+  // New properties for toast notification
+  showToast: boolean = false;
+  errorMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'error'; // Default to 'error'
+
   constructor(
     private pdsService: PdsService, 
     private userService: UserService, 
@@ -63,11 +68,13 @@ export class PdsComponent implements OnInit {
       (error) => {
         console.error('Error downloading personal PDS', error);
         this.isLoading = false;
+        this.showToastNotification('Error downloading personal PDS. Please try again.', 'error');
       }
     );
   }
 
   downloadUserPds(userId: number): void {
+    console.log('Requesting PDS for user ID:', userId);
     this.isLoading = true;
 
     this.pdsService.downloadPDSForUser(userId).subscribe(
@@ -77,11 +84,32 @@ export class PdsComponent implements OnInit {
         window.open(url);
 
         this.isLoading = false;
+        this.showToastNotification('PDS downloaded successfully.', 'success');
       },
       (error) => {
         console.error('Error downloading user PDS', error);
         this.isLoading = false;
+
+        // Check for missing user information error message
+        let errorMessage = 'Error generating PDS. Please try again.';
+        if (error.status === 404 && error.error?.message === 'User details not found') {
+          errorMessage = 'The information for this user is incomplete.';
+        }
+
+        // Display error message in toast notification
+        this.showToastNotification(errorMessage, 'error');
       }
     );
+  }
+
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.errorMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
   }
 }
