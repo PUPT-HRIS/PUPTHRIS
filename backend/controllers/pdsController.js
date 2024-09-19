@@ -56,10 +56,10 @@ exports.generatePDS = async (req, res) => {
   }
 };
 
-// Function to generate PDS for another user
 exports.generatePDSForUser = async (req, res) => {
   try {
     const { userId } = req.params;
+    console.log('Request received to generate PDS for user:', userId);
 
     const basicDetails = await BasicDetails.findOne({ where: { UserID: userId } });
     const personalDetails = await PersonalDetails.findOne({ where: { UserID: userId } });
@@ -68,9 +68,13 @@ exports.generatePDSForUser = async (req, res) => {
     const childrenDetails = await ChildrenDetails.findAll({ where: { UserID: userId } });
     const educationDetails = await EducationDetails.findAll({ where: { UserID: userId } });
 
-    if (!basicDetails || !personalDetails || !contactDetails || !familyBackground || !childrenDetails|| !educationDetails) {
-      return res.status(404).json({ message: 'User details not found' });
+    // Check if any of the required details are missing
+    if (!basicDetails || !personalDetails || !contactDetails || !familyBackground || !childrenDetails || !educationDetails) {
+      console.log('Some user details are missing.');
+      return res.status(400).json({ message: 'Some user details are missing. Please complete the profile before generating the PDS.' });
     }
+
+    console.log('PDS generation successful for user:', userId);
 
     // Combine basicDetails and personalDetails into one object
     const userDetails = {
@@ -98,6 +102,7 @@ exports.generatePDSForUser = async (req, res) => {
     res.status(500).send('Error generating PDS');
   }
 };
+
 
 // Function to convert Excel file to PDF using LibreOffice
 async function convertExcelToPDF(excelFilePath) {
