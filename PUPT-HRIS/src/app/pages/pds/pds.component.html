@@ -22,7 +22,7 @@
   </div>
 
   <div class="p-6 space-y-6">
-    <div *ngIf="users.length > 0" class="overflow-x-auto px-10">
+    <div *ngIf="paginatedUsers.length > 0" class="overflow-x-auto px-10">
       <p class="text-lg font-normal">View or download PDS of other users:</p>
       <table class="table table-zebra w-full border-separate border-spacing-0">
         <thead>
@@ -36,8 +36,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of users; let i = index" class="hover:bg-gray-100">
-            <td class="p-4 text-center">{{ i + 1 }}</td>
+          <tr *ngFor="let user of paginatedUsers; let i = index" class="hover:bg-gray-100">
+            <td class="p-4 text-center">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
             <td class="p-4">{{ user.Fcode }}</td>
             <td class="p-4">{{ user.FirstName }} {{ user.Surname }}</td>
             <td class="p-4">
@@ -47,14 +47,23 @@
             </td>
             <td class="p-4">{{ user.Department?.DepartmentName }}</td>
             <td class="p-4 flex justify-center space-x-2">
-              <button class="btn btn-sm btn-primary" (click)="downloadUserPds(user.UserID)">Download PDS</button>
+              <button class="btn btn-sm" (click)="downloadUserPds(user.UserID)">Download PDS</button>
             </td>
           </tr>
         </tbody>
       </table>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls mt-4 flex justify-center space-x-2">
+        <button class="btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button class="btn-pagination" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <button class="btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+      </div>
     </div>
 
-    <div *ngIf="users.length === 0" class="p-6 space-y-6">
+    <div *ngIf="paginatedUsers.length === 0" class="p-6 space-y-6">
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <p class="text-lg">No users found.</p>
       </div>
