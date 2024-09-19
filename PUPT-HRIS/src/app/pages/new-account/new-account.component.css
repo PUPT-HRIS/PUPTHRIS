@@ -1,3 +1,4 @@
+/* Button styling */
 .btn {
   background-color: #000000;
   border-color: #000000;
@@ -62,6 +63,7 @@ h2 {
   background-color: #f3f4f6;
 }
 
+/* Toast Notification styling */
 .toast {
   position: fixed;
   bottom: 10px;
@@ -99,4 +101,34 @@ h2 {
 
 .alert-error {
   background-color: #dc3545;
+}
+
+/* Roles styling */
+.roles-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two-column layout for checkboxes */
+  gap: 10px;
+}
+
+.role-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.role-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  accent-color: #3b82f6; /* Apply a blue accent color */
+}
+
+.role-label {
+  font-weight: 500;
+  color: #333;
+}
+
+/* Hover effect for labels */
+.role-checkbox:hover .role-label {
+  color: #3b82f6; /* Change label color on hover */
 }

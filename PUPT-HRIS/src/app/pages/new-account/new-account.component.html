@@ -133,17 +133,17 @@
     <!-- Roles (Checkboxes for multi-select) -->
     <div class="form-control w-full">
       <label class="label-text font-bold">Roles <span class="text-red-500">*</span></label>
-      <div *ngFor="let role of roles">
-        <label class="label">
+      <div class="roles-container mt-3">
+        <div *ngFor="let role of roles" class="role-checkbox">
           <input
             type="checkbox"
             [value]="role.RoleID"
             (change)="onRoleCheckboxChange($event)"
             [checked]="newAccountForm.value.Roles.includes(role.RoleID)"
           />
-          <span class="label-text">{{ role.RoleName }}</span>
-        </label>
-      </div>      
+          <span class="role-label">{{ role.RoleName }}</span>
+        </div>
+      </div>    
     </div>
 
     <!-- Department -->

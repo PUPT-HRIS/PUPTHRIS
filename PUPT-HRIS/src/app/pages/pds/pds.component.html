@@ -1,0 +1,85 @@
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <!-- Personal PDS Section -->
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Personal PDS</h1>
+  </div>
+
+  <div class="p-6 space-y-6">
+    <p class="text-lg font-normal">View or Print your PDS form:</p>
+    <button class="btn btn-black" (click)="viewPds()" [disabled]="isLoading">View PDS</button>
+
+    <div *ngIf="isLoading" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-opacity-50 bg-gray-800 z-50">
+      <div class="flex flex-col items-center">
+        <button class="btn btn-square loading"></button>
+        <p class="text-white mt-4">Generating your PDS, please wait...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other Users PDS Section -->
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full mt-6">
+    <h1 class="text-2xl font-bold">Other Users PDS</h1>
+  </div>
+
+  <div class="p-6 space-y-6">
+    <div *ngIf="paginatedUsers.length > 0" class="overflow-x-auto px-10">
+      <p class="text-lg font-normal">View or download PDS of other users:</p>
+      <table class="table table-zebra w-full border-separate border-spacing-0">
+        <thead>
+          <tr class="bg-maroon text-white">
+            <th class="p-4">#</th>
+            <th class="p-4">FCode</th>
+            <th class="p-4">Name</th>
+            <th class="p-4">Instructor Status</th>
+            <th class="p-4">Department</th>
+            <th class="p-4 w-36">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of paginatedUsers; let i = index" class="hover:bg-gray-100">
+            <td class="p-4 text-center">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
+            <td class="p-4">{{ user.Fcode }}</td>
+            <td class="p-4">{{ user.FirstName }} {{ user.Surname }}</td>
+            <td class="p-4">
+              <span *ngFor="let role of user.Roles; let isLast = last">
+                {{ role.RoleName }}<span *ngIf="!isLast">, </span>
+              </span>
+            </td>
+            <td class="p-4">{{ user.Department?.DepartmentName }}</td>
+            <td class="p-4 flex justify-center space-x-2">
+              <button class="btn btn-sm" (click)="downloadUserPds(user.UserID)">Download PDS</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls mt-4 flex justify-center space-x-2">
+        <button class="btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button class="btn-pagination" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <button class="btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+      </div>
+    </div>
+
+    <div *ngIf="paginatedUsers.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No users found.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ errorMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ errorMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ errorMessage }}</span>
+  </div>
+</div>
