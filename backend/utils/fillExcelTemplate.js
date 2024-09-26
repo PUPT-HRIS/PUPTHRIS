@@ -1,6 +1,11 @@
 const ExcelJS = require('exceljs');
 const path = require('path');
 
+const { GetObjectCommand } = require('@aws-sdk/client-s3');
+const s3 = require('../config/s3.config');
+const UserSignatures = require('../models/userSignaturesModel');
+const { S3_BUCKET_NAME } = process.env;
+
 // Helper function to apply font and alignment settings to multiple cells
 function setFontAndAlignmentForCells(cells, worksheet, fontSettings, alignmentSettings) {
     cells.forEach(cellAddress => {
@@ -9,6 +14,26 @@ function setFontAndAlignmentForCells(cells, worksheet, fontSettings, alignmentSe
         cell.alignment = alignmentSettings;
     });
 }
+
+async function getImageFromS3(imageURL) {
+    const urlParts = new URL(imageURL);
+    const fileName = urlParts.pathname.split('/').pop();
+
+    const params = {
+        Bucket: S3_BUCKET_NAME,
+        Key: fileName
+    };
+
+    try {
+        const command = new GetObjectCommand(params);
+        const response = await s3.send(command);
+        return await response.Body.transformToByteArray();
+    } catch (err) {
+        console.error('Error getting image from S3:', err);
+        throw err;
+    }
+}
+
 
 // Function to fill the Excel template with user data
 async function fillExcelTemplate(userDetails, childrenDetails, educationDetails) {
@@ -188,6 +213,48 @@ async function fillExcelTemplate(userDetails, childrenDetails, educationDetails)
         }
     });
 
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0]; // Format it as YYYY-MM-DD
+
+    worksheet.getCell('L60').value = formattedDate;
+
+    // Fetch user signature
+    try {
+        const userSignature = await UserSignatures.findOne({ where: { UserID: userDetails.UserID } });
+        if (userSignature && userSignature.SignatureImageURL) {
+            const imageBuffer = await getImageFromS3(userSignature.SignatureImageURL);
+            const fileExtension = userSignature.SignatureImageURL.split('.').pop().toLowerCase();
+            
+            let extension;
+            switch (fileExtension) {
+                case 'jpg':
+                case 'jpeg':
+                    extension = 'jpeg';
+                    break;
+                case 'png':
+                    extension = 'png';
+                    break;
+                default:
+                    throw new Error('Unsupported image format');
+            }
+
+            const imageId = workbook.addImage({
+                buffer: imageBuffer,
+                extension: extension,
+            });
+
+            worksheet.addImage(imageId, {
+                tl: { col: 3, row: 59 },  // D60
+                br: { col: 4, row: 60 },  // E61
+                editAs: 'oneCell'
+            });
+
+            worksheet.getRow(60).height = 60; // Adjust signature row height
+        }
+    } catch (error) {
+        console.error('Error adding signature image:', error);
+    }
+
     // Set Arial font settings
     const arialFontSettings = { name: 'Arial', size: 10 };
 
@@ -214,7 +281,7 @@ async function fillExcelTemplate(userDetails, childrenDetails, educationDetails)
         'D13', 'D15', 'D22', 'D24', 'D25', 'D27', 'D29', 'D31', 'D32', 'D33', 'D34', 'D16',
         'I17', 'L17', 'I19', 'L19', 'I22', 'L22', 'I24', 'I25', 'L25', 'I27', 'L27', 'I29', 'K29',
         'I31', 'I32', 'I33', 'I34', 'D36', 'D37', 'D38', 'D39', 'D40', 'D41', 'D42', 'D43', 'D44', 
-        'D45', 'D47', 'D48', 'D49', ...childrenNameCells, ...childrenBirthdateCells
+        'D45', 'D47', 'D48', 'D49', ...childrenNameCells, ...childrenBirthdateCells, 'L60'
     ], worksheet, arialFontSettings, centerAlignmentSettings);
 
     // Save the updated Excel file to a temporary path
