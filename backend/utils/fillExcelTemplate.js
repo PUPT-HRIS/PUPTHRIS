@@ -5,6 +5,7 @@ const { GetObjectCommand } = require('@aws-sdk/client-s3');
 const s3 = require('../config/s3.config');
 const UserSignatures = require('../models/userSignaturesModel');
 const { S3_BUCKET_NAME } = process.env;
+const fillWorksheet2 = require('./fillExcelTemplateWorksheet2');
 
 // Helper function to apply font and alignment settings to multiple cells
 function setFontAndAlignmentForCells(cells, worksheet, fontSettings, alignmentSettings) {
@@ -36,11 +37,14 @@ async function getImageFromS3(imageURL) {
 
 
 // Function to fill the Excel template with user data
-async function fillExcelTemplate(userDetails, childrenDetails, educationDetails) {
+async function fillExcelTemplate(userDetails, childrenDetails, educationDetails, civilServiceEligibilities, workExperiences) {
     const workbook = new ExcelJS.Workbook();
     const templatePath = path.join(__dirname, '../templates/pds_template.xlsx');
     await workbook.xlsx.readFile(templatePath);
     const worksheet = workbook.getWorksheet(1);
+    const worksheet2 = workbook.getWorksheet(2);
+
+    await fillWorksheet2(workbook, userDetails, civilServiceEligibilities, workExperiences);
 
     // Fill basic details (left-aligned for these fields)
     worksheet.getCell('D10').value = ' ' + userDetails.LastName;  // Surname
@@ -217,6 +221,7 @@ async function fillExcelTemplate(userDetails, childrenDetails, educationDetails)
     const formattedDate = today.toISOString().split('T')[0]; // Format it as YYYY-MM-DD
 
     worksheet.getCell('L60').value = formattedDate;
+    worksheet2.getCell('K47').value = formattedDate;
 
     // Fetch user signature
     try {
@@ -249,7 +254,14 @@ async function fillExcelTemplate(userDetails, childrenDetails, educationDetails)
                 editAs: 'oneCell'
             });
 
+            worksheet2.addImage(imageId, {
+                tl: { col: 3, row: 46 }, 
+                br: { col: 4, row: 47 }, 
+                editAs: 'oneCell'
+            });
+
             worksheet.getRow(60).height = 60; // Adjust signature row height
+            worksheet2.getRow(47).height = 60; // Adjust signature row height
         }
     } catch (error) {
         console.error('Error adding signature image:', error);
