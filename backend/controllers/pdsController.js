@@ -13,6 +13,7 @@ const EducationDetails = require('../models/educationModel');
 const CivilServiceEligibility = require('../models/CivilServiceEligibility');
 const WorkExperience = require('../models/workexperienceModel');
 const VoluntaryWork = require('../models/voluntaryworkModel');
+const LearningDevelopment = require('../models/learningdevelopmentModel');
 
 exports.generatePDS = async (req, res) => {
     let tempExcelFilePath = null;
@@ -36,9 +37,10 @@ exports.generatePDS = async (req, res) => {
             where: { UserID: userId },
             raw: true
         });
+        const learningDevelopments = await LearningDevelopment.findAll({ where: { UserID: userId } });
         console.log("Fetched Voluntary Works:", JSON.stringify(voluntaryWorks, null, 2));
 
-        if (!basicDetails || !personalDetails || !contactDetails || !familyBackground || !childrenDetails || !educationDetails || !civilServiceEligibilities || !workExperiences || !voluntaryWorks) {
+        if (!basicDetails || !personalDetails || !contactDetails || !familyBackground || !childrenDetails || !educationDetails || !civilServiceEligibilities || !workExperiences || !voluntaryWorks || !learningDevelopments) {
             return res.status(404).json({ message: 'User details not found' });
         }
 
@@ -49,7 +51,7 @@ exports.generatePDS = async (req, res) => {
             ...familyBackground.get({ plain: true }),
         };
 
-        tempExcelFilePath = await fillExcelTemplate(userDetails, childrenDetails, educationDetails, civilServiceEligibilities, workExperiences, voluntaryWorks);
+        tempExcelFilePath = await fillExcelTemplate(userDetails, childrenDetails, educationDetails, civilServiceEligibilities, workExperiences, voluntaryWorks, learningDevelopments);
         const pdfBuffer = await convertExcelToPDF(tempExcelFilePath);
         console.log('Original PDF Buffer size:', pdfBuffer.length);
 
@@ -100,8 +102,9 @@ exports.generatePDSForUser = async (req, res) => {
             where: { UserID: userId },
             raw: true
         });
+        const learningDevelopments = await LearningDevelopment.findAll({ where: { UserID: userId } });
 
-        if (!basicDetails || !personalDetails || !contactDetails || !familyBackground || !childrenDetails || !educationDetails || !civilServiceEligibilities || !workExperiences || !voluntaryWorks) {
+        if (!basicDetails || !personalDetails || !contactDetails || !familyBackground || !childrenDetails || !educationDetails || !civilServiceEligibilities || !workExperiences || !voluntaryWorks || !learningDevelopments) {
             return res.status(400).json({ message: 'Some user details are missing. Please complete the profile before generating the PDS.' });
         }
 
@@ -114,7 +117,7 @@ exports.generatePDSForUser = async (req, res) => {
             ...familyBackground.get({ plain: true }),
         };
 
-        tempExcelFilePath = await fillExcelTemplate(userDetails, childrenDetails, educationDetails, civilServiceEligibilities, workExperiences, voluntaryWorks);
+        tempExcelFilePath = await fillExcelTemplate(userDetails, childrenDetails, educationDetails, civilServiceEligibilities, workExperiences, voluntaryWorks, learningDevelopments);
         const pdfBuffer = await convertExcelToPDF(tempExcelFilePath);
         console.log('Original PDF Buffer size:', pdfBuffer.length);
 

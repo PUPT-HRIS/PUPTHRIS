@@ -38,7 +38,7 @@ async function getImageFromS3(imageURL) {
 
 
 // Function to fill the Excel template with user data
-async function fillExcelTemplate(userDetails, childrenDetails, educationDetails, civilServiceEligibilities, workExperiences, voluntaryWork) {
+async function fillExcelTemplate(userDetails, childrenDetails, educationDetails, civilServiceEligibilities, workExperiences, voluntaryWork, learningDevelopments) {
     const workbook = new ExcelJS.Workbook();
     const templatePath = path.join(__dirname, '../templates/pds_template.xlsx');
     await workbook.xlsx.readFile(templatePath);
@@ -48,7 +48,7 @@ async function fillExcelTemplate(userDetails, childrenDetails, educationDetails,
 
     await fillWorksheet2(workbook, userDetails, civilServiceEligibilities, workExperiences);
     console.log("Voluntary Works before passing to fillWorksheet3:", JSON.stringify(voluntaryWork, null, 2));
-    await fillWorksheet3(workbook, voluntaryWork);
+    await fillWorksheet3(workbook, voluntaryWork, learningDevelopments);
 
     // Fill basic details (left-aligned for these fields)
     worksheet.getCell('D10').value = ' ' + userDetails.LastName;  // Surname
