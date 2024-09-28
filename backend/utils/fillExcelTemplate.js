@@ -6,6 +6,7 @@ const s3 = require('../config/s3.config');
 const UserSignatures = require('../models/userSignaturesModel');
 const { S3_BUCKET_NAME } = process.env;
 const fillWorksheet2 = require('./fillExcelTemplateWorksheet2');
+const fillWorksheet3 = require('./fillExcelTemplateWorksheet3');
 
 // Helper function to apply font and alignment settings to multiple cells
 function setFontAndAlignmentForCells(cells, worksheet, fontSettings, alignmentSettings) {
@@ -37,14 +38,17 @@ async function getImageFromS3(imageURL) {
 
 
 // Function to fill the Excel template with user data
-async function fillExcelTemplate(userDetails, childrenDetails, educationDetails, civilServiceEligibilities, workExperiences) {
+async function fillExcelTemplate(userDetails, childrenDetails, educationDetails, civilServiceEligibilities, workExperiences, voluntaryWork) {
     const workbook = new ExcelJS.Workbook();
     const templatePath = path.join(__dirname, '../templates/pds_template.xlsx');
     await workbook.xlsx.readFile(templatePath);
     const worksheet = workbook.getWorksheet(1);
     const worksheet2 = workbook.getWorksheet(2);
+    const worksheet3 = workbook.getWorksheet(3);
 
     await fillWorksheet2(workbook, userDetails, civilServiceEligibilities, workExperiences);
+    console.log("Voluntary Works before passing to fillWorksheet3:", JSON.stringify(voluntaryWork, null, 2));
+    await fillWorksheet3(workbook, voluntaryWork);
 
     // Fill basic details (left-aligned for these fields)
     worksheet.getCell('D10').value = ' ' + userDetails.LastName;  // Surname
@@ -222,6 +226,7 @@ async function fillExcelTemplate(userDetails, childrenDetails, educationDetails,
 
     worksheet.getCell('L60').value = formattedDate;
     worksheet2.getCell('K47').value = formattedDate;
+    worksheet3.getCell('I50').value = formattedDate;
 
     // Fetch user signature
     try {
@@ -260,8 +265,16 @@ async function fillExcelTemplate(userDetails, childrenDetails, educationDetails,
                 editAs: 'oneCell'
             });
 
-            worksheet.getRow(60).height = 60; // Adjust signature row height
-            worksheet2.getRow(47).height = 60; // Adjust signature row height
+            worksheet3.addImage(imageId, {
+                tl: { col: 2, row: 49 }, 
+                br: { col: 3, row: 50 }, 
+                editAs: 'oneCell'
+            });
+
+            worksheet.getRow(60).height = 90; // Adjust signature row height
+            worksheet2.getRow(47).height = 60;
+            worksheet3.getRow(50).height = 70;
+            worksheet3.getColumn('C').width = 10;
         }
     } catch (error) {
         console.error('Error adding signature image:', error);
