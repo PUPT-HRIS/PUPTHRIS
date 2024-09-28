@@ -18,6 +18,8 @@ const SpecialSkill = require('../models/specialSkillModel');
 const NonAcademic = require('../models/nonAcademicModel');
 const Membership = require('../models/membershipModel');
 const CharacterReference = require('../models/characterReferenceModel');
+const AdditionalQuestions = require('../models/additionalQuestionModel');
+
 exports.generatePDS = async (req, res) => {
     let tempExcelFilePath = null;
     let testPdfPath = null;
@@ -45,6 +47,7 @@ exports.generatePDS = async (req, res) => {
         const nonAcademics = await NonAcademic.findAll({ where: { UserID: userId } });
         const memberships = await Membership.findAll({ where: { UserID: userId } });
         const characterReferences = await CharacterReference.findAll({ where: { UserID: userId } });
+        const additionalQuestions = await AdditionalQuestions.findOne({ where: { UserID: userId } });
         console.log("Fetched Voluntary Works:", JSON.stringify(voluntaryWorks, null, 2));
 
         if (!basicDetails || 
@@ -60,7 +63,8 @@ exports.generatePDS = async (req, res) => {
             !specialSkills ||
             !nonAcademics ||
             !memberships ||
-            !characterReferences
+            !characterReferences ||
+            !additionalQuestions
         ) {
             return res.status(404).json({ message: 'User details not found' });
         }
@@ -82,7 +86,8 @@ exports.generatePDS = async (req, res) => {
             specialSkills,
             nonAcademics,
             memberships,
-            characterReferences
+            characterReferences,
+            additionalQuestions
         );
         const pdfBuffer = await convertExcelToPDF(tempExcelFilePath);
         console.log('Original PDF Buffer size:', pdfBuffer.length);
@@ -138,6 +143,8 @@ exports.generatePDSForUser = async (req, res) => {
         const specialSkills = await SpecialSkill.findAll({ where: { UserID: userId } });
         const nonAcademics = await NonAcademic.findAll({ where: { UserID: userId } });
         const memberships = await Membership.findAll({ where: { UserID: userId } });
+        const characterReferences = await CharacterReference.findAll({ where: { UserID: userId } });
+        const additionalQuestions = await AdditionalQuestions.findOne({ where: { UserID: userId } });
 
         if (!basicDetails || 
             !personalDetails || 
@@ -152,7 +159,8 @@ exports.generatePDSForUser = async (req, res) => {
             !specialSkills || 
             !nonAcademics || 
             !memberships ||
-            !characterReferences
+            !characterReferences ||
+            !additionalQuestions
         ) {
             return res.status(400).json({ message: 'Some user details are missing. Please complete the profile before generating the PDS.' });
         }
@@ -176,7 +184,8 @@ exports.generatePDSForUser = async (req, res) => {
             specialSkills,
             nonAcademics,
             memberships,
-            characterReferences
+            characterReferences,
+            additionalQuestions
         );
         const pdfBuffer = await convertExcelToPDF(tempExcelFilePath);
         console.log('Original PDF Buffer size:', pdfBuffer.length);

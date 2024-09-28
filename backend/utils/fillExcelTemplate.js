@@ -49,7 +49,8 @@ async function fillExcelTemplate(userDetails,
     specialSkills,
     nonAcademics,
     memberships,
-    characterReferences
+    characterReferences,
+    additionalQuestions
 ) {
     const workbook = new ExcelJS.Workbook();
     const templatePath = path.join(__dirname, '../templates/pds_template.xlsx');
@@ -63,7 +64,7 @@ async function fillExcelTemplate(userDetails,
     await fillWorksheet2(workbook, userDetails, civilServiceEligibilities, workExperiences);
     console.log("Voluntary Works before passing to fillWorksheet3:", JSON.stringify(voluntaryWork, null, 2));
     await fillWorksheet3(workbook, voluntaryWork, learningDevelopments, specialSkills, nonAcademics, memberships);
-    await fillWorksheet4(workbook, characterReferences);
+    await fillWorksheet4(workbook, characterReferences, additionalQuestions);
 
     // Fill basic details (left-aligned for these fields)
     worksheet.getCell('D10').value = ' ' + userDetails.LastName;  // Surname
