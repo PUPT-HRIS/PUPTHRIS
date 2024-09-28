@@ -1,8 +1,11 @@
-async function fillWorksheet3(workbook, voluntaryWorks, learningDevelopments) {
+async function fillWorksheet3(workbook, voluntaryWorks, learningDevelopments, specialSkills, nonAcademics, memberships) {
     const worksheet = workbook.getWorksheet(3);
 
     fillVoluntaryWork(worksheet, voluntaryWorks);
     fillLearningDevelopment(worksheet, learningDevelopments);
+    fillSpecialSkills(worksheet, specialSkills);
+    fillNonAcademics(worksheet, nonAcademics);
+    fillMemberships(worksheet, memberships);
 
     // Set font and alignment for all filled cells
     setFontAndAlignment(worksheet);
@@ -72,13 +75,76 @@ function fillLearningDevelopment(worksheet, learningDevelopments) {
     }
 }
 
+function fillSpecialSkills(worksheet, specialSkills) {
+    console.log("Special Skills data received:", JSON.stringify(specialSkills, null, 2));
+
+    const startRow = 42;
+    const endRow = 48;
+
+    if (Array.isArray(specialSkills) && specialSkills.length > 0) {
+        specialSkills.slice(0, endRow - startRow + 1).forEach((skill, index) => {
+            const row = startRow + index;
+            console.log(`Processing special skill at index ${index}:`, JSON.stringify(skill, null, 2));
+
+            worksheet.getCell(`A${row}`).value = skill.Skill || '';
+
+            console.log(`Cell value set for row ${row}`);
+        });
+    } else {
+        console.log('No special skills data available or data is not in expected format');
+    }
+}
+
+function fillNonAcademics(worksheet, nonAcademics) {
+    console.log("Non-Academic Distinctions data received:", JSON.stringify(nonAcademics, null, 2));
+
+    const startRow = 42;
+    const endRow = 48;
+
+    if (Array.isArray(nonAcademics) && nonAcademics.length > 0) {
+        nonAcademics.slice(0, endRow - startRow + 1).forEach((distinction, index) => {
+            const row = startRow + index;
+            console.log(`Processing non-academic distinction at index ${index}:`, JSON.stringify(distinction, null, 2));
+
+            worksheet.getCell(`C${row}`).value = distinction.Distinction || '';
+
+            console.log(`Cell value set for row ${row}`);
+        });
+    } else {
+        console.log('No non-academic distinctions data available or data is not in expected format');
+    }
+}
+
+function fillMemberships(worksheet, memberships) {
+    console.log("Memberships data received:", JSON.stringify(memberships, null, 2));
+
+    const startRow = 42;
+    const endRow = 48;
+
+    if (Array.isArray(memberships) && memberships.length > 0) {
+        memberships.slice(0, endRow - startRow + 1).forEach((membership, index) => {
+            const row = startRow + index;
+            console.log(`Processing membership at index ${index}:`, JSON.stringify(membership, null, 2));
+
+            worksheet.getCell(`I${row}`).value = membership.Association || '';
+
+            console.log(`Cell value set for row ${row}`);
+        });
+    } else {
+        console.log('No memberships data available or data is not in expected format');
+    }
+}
+
 function setFontAndAlignment(worksheet) {
     const cellsToFormat = [
         ...Array.from({length: 7}, (_, i) => `A${i+6}`),
         ...Array.from({length: 7}, (_, i) => `E${i+6}`),
         ...Array.from({length: 7}, (_, i) => `F${i+6}`),
         ...Array.from({length: 7}, (_, i) => `G${i+6}`),
-        ...Array.from({length: 7}, (_, i) => `H${i+6}`)
+        ...Array.from({length: 7}, (_, i) => `H${i+6}`),
+        ...Array.from({length: 7}, (_, i) => `A${i+42}`),
+        ...Array.from({length: 7}, (_, i) => `C${i+42}`),
+        ...Array.from({length: 7}, (_, i) => `I${i+42}`)
     ];
 
     cellsToFormat.forEach(cellAddress => {
