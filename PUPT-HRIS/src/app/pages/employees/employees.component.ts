@@ -76,7 +76,6 @@ export class EmployeeComponent implements OnInit {
   }
 
   getRoleName(roles: { RoleName: string }[]): string {
-    console.log('Roles received:', roles);
     if (roles && roles.length > 0) {
       if (roles.some(role => role.RoleName.toLowerCase() === 'faculty')) return 'Faculty';
       if (roles.some(role => role.RoleName.toLowerCase() === 'staff')) return 'Staff';
@@ -252,6 +251,7 @@ export class EmployeeComponent implements OnInit {
   }
 
   fetchCharacterReferences(userId: number): void {
+    console.log('Fetching character references for user ID:', userId);
     this.characterReferenceService.getReferences(userId).subscribe(
       (references) => (this.characterReferences = references),
       (error) => {
