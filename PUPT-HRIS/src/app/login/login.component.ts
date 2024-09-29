@@ -15,7 +15,7 @@ import { RouterModule } from '@angular/router';
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
-
+  showPassword: boolean = false;
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -39,5 +39,8 @@ export class LoginComponent {
       console.error('Form is invalid');
       this.errorMessage = 'Please fill in both fields correctly.';
     }
+  }
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 }
