@@ -14,7 +14,8 @@ export class SidebarComponent implements OnInit {
   activeItem: string = '';
   isProfileDropdownOpen: boolean = false;
   roles: string[] = [];
-
+  isReportsDropdownOpen: boolean = false;
+  isReportsActive: boolean = false;
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -146,6 +147,10 @@ export class SidebarComponent implements OnInit {
     } else {
       this.activeItem = '';
     }
+  }
+
+  toggleReportsDropdown() {
+    this.isReportsDropdownOpen = !this.isReportsDropdownOpen;
   }
 
   logout() {
