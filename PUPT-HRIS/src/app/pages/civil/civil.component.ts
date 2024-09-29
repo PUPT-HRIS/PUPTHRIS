@@ -117,8 +117,17 @@ export class CivilComponent implements OnInit {
     if (confirm('Are you sure you want to delete this record?')) {
       this.civilServiceService.deleteCivilServiceEligibility(id).subscribe(
         response => {
-          this.loadCivilServiceEligibilities();
-          this.showToastNotification('Civil service eligibility deleted successfully.', 'error');
+          // Remove the deleted item from the local array
+          this.civilServiceData = this.civilServiceData.filter(el => el.CivilServiceEligibilityID !== id);
+          
+          // Update pagination
+          this.totalPages = Math.ceil(this.civilServiceData.length / this.itemsPerPage);
+          if (this.currentPage > this.totalPages) {
+            this.currentPage = this.totalPages || 1;
+          }
+          this.updatePaginatedData();
+
+          this.showToastNotification('Civil service eligibility deleted successfully.', 'success');
         },
         error => {
           this.showToastNotification('There is an error deleting the record.', 'error');
