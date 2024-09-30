@@ -24,6 +24,7 @@ import { WorkExperience } from '../../model/work.model';
 import { VoluntaryWork } from '../../model/voluntary-work.model';
 import { CharacterReference } from '../../model/character-reference.model';
 import { CommonModule } from '@angular/common';
+import { RoleName, Role } from '../../model/role.model';
 
 @Component({
   selector: 'app-employee',
@@ -48,6 +49,7 @@ export class EmployeeComponent implements OnInit {
   characterReferences: CharacterReference[] | null = null;
   isModalOpen: boolean = false;
   activeTab: string = 'basic';
+  roleName = RoleName;
 
   // Pagination variables
   currentPage: number = 1;
@@ -71,6 +73,17 @@ export class EmployeeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUsers();
+  }
+
+  getRoleName(roles: { RoleName: string }[]): string {
+    if (roles && roles.length > 0) {
+      if (roles.some(role => role.RoleName.toLowerCase() === 'faculty')) return 'Faculty';
+      if (roles.some(role => role.RoleName.toLowerCase() === 'staff')) return 'Staff';
+      if (roles.some(role => role.RoleName.toLowerCase() === 'admin')) return 'Admin';
+      if (roles.some(role => role.RoleName.toLowerCase() === 'superadmin')) return 'Super Admin';
+      return roles[0].RoleName; // Return the first role if none of the above match
+    }
+    return 'Unknown';
   }
 
   loadUsers(): void {
@@ -238,6 +251,7 @@ export class EmployeeComponent implements OnInit {
   }
 
   fetchCharacterReferences(userId: number): void {
+    console.log('Fetching character references for user ID:', userId);
     this.characterReferenceService.getReferences(userId).subscribe(
       (references) => (this.characterReferences = references),
       (error) => {

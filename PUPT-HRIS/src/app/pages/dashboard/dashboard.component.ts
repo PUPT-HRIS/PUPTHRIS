@@ -25,16 +25,25 @@ export class DashboardComponent implements AfterViewInit {
   public faculty: number = 0;
   public staff: number = 0;
 
-  public lineChartOptions: ChartOptions<'line'> = {
+  // Remove lineChartOptions, lineChartLabels, lineChartType, lineChartLegend, and lineChartData
+
+  // Add barChartOptions, barChartLegend, and barChartData
+  public barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      }
+    }
   };
-  public lineChartLabels: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  public lineChartType: ChartType = 'line';
-  public lineChartLegend = true;
-  public lineChartData: ChartData<'line'> = {
-    labels: this.lineChartLabels,
+  public barChartLegend = false;
+  public barChartData: ChartData<'bar'> = {
+    labels: ['Part-Time', 'Full-Time', 'Temporary'],
     datasets: [
-      { data: [50, 75, 100, 125, 150, 175, 200, 225, 250], label: 'Employees this year' }
+      {
+        data: [0, 0, 0],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+      }
     ]
   };
 
@@ -71,10 +80,10 @@ export class DashboardComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     const roles = this.authService.getUserRoles();
 
-  // Assuming you want to assign the first role or check for a specific role
-  if (roles.length > 0) {
-    this.userRole = roles.includes('admin') ? 'admin' : roles.includes('superadmin') ? 'superadmin' : 'user';
-  }
+    // Assuming you want to assign the first role or check for a specific role
+    if (roles.length > 0) {
+      this.userRole = roles.includes('admin') ? 'admin' : roles.includes('superadmin') ? 'superadmin' : 'user';
+    }
 
     this.dashboardService.getDashboardData().subscribe(data => {
       console.log('Dashboard Data:', data);
@@ -87,6 +96,9 @@ export class DashboardComponent implements AfterViewInit {
       this.faculty = data.faculty;
       this.staff = data.staff;
   
+      // Update barChartData
+      this.barChartData.datasets[0].data = [this.partTime, this.fullTime, this.temporary];
+
       if (data.departments && Array.isArray(data.departments)) {
         const departments: DepartmentCount[] = data.departments.map((dept: { DepartmentName: string, count: number }) => ({
           Department: dept.DepartmentName,

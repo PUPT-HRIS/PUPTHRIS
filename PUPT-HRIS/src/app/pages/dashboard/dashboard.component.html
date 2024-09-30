@@ -15,21 +15,6 @@
       <button class="view-btn">View</button>
     </div>
     <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-      <h3 class="text-2xl font-bold">Part-Time</h3>
-      <p class="text-6xl font-extrabold">{{ partTime }}</p>
-      <button class="view-btn">View</button>
-    </div>
-    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-      <h3 class="text-2xl font-bold">Full-Time</h3>
-      <p class="text-6xl font-extrabold">{{ fullTime }}</p>
-      <button class="view-btn">View</button>
-    </div>
-    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-      <h3 class="text-2xl font-bold">Temporary</h3>
-      <p class="text-6xl font-extrabold">{{ temporary }}</p>
-      <button class="view-btn">View</button>
-    </div>
-    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
       <h3 class="text-2xl font-bold">Faculty</h3>
       <p class="text-6xl font-extrabold">{{ faculty }}</p>
       <button class="view-btn">View</button>
@@ -48,12 +33,12 @@
   <!-- Charts Section -->
   <div class="charts-container grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
     <div>
-      <h2 class="text-2xl font-bold">Employees this year</h2>
+      <h2 class="text-2xl font-bold">Employment Types</h2>
       <canvas baseChart
-              [data]="lineChartData"
-              [options]="lineChartOptions"
-              [legend]="lineChartLegend"
-              [type]="'line'">
+              [data]="barChartData"
+              [options]="barChartOptions"
+              [legend]="barChartLegend"
+              [type]="'bar'">
       </canvas>
     </div>
 

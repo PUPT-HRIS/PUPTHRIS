@@ -18,6 +18,7 @@ export class PdsComponent implements OnInit {
   users: User[] = [];
   paginatedUsers: User[] = [];
   isLoading: boolean = false;
+  canManageEmployees: boolean = false;
 
   // Pagination variables
   currentPage: number = 1;
@@ -40,6 +41,7 @@ export class PdsComponent implements OnInit {
     if (token) {
       const decodedToken: any = jwtDecode(token);
       this.userId = decodedToken.userId;
+      this.canManageEmployees = decodedToken.roles.includes('admin') || decodedToken.roles.includes('superadmin');
     }
 
     this.fetchAllUsers();

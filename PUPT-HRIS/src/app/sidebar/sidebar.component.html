@@ -81,8 +81,16 @@
 
   <!-- Print PDS (Profile Data Sheet) -->
   <li *ngIf="canPrintPds">
-    <a id="print-pds" class="sidebar-link" routerLink="/print-pds" (click)="setActive('print-pds')"
-    [class.active]="activeItem === 'print-pds'"><i class="fas fa-print mr-3"></i>Print PDS</a>
+    <a id="generate-reports" class="sidebar-link" (click)="toggleReportsDropdown()" [class.active]="isReportsActive">
+      <i class="fas fa-file-alt mr-3"></i>Generate Reports
+      <i [ngClass]="isReportsDropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="ml-auto"></i>
+    </a>
+    <ul *ngIf="isReportsDropdownOpen" class="ml-6 mt-2 space-y-4 text-lg">
+      <li>
+        <a id="print-pds" routerLink="/print-pds" (click)="setActive('print-pds')"
+        [class.active]="activeItem === 'print-pds'">Print PDS</a>
+      </li>
+    </ul>
   </li>
 
   <!-- Spacer div for expanding sidebar content -->
