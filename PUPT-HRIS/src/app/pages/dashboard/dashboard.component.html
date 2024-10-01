@@ -1,65 +1,134 @@
 <div class="dashboard-content">
   <div *ngIf="userRole === 'admin' || userRole === 'superadmin'; else userView">
-  <div class="flex-1 mb-2">
-    <a class="text-lg font-normal">You are currently viewing the Dashboard.</a>
-  </div>
-  <div class="cards-container grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-      <h3 class="text-2xl font-bold">Female</h3>
-      <p class="text-6xl font-extrabold">{{ totalFemale }}</p>
-      <button class="view-btn">View</button>
+    <div class="flex-1 mb-2">
+      <a class="text-lg font-normal">You are currently viewing the Dashboard.</a>
     </div>
-    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-      <h3 class="text-2xl font-bold">Male</h3>
-      <p class="text-6xl font-extrabold">{{ totalMale }}</p>
-      <button class="view-btn">View</button>
+    <div class="cards-container grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-bold">Female</h3>
+        <p class="text-6xl font-extrabold">{{ totalFemale }}</p>
+        <button class="view-btn">View</button>
+      </div>
+      <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-bold">Male</h3>
+        <p class="text-6xl font-extrabold">{{ totalMale }}</p>
+        <button class="view-btn">View</button>
+      </div>
+      <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-bold">Faculty</h3>
+        <p class="text-6xl font-extrabold">{{ faculty }}</p>
+        <button class="view-btn">View</button>
+      </div>
+      <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-bold">Staff</h3>
+        <p class="text-6xl font-extrabold">{{ staff }}</p>
+        <button class="view-btn">View</button>
+      </div>
     </div>
-    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-      <h3 class="text-2xl font-bold">Faculty</h3>
-      <p class="text-6xl font-extrabold">{{ faculty }}</p>
-      <button class="view-btn">View</button>
+
+    <div class="flex w-full flex-col">
+      <div class="divider divider-neutral divider-end">Charts</div>
     </div>
-    <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-      <h3 class="text-2xl font-bold">Staff</h3>
-      <p class="text-6xl font-extrabold">{{ staff }}</p>
-      <button class="view-btn">View</button>
+
+    <!-- Charts Section -->
+    <div class="charts-container grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
+      <div>
+        <h2 class="text-2xl font-bold">Employment Types</h2>
+        <canvas baseChart
+                [data]="barChartData"
+                [options]="barChartOptions"
+                [legend]="barChartLegend"
+                [type]="'bar'">
+        </canvas>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold">Instructor per Department</h2>
+        <canvas baseChart
+                [data]="pieChartData"
+                [options]="pieChartOptions"
+                [legend]="pieChartLegend"
+                [type]="'pie'">
+        </canvas>
+      </div>
     </div>
   </div>
 
-  <div class="flex w-full flex-col">
-    <div class="divider divider-neutral divider-end">Charts</div>
-  </div>
-
-  <!-- Charts Section -->
-  <div class="charts-container grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-    <div>
-      <h2 class="text-2xl font-bold">Employment Types</h2>
-      <canvas baseChart
-              [data]="barChartData"
-              [options]="barChartOptions"
-              [legend]="barChartLegend"
-              [type]="'bar'">
-      </canvas>
+  <ng-template #userView>
+    <div class="flex-1 mb-2">
+      <a class="text-lg font-normal">Welcome to your Personal Dashboard</a>
+    </div>
+    <div class="cards-container grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-bold">Department</h3>
+        <p class="text-2xl font-extrabold">{{ userDepartment }}</p>
+      </div>
+      <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-bold">Position</h3>
+        <p class="text-2xl font-extrabold">{{ userPosition }}</p>
+      </div>
+      <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-bold">Employment Type</h3>
+        <p class="text-2xl font-extrabold">{{ userEmploymentType }}</p>
+      </div>
+      <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-bold">Years of Service</h3>
+        <p class="text-2xl font-extrabold">{{ userYearsOfService }}</p>
+      </div>
     </div>
 
-    <div>
-      <h2 class="text-2xl font-bold">Instructor per Department</h2>
-      <canvas baseChart
-              [data]="pieChartData"
-              [options]="pieChartOptions"
-              [legend]="pieChartLegend"
-              [type]="'pie'">
-      </canvas>
+    <div class="flex w-full flex-col">
+      <div class="divider divider-neutral divider-end">Your Information</div>
     </div>
-  </div>
-</div>
 
-<ng-template #userView>
-  <div class="flex-1 mb-2">
-    <a class="text-lg font-normal">You are currently viewing the User Dashboard.</a>
-  </div>
-  <!-- Add the non-admin content here -->
-  <p>Welcome to your personal dashboard. Here you will find some quick stats.</p>
-  <!-- You can add cards and content for non-admin users -->
-</ng-template>
+    <!-- User-specific charts or information -->
+    <div class="charts-container grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
+      <div>
+        <h2 class="text-2xl font-bold">Attendance Overview</h2>
+        <canvas baseChart
+                [data]="userAttendanceChartData"
+                [options]="userAttendanceChartOptions"
+                [legend]="userAttendanceChartLegend"
+                [type]="'pie'">
+        </canvas>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold">Performance Metrics</h2>
+        <canvas baseChart
+                [data]="userPerformanceChartData"
+                [options]="userPerformanceChartOptions"
+                [legend]="userPerformanceChartLegend"
+                [type]="'bar'">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Trainings and Seminars Section -->
+    <div class="flex w-full flex-col mt-8">
+      <div class="divider divider-neutral divider-end">Trainings and Seminars</div>
+    </div>
+
+    <div class="trainings-seminars-container mt-4">
+      <h2 class="text-2xl font-bold mb-4">Recent Trainings and Seminars</h2>
+      <table class="w-full">
+        <thead>
+          <tr>
+            <th class="text-left">Title</th>
+            <th class="text-left">Date</th>
+            <th class="text-left">Type</th>
+            <th class="text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of trainingsAndSeminars">
+            <td>{{ item.title }}</td>
+            <td>{{ item.date | date:'mediumDate' }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-template>
 </div>

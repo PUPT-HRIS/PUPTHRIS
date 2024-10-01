@@ -23,8 +23,14 @@ export class DashboardService {
     );
   }
 
+  getUserDashboardData(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user-dashboard-data`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);
-    return throwError(error.message || 'Server error');
+    return throwError(() => error.message || 'Server error');
   }
 }

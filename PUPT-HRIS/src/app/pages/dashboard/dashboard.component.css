@@ -1,50 +1,77 @@
 .dashboard-content {
-    margin-left: 60px;
-    margin-right: 60px;
-  }
-  
-  .cards-container {
-    display: grid;
-    gap: 1.5rem;
-  }
-  
-  .card {
-    background: linear-gradient(45deg, #b94802, #800000);
-    color: white;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    text-align: center;
-  }
-  
-  .card h3 {
-    font-size: 1.125rem;
-  }
-  
-  .card p {
-    font-size: 2.25rem;
-    font-weight: bold;
-  }
-  
-  .view-btn {
-    background-color: #000;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    margin-top: 1rem;
-    display: inline-block;
-  }
-  
-  .charts-container {
-    display: grid;
-    gap: 2rem;
-    min-height: 300px;
-  }
-  
-  .charts-container h2 {
-    margin-bottom: 1rem;
-  }
-  
-  canvas {
-    max-width: 100%;
-  }
-  
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+.cards-container {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.card {
+  background: linear-gradient(45deg, #b94802, #800000);
+  color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.card h3 {
+  font-size: 1.125rem;
+}
+
+.card p {
+  font-size: 2.25rem;
+  font-weight: bold;
+}
+
+.view-btn {
+  background-color: #000;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  margin-top: 1rem;
+  display: inline-block;
+}
+
+.charts-container {
+  display: grid;
+  gap: 2rem;
+  min-height: 300px;
+}
+
+.charts-container h2 {
+  margin-bottom: 1rem;
+}
+
+canvas {
+  max-width: 100%;
+}
+
+.trainings-seminars-container {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.trainings-seminars-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.trainings-seminars-container th,
+.trainings-seminars-container td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.trainings-seminars-container th {
+  background-color: #f8fafc;
+  font-weight: bold;
+}
+
+.trainings-seminars-container tr:last-child td {
+  border-bottom: none;
+}
