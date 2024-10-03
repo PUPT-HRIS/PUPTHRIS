@@ -85,4 +85,22 @@ export class UserManagementComponent implements OnInit {
   }
 
   deleteUser(userID: number): void {}
+
+  getAdminRoles(): Role[] {
+    return this.availableRoles
+      .filter(role => 
+        role.RoleName.toLowerCase() === 'superadmin' || role.RoleName.toLowerCase() === 'admin'
+      )
+      .sort((a, b) => {
+        if (a.RoleName.toLowerCase() === 'superadmin') return -1;
+        if (b.RoleName.toLowerCase() === 'superadmin') return 1;
+        return 0;
+      });
+  }
+
+  getNonAdminRoles(): Role[] {
+    return this.availableRoles.filter(role => 
+      role.RoleName.toLowerCase() !== 'admin' && role.RoleName.toLowerCase() !== 'superadmin'
+    );
+  }
 }
