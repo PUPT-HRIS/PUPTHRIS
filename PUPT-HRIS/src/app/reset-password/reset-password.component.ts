@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
@@ -9,12 +9,12 @@ import { CommonModule } from '@angular/common';
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css'],
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
 })
-export class ResetPasswordComponent {
+export class ResetPasswordComponent implements OnInit {
   resetPasswordForm: FormGroup;
   errorMessage: string | null = null;
-  token: string;
+  token: string | null = null;
 
   showToast: boolean = false;
   toastMessage: string = '';
@@ -30,8 +30,16 @@ export class ResetPasswordComponent {
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordsMatch });
+  }
 
-    this.token = this.route.snapshot.queryParams['token'];
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.token = params['token'];
+      if (!this.token) {
+        this.showToastNotification('Invalid or missing reset token. Please request a new password reset.', 'error');
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   passwordsMatch(control: AbstractControl): { [key: string]: boolean } | null {
@@ -41,7 +49,7 @@ export class ResetPasswordComponent {
   }
 
   submit() {
-    if (this.resetPasswordForm.valid) {
+    if (this.resetPasswordForm.valid && this.token) {
       const { newPassword } = this.resetPasswordForm.value;
       this.authService.resetPassword(this.token, newPassword)
         .subscribe({

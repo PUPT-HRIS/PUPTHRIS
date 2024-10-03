@@ -34,7 +34,7 @@ import { PdsComponent } from './pages/pds/pds.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'reset-password/:token', component: ResetPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   {
     path: '',
     component: MainLayoutComponent,
