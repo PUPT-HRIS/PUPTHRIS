@@ -6,6 +6,13 @@ import { DepartmentCount } from '../../model/departmentCount.model';
 import { AuthService } from '../../services/auth.service'; 
 import { CommonModule } from '@angular/common';
 
+interface TrainingSeminar {
+  title: string;
+  date: Date;
+  type: string;
+  status: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -25,9 +32,6 @@ export class DashboardComponent implements AfterViewInit {
   public faculty: number = 0;
   public staff: number = 0;
 
-  // Remove lineChartOptions, lineChartLabels, lineChartType, lineChartLegend, and lineChartData
-
-  // Add barChartOptions, barChartLegend, and barChartData
   public barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
@@ -71,6 +75,56 @@ export class DashboardComponent implements AfterViewInit {
 
   public userRole: string = '';
 
+  // User-specific properties
+  public userDepartment: string = '';
+  public userPosition: string = '';
+  public userEmploymentType: string = '';
+  public userYearsOfService: number = 0;
+
+  // User attendance chart
+  public userAttendanceChartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'right',
+      }
+    }
+  };
+  public userAttendanceChartLegend = true;
+  public userAttendanceChartData: ChartData<'pie'> = {
+    labels: ['Present', 'Absent', 'Late'],
+    datasets: [
+      {
+        data: [0, 0, 0],
+        backgroundColor: ['#4BC0C0', '#FF6384', '#FFCE56'],
+      }
+    ]
+  };
+
+  // User performance chart
+  public userPerformanceChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      }
+    }
+  };
+  public userPerformanceChartLegend = false;
+  public userPerformanceChartData: ChartData<'bar'> = {
+    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+    datasets: [
+      {
+        data: [0, 0, 0, 0],
+        backgroundColor: '#36A2EB',
+      }
+    ]
+  };
+
+  // Trainings and Seminars
+  public trainingsAndSeminars: TrainingSeminar[] = [];
+
   constructor(
     private dashboardService: DashboardService, 
     private cdr: ChangeDetectorRef,
@@ -80,11 +134,18 @@ export class DashboardComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     const roles = this.authService.getUserRoles();
 
-    // Assuming you want to assign the first role or check for a specific role
     if (roles.length > 0) {
       this.userRole = roles.includes('admin') ? 'admin' : roles.includes('superadmin') ? 'superadmin' : 'user';
     }
 
+    if (this.userRole === 'admin' || this.userRole === 'superadmin') {
+      this.loadAdminDashboardData();
+    } else {
+      this.loadUserDashboardData();
+    }
+  }
+
+  loadAdminDashboardData(): void {
     this.dashboardService.getDashboardData().subscribe(data => {
       console.log('Dashboard Data:', data);
   
@@ -96,7 +157,6 @@ export class DashboardComponent implements AfterViewInit {
       this.faculty = data.faculty;
       this.staff = data.staff;
   
-      // Update barChartData
       this.barChartData.datasets[0].data = [this.partTime, this.fullTime, this.temporary];
 
       if (data.departments && Array.isArray(data.departments)) {
@@ -108,7 +168,6 @@ export class DashboardComponent implements AfterViewInit {
   
         this.pieChartLabels = departments.map(dept => dept.Department);
   
-        // Extend the color palette to 20 vibrant colors
         const colors = [
           '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
           '#FFCD56', '#4BC0C0', '#36A2EB', '#FF6384', '#C9CBCF', '#6B486B',
@@ -124,16 +183,42 @@ export class DashboardComponent implements AfterViewInit {
           }]
         };
   
-        setTimeout(() => {
-          if (this.chart) {
-            this.chart?.chart?.resize();
-            this.chart.update();
-          }
-          this.cdr.detectChanges();
-        }, 0);
+        this.updateCharts();
       } else {
         console.error('Departments data is missing or not an array');
       }
     });
-  }  
+  }
+
+  loadUserDashboardData(): void {
+    this.dashboardService.getUserDashboardData().subscribe(data => {
+      this.userDepartment = data.department;
+      this.userPosition = data.position;
+      this.userEmploymentType = data.employmentType;
+      this.userYearsOfService = data.yearsOfService;
+
+      this.userAttendanceChartData.datasets[0].data = [
+        data.attendancePresent,
+        data.attendanceAbsent,
+        data.attendanceLate
+      ];
+
+      this.userPerformanceChartData.datasets[0].data = data.performanceMetrics;
+
+      // Add trainings and seminars data
+      this.trainingsAndSeminars = data.trainingsAndSeminars || [];
+
+      this.updateCharts();
+    });
+  }
+
+  updateCharts(): void {
+    setTimeout(() => {
+      if (this.chart) {
+        this.chart.chart?.resize();
+        this.chart.update();
+      }
+      this.cdr.detectChanges();
+    }, 0);
+  }
 }

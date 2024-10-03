@@ -65,13 +65,13 @@
     border-radius: 0.25rem;
   }
   
-  .btn-edit {
+  .btn-save {
     background-color: #3b82f6;
     color: white;
   }
   
-  .btn-delete {
-    background-color: #ef4444;
+  .btn-inactive {
+    background-color: #ff0000;
     color: white;
   }
   
@@ -79,16 +79,40 @@
     transform: translateY(-1px);
   }
   
-  .btn-edit:hover {
+  .btn-save:hover {
     background-color: #2563eb;
   }
   
-  .btn-delete:hover {
-    background-color: #dc2626;
+  .btn-inactive:hover {
+    background-color: #990000;
   }
   
   .btn-container {
     display: flex;
     gap: 10px;
   }
-  
+  /* Toast styles */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .alert {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: white;
+  }
+
+  .alert-success {
+    background-color: #10B981;
+  }
+
+  .alert-error {
+    background-color: #EF4444;
+  }
+
+  .alert-warning {
+    background-color: #F59E0B;
+  }
