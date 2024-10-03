@@ -123,7 +123,7 @@ const sendEmail = async (toEmail, password, firstName) => {
       });
     }
 
-    const siteLink = process.env.SITE_LINK || 'https://yourwebsite.com';
+    const siteLink = process.env.SITE_LINK || 'https://pup-hris.site';
 
     let mailOptions = {
       from: process.env.EMAIL_USERNAME,

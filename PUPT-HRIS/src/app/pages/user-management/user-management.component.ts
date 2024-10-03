@@ -105,6 +105,24 @@ export class UserManagementComponent implements OnInit {
     });
   }
 
+  getAdminRoles(): Role[] {
+    return this.availableRoles
+      .filter(role => 
+        role.RoleName.toLowerCase() === 'superadmin' || role.RoleName.toLowerCase() === 'admin'
+      )
+      .sort((a, b) => {
+        if (a.RoleName.toLowerCase() === 'superadmin') return -1;
+        if (b.RoleName.toLowerCase() === 'superadmin') return 1;
+        return 0;
+      });
+  }
+
+  getNonAdminRoles(): Role[] {
+    return this.availableRoles.filter(role => 
+      role.RoleName.toLowerCase() !== 'admin' && role.RoleName.toLowerCase() !== 'superadmin'
+    );
+  }
+
   setUserInactive(userID: number): void {
     // Implement set user inactive functionality here
     // After successfully setting the user to inactive:
