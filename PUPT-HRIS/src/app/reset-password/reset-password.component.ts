@@ -37,7 +37,9 @@ export class ResetPasswordComponent implements OnInit {
       this.token = params['token'];
       if (!this.token) {
         this.showToastNotification('Invalid or missing reset token. Please request a new password reset.', 'error');
-        this.router.navigate(['/login']);
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 3000);
       }
     });
   }
@@ -65,6 +67,8 @@ export class ResetPasswordComponent implements OnInit {
             this.showToastNotification('Failed to reset password. Please try again.', 'error');
           }
         });
+    } else if (!this.token) {
+      this.showToastNotification('Invalid or missing reset token. Please request a new password reset.', 'error');
     } else {
       this.showToastNotification('Please ensure the passwords match and meet the requirements.', 'warning');
     }
