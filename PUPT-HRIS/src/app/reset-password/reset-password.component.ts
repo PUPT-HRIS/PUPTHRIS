@@ -16,6 +16,10 @@ export class ResetPasswordComponent {
   errorMessage: string | null = null;
   token: string;
 
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'warning' = 'success';
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -43,15 +47,28 @@ export class ResetPasswordComponent {
         .subscribe({
           next: (response: any) => {
             console.log('Password reset successful:', response.message);
-            this.router.navigate(['/login']);
+            this.showToastNotification('Password reset successful. You can now log in with your new password.', 'success');
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000);
           },
           error: (error) => {
             console.error('Password reset failed', error);
-            this.errorMessage = 'Failed to reset password. Please try again.';
+            this.showToastNotification('Failed to reset password. Please try again.', 'error');
           }
         });
     } else {
-      this.errorMessage = 'Please ensure the passwords match and meet the requirements.';
+      this.showToastNotification('Please ensure the passwords match and meet the requirements.', 'warning');
     }
-  }  
+  }
+
+  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
+  }
 }

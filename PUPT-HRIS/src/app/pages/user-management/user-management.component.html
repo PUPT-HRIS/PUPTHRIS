@@ -49,8 +49,8 @@
               </div>
             </td>
             <td class="p-4 flex justify-center space-x-2">
-              <button class="btn btn-edit btn-sm" (click)="saveUserDetails(user)">Save</button>
-              <button class="btn btn-delete btn-sm" (click)="deleteUser(user.UserID)">Delete</button>
+              <button class="btn btn-save btn-sm" (click)="saveUserDetails(user)">Save</button>
+              <button class="btn btn-inactive btn-sm" (click)="setUserInactive(user.UserID)">Inactive</button>
             </td>
           </tr>
         </tbody>
@@ -62,5 +62,18 @@
         <p class="text-lg">No users found.</p>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
   </div>
 </div>
