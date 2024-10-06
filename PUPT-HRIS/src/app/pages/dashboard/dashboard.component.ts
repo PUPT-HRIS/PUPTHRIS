@@ -13,6 +13,10 @@ interface TrainingSeminar {
   status: string;
 }
 
+interface Employee {
+  name: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -125,6 +129,29 @@ export class DashboardComponent implements AfterViewInit {
   // Trainings and Seminars
   public trainingsAndSeminars: TrainingSeminar[] = [];
 
+  public isFullTimeView: boolean = true;
+  public fullTimeEmployees: Employee[] = Array(20).fill(null).map((_, i) => ({ name: `Full-Time Employee ${i + 1}` }));
+  public partTimeEmployees: Employee[] = Array(12).fill(null).map((_, i) => ({ name: `Part-Time Employee ${i + 1}` }));
+
+  public employmentTypeChartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'right',
+      }
+    }
+  };
+  public employmentTypeChartData: ChartData<'pie'> = {
+    labels: ['Full-Time', 'Part-Time'],
+    datasets: [
+      {
+        data: [20, 12], // Filler data
+        backgroundColor: ['#4BC0C0', '#FF6384'],
+      }
+    ]
+  };
+
   constructor(
     private dashboardService: DashboardService, 
     private cdr: ChangeDetectorRef,
@@ -143,6 +170,8 @@ export class DashboardComponent implements AfterViewInit {
     } else {
       this.loadUserDashboardData();
     }
+
+    this.updateEmploymentTypeChart();
   }
 
   loadAdminDashboardData(): void {
@@ -220,5 +249,17 @@ export class DashboardComponent implements AfterViewInit {
       }
       this.cdr.detectChanges();
     }, 0);
+  }
+
+  updateEmploymentTypeChart(): void {
+    this.employmentTypeChartData.datasets[0].data = [
+      this.fullTimeEmployees.length,
+      this.partTimeEmployees.length
+    ];
+    this.updateCharts();
+  }
+
+  toggleEmploymentTypeView(): void {
+    this.isFullTimeView = !this.isFullTimeView;
   }
 }
