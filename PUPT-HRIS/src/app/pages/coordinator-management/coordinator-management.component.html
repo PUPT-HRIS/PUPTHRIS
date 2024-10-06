@@ -1,0 +1,81 @@
+<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
+  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+    <h1 class="text-2xl font-bold">Coordinator Management</h1>
+  </div>
+
+  <div class="p-6 space-y-6">
+    <div *ngIf="departments.length > 0" class="overflow-x-auto px-10">
+      <table class="table table-zebra w-full border-separate border-spacing-0">
+        <thead>
+          <tr class="bg-maroon text-white">
+            <th class="p-4">#</th>
+            <th class="p-4">Department</th>
+            <th class="p-4">Current Coordinator</th>
+            <th class="p-4 w-36">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let department of departments; let i = index" class="hover:bg-gray-100">
+            <td class="p-4 text-center">{{ i + 1 }}</td>
+            <td class="p-4">{{ department.DepartmentName }}</td>
+            <td class="p-4">
+              <ng-container *ngIf="department.Coordinator?.User; else notAssigned">
+                {{ department.Coordinator?.User?.FirstName }} {{ department.Coordinator?.User?.Surname }}
+              </ng-container>
+              <ng-template #notAssigned>
+                <span class="text-gray-500 italic">Not assigned yet</span>
+              </ng-template>
+            </td>
+            <td class="p-4 flex justify-center space-x-2">
+              <button class="btn btn-save btn-sm" (click)="openAssignModal(department)">Assign</button>
+              <button *ngIf="department.Coordinator?.CoordinatorID" class="btn btn-inactive btn-sm" (click)="removeCoordinator(department)">Remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="departments.length === 0" class="p-6 space-y-6">
+      <div class="p-6 bg-white rounded-lg shadow-lg">
+        <p class="text-lg">No departments found.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for assigning coordinator -->
+<div *ngIf="showAssignModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
+  <div class="bg-white p-5 rounded-lg shadow-xl w-3/4 max-h-3/4 overflow-y-auto">
+    <h2 class="text-xl font-bold mb-4">Assign Coordinator for {{ selectedDepartment?.DepartmentName }}</h2>
+    <table class="table table-zebra w-full">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of facultyUsers">
+          <td>{{ user.FirstName }} {{ user.Surname }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" (click)="assignCoordinator(selectedDepartment!, user.UserID)">Assign</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-secondary mt-4" (click)="closeAssignModal()">Close</button>
+  </div>
+</div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
+  </div>
+</div>

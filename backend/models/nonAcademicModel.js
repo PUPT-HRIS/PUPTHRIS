@@ -7,7 +7,7 @@ const NonAcademic = sequelize.define('nonacademics', {
     autoIncrement: true,
     primaryKey: true,
   },
-  UserID: {
+  userID: {
     type: DataTypes.INTEGER,
     references: {
       model: 'users',

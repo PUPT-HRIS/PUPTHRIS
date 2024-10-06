@@ -4,7 +4,7 @@ exports.addMembership = async (req, res) => {
   try {
     const newMembership = await Membership.create({
       ...req.body,
-      UserID: req.user.userId
+      userID: req.user.userId
     });
     res.status(201).json(newMembership);
   } catch (error) {
@@ -18,7 +18,7 @@ exports.updateMembership = async (req, res) => {
     const membershipId = req.params.id;
     const updatedData = req.body;
     const result = await Membership.update(updatedData, {
-      where: { MembershipID: membershipId, UserID: req.user.userId }
+      where: { MembershipID: membershipId, userID: req.user.userId }
     });
     if (result[0] === 0) {
       res.status(404).json({ message: 'Membership record not found' });
@@ -34,7 +34,7 @@ exports.updateMembership = async (req, res) => {
 exports.getMembershipsByUser = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const memberships = await Membership.findAll({ where: { UserID: userId } });
+    const memberships = await Membership.findAll({ where: { userID: userId } });
     res.status(200).json(memberships);
   } catch (error) {
     console.error('Error fetching memberships:', error);
@@ -46,7 +46,7 @@ exports.deleteMembership = async (req, res) => {
   try {
     const membershipId = req.params.id;
     const result = await Membership.destroy({
-      where: { MembershipID: membershipId, UserID: req.user.userId }
+      where: { MembershipID: membershipId, userID: req.user.userId }
     });
     if (result === 0) {
       res.status(404).json({ error: 'Membership record not found' });

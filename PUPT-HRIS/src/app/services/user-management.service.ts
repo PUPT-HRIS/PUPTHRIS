@@ -39,4 +39,8 @@ export class UserManagementService {
   getAllRoles(): Observable<Role[]> {
     return this.http.get<Role[]>(`${this.apiUrl}/roles`, { headers: this.getHeaders() });
   }
+  
+  updateUserDepartment(userId: number, departmentId: number): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${userId}/department`, { departmentId }, { headers: this.getHeaders() });
+  }
 }

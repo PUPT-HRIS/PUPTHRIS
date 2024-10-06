@@ -4,7 +4,7 @@ exports.addNonAcademic = async (req, res) => {
   try {
     const newNonAcademic = await NonAcademic.create({
       ...req.body,
-      UserID: req.user.userId
+      userID: req.user.userId
     });
     res.status(201).json(newNonAcademic);
   } catch (error) {
@@ -18,7 +18,7 @@ exports.updateNonAcademic = async (req, res) => {
     const nonAcademicId = req.params.id;
     const updatedData = req.body;
     const result = await NonAcademic.update(updatedData, {
-      where: { NonAcademicID: nonAcademicId, UserID: req.user.userId }
+      where: { NonAcademicID: nonAcademicId, userID: req.user.userId }
     });
     if (result[0] === 0) {
       res.status(404).json({ message: 'Non-academic distinction record not found' });
@@ -34,7 +34,7 @@ exports.updateNonAcademic = async (req, res) => {
 exports.getNonAcademicsByUser = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const nonAcademics = await NonAcademic.findAll({ where: { UserID: userId } });
+    const nonAcademics = await NonAcademic.findAll({ where: { userID: userId } });
     res.status(200).json(nonAcademics);
   } catch (error) {
     console.error('Error fetching non-academic distinctions:', error);
@@ -46,7 +46,7 @@ exports.deleteNonAcademic = async (req, res) => {
   try {
     const nonAcademicId = req.params.id;
     const result = await NonAcademic.destroy({
-      where: { NonAcademicID: nonAcademicId, UserID: req.user.userId }
+      where: { NonAcademicID: nonAcademicId, userID: req.user.userId }
     });
     if (result === 0) {
       res.status(404).json({ error: 'Non-academic distinction record not found' });

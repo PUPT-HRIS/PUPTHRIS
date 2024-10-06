@@ -144,6 +144,8 @@ export class SidebarComponent implements OnInit {
       this.isProfileDropdownOpen = true;
     } else if (url.includes('settings')) {
       this.activeItem = 'settings';
+    } else if (url.includes('coordinator-management')) {
+      this.activeItem = 'coordinator-management';
     } else {
       this.activeItem = '';
     }
@@ -156,5 +158,9 @@ export class SidebarComponent implements OnInit {
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
+  }
+
+  get canManageCoordinators(): boolean {
+    return this.hasRole('superadmin');
   }
 }

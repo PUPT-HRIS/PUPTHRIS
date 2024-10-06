@@ -1,18 +1,19 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 
-const WorkExperience = sequelize.define('workexperience', {
+const WorkExperience = sequelize.define('WorkExperience', {
   WorkExperienceID: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     primaryKey: true,
+    autoIncrement: true,
   },
-  UserID: {
+  userID: {
     type: DataTypes.INTEGER,
+    allowNull: true,
     references: {
       model: 'users',
-      key: 'UserID',
-    },
+      key: 'UserID'
+    }
   },
   InclusiveDatesFrom: {
     type: DataTypes.DATE,

@@ -31,6 +31,8 @@ const userSignatureRoutes = require('./routes/userSignatureRoutes');
 const roleRoutes = require('./routes/roleRoutes');
 const userManagementRoutes = require('./routes/userManagementRoutes');
 const pdsRoutes = require('./routes/pdsRoutes'); 
+const coordinatorRoutes = require('./routes/coordinatorRoute');
+
 
 require('./models/associations');
 
@@ -69,6 +71,7 @@ app.use('/api/user-signature', userSignatureRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/user-management', userManagementRoutes);
 app.use('/api/pds', pdsRoutes);
+app.use('/api/coordinators', coordinatorRoutes);
 
 sequelize.sync().then(() => {
   console.log('Database synced successfully');

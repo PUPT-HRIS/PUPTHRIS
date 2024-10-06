@@ -113,3 +113,27 @@ exports.getAllRoles = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+exports.updateUserDepartment = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { departmentId } = req.body;
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const department = await Department.findByPk(departmentId);
+    if (!department) {
+      return res.status(404).json({ message: 'Department not found' });
+    }
+
+    await user.setDepartment(department);
+
+    res.status(200).json({ message: 'User department updated successfully', user });
+  } catch (error) {
+    console.error('Error updating user department:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

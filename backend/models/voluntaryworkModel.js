@@ -7,7 +7,7 @@ const VoluntaryWork = sequelize.define('VoluntaryWork', {
     autoIncrement: true,
     primaryKey: true,
   },
-  UserID: {
+  userID: {
     type: DataTypes.INTEGER,
     references: {
       model: 'users',
