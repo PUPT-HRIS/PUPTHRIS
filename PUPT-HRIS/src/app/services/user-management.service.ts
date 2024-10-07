@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap, catchError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../model/user.model';
 import { Role } from '../model/role.model';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,14 @@ export class UserManagementService {
   }
 
   toggleUserActiveStatus(userId: number): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/users/${userId}/toggle-active`, {}, { headers: this.getHeaders() });
+    console.log('Sending request to toggle user status for userId:', userId);
+    return this.http.put<any>(`${this.apiUrl}/users/${userId}/toggle-active`, {}, { headers: this.getHeaders() })
+      .pipe(
+        tap(response => console.log('Toggle user status response:', response)),
+        catchError(error => {
+          console.error('Error in toggleUserActiveStatus:', error);
+          return throwError(error);
+        })
+      );
   }
 }

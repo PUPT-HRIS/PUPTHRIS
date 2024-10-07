@@ -29,7 +29,7 @@ export class CoordinatorManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDepartments();
-    this.loadFacultyUsers();
+    this.loadActiveFacultyUsers();
   }
 
   loadDepartments(): void {
@@ -64,16 +64,16 @@ export class CoordinatorManagementComponent implements OnInit {
     });
   }
 
-  loadFacultyUsers(): void {
+  loadActiveFacultyUsers(): void {
     this.userManagementService.getAllUsers().subscribe({
       next: (users) => {
         this.facultyUsers = users.filter(user => 
-          user.Roles.some(role => role.RoleName.toLowerCase() === 'faculty')
+          user.Roles.some(role => role.RoleName.toLowerCase() === 'faculty') && user.isActive
         );
       },
       error: (error) => {
-        console.error('Error fetching faculty users:', error);
-        this.showToastNotification('Error fetching faculty users', 'error');
+        console.error('Error fetching active faculty users:', error);
+        this.showToastNotification('Error fetching active faculty users', 'error');
       }
     });
   }

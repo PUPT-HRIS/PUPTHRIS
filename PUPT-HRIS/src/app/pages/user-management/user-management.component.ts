@@ -123,18 +123,12 @@ export class UserManagementComponent implements OnInit {
     );
   }
 
-  toggleUserActiveStatus(user: User): void {
-    this.userManagementService.toggleUserActiveStatus(user.UserID).subscribe({
-      next: (response) => {
-        user.isActive = !user.isActive;
-        console.log('User status updated successfully', response);
-        this.showToastNotification(`User ${user.isActive ? 'activated' : 'deactivated'} successfully`, 'success');
-      },
-      error: (error) => {
-        console.error('Error updating user status', error);
-        this.showToastNotification('Error updating user status', 'error');
-      },
-    });
+  setUserInactive(userID: number): void {
+    // Implement set user inactive functionality here
+    // After successfully setting the user to inactive:
+    // this.showToastNotification('User set to inactive successfully', 'success');
+    // If there's an error:
+    // this.showToastNotification('Error setting user to inactive', 'error');
   }
 
   private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
@@ -145,5 +139,20 @@ export class UserManagementComponent implements OnInit {
     setTimeout(() => {
       this.showToast = false;
     }, 3000); // Hide toast after 3 seconds
+  }
+
+  toggleUserActiveStatus(user: User): void {
+    console.log('Attempting to toggle status for user:', user);
+    this.userManagementService.toggleUserActiveStatus(user.UserID).subscribe({
+      next: (response) => {
+        console.log('User status updated successfully:', response);
+        user.isActive = !user.isActive;
+        this.showToastNotification(`User ${user.isActive ? 'activated' : 'deactivated'} successfully`, 'success');
+      },
+      error: (error) => {
+        console.error('Error updating user status:', error);
+        this.showToastNotification('Error updating user status: ' + error.message, 'error');
+      },
+    });
   }
 }
