@@ -8,6 +8,6 @@ router.get('/users', userManagementController.getAllUsers);
 router.get('/user/:UserID', userManagementController.getUserDetails);
 router.get('/roles', userManagementController.getAllRoles);
 router.put('/users/:userId/department', userManagementController.updateUserDepartment);
-
+router.put('/users/:userId/toggle-active', userManagementController.toggleUserActiveStatus);
 
 module.exports = router;

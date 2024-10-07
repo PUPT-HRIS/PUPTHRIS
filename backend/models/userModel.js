@@ -67,9 +67,20 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE,
     allowNull: true,
   },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
+  },
 }, {
   tableName: 'users',
   timestamps: false,
 });
+
+// Add a method to toggle user active status
+User.prototype.toggleActiveStatus = async function() {
+  this.isActive = !this.isActive;
+  return await this.save();
+};
 
 module.exports = User;

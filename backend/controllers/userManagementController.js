@@ -95,6 +95,7 @@ exports.getAllUsers = async (req, res) => {
           attributes: ['RoleID', 'RoleName'],
         },
       ],
+      attributes: { include: ['isActive'] }, // Include isActive in the response
     });
 
     res.status(200).json(users);
@@ -134,6 +135,26 @@ exports.updateUserDepartment = async (req, res) => {
     res.status(200).json({ message: 'User department updated successfully', user });
   } catch (error) {
     console.error('Error updating user department:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Add this new function
+exports.toggleUserActiveStatus = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findByPk(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.isActive = !user.isActive;
+    await user.save();
+
+    res.status(200).json({ message: 'User status updated', isActive: user.isActive });
+  } catch (error) {
+    console.error('Error toggling user status:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };

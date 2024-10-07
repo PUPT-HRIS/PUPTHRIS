@@ -123,12 +123,18 @@ export class UserManagementComponent implements OnInit {
     );
   }
 
-  setUserInactive(userID: number): void {
-    // Implement set user inactive functionality here
-    // After successfully setting the user to inactive:
-    // this.showToastNotification('User set to inactive successfully', 'success');
-    // If there's an error:
-    // this.showToastNotification('Error setting user to inactive', 'error');
+  toggleUserActiveStatus(user: User): void {
+    this.userManagementService.toggleUserActiveStatus(user.UserID).subscribe({
+      next: (response) => {
+        user.isActive = !user.isActive;
+        console.log('User status updated successfully', response);
+        this.showToastNotification(`User ${user.isActive ? 'activated' : 'deactivated'} successfully`, 'success');
+      },
+      error: (error) => {
+        console.error('Error updating user status', error);
+        this.showToastNotification('Error updating user status', 'error');
+      },
+    });
   }
 
   private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {

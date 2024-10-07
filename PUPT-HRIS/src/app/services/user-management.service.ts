@@ -43,4 +43,8 @@ export class UserManagementService {
   updateUserDepartment(userId: number, departmentId: number): Observable<User> {
     return this.http.put<User>(`${this.apiUrl}/${userId}/department`, { departmentId }, { headers: this.getHeaders() });
   }
+
+  toggleUserActiveStatus(userId: number): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/users/${userId}/toggle-active`, {}, { headers: this.getHeaders() });
+  }
 }

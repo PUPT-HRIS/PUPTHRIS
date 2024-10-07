@@ -72,7 +72,20 @@ export class EmployeeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.loadActiveUsers();
+  }
+
+  loadActiveUsers(): void {
+    this.userService.getUsers().subscribe(
+      (data) => {
+        this.users = data;
+        this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
+        this.paginateUsers();
+      },
+      (error) => {
+        console.error('Error fetching active users', error);
+      }
+    );
   }
 
   getRoleName(roles: { RoleName: string }[]): string {

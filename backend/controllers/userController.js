@@ -26,7 +26,8 @@ exports.addUser = async (req, res) => {
       EmploymentType,
       PasswordHash,
       Salt: salt,
-      DepartmentID: finalDepartmentID, // Use the updated department value
+      DepartmentID: finalDepartmentID,
+      isActive: true, // Explicitly set isActive to true (optional due to default value)
     });
 
     // Assign roles to the user
@@ -47,6 +48,7 @@ exports.addUser = async (req, res) => {
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.findAll({
+      where: { isActive: true }, // Add this line to filter active users
       include: [
         {
           model: Department,
@@ -136,5 +138,23 @@ const sendEmail = async (toEmail, password, firstName) => {
     console.log('Email sent successfully to', toEmail);
   } catch (error) {
     console.error('Error sending email:', error);
+  }
+};
+
+// Add a new function to toggle user active status
+exports.toggleUserActiveStatus = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findByPk(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    await user.toggleActiveStatus();
+    res.status(200).json({ message: 'User status updated', isActive: user.isActive });
+  } catch (error) {
+    console.error('Error toggling user status:', error);
+    res.status(500).send('Internal Server Error');
   }
 };
