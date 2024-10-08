@@ -6,13 +6,19 @@ import { BasicDetails } from '../../model/basic-details.model';
 import {jwtDecode} from 'jwt-decode';
 import { CommonModule } from '@angular/common';
 import { ProfileImageComponent } from '../profile-image/profile-image.component';
+import { AcademicRankComponent } from "../academic-rank/academic-rank.component"; // Add this import
 
 @Component({
   selector: 'app-basic-details',
   templateUrl: './basic-details.component.html',
   styleUrls: ['./basic-details.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProfileImageComponent]
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    ProfileImageComponent, 
+    AcademicRankComponent // Add AcademicRankComponent to the imports array
+  ]
 })
 export class BasicDetailsComponent implements OnInit {
   basicDetailsForm: FormGroup;
