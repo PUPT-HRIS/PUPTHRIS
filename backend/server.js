@@ -32,6 +32,7 @@ const roleRoutes = require('./routes/roleRoutes');
 const userManagementRoutes = require('./routes/userManagementRoutes');
 const pdsRoutes = require('./routes/pdsRoutes'); 
 const coordinatorRoutes = require('./routes/coordinatorRoute');
+const academicRanksRoutes = require('./routes/academicRanksRoute');
 
 
 require('./models/associations');
@@ -72,7 +73,7 @@ app.use('/api/roles', roleRoutes);
 app.use('/api/user-management', userManagementRoutes);
 app.use('/api/pds', pdsRoutes);
 app.use('/api/coordinators', coordinatorRoutes);
-
+app.use('/api/academic-ranks', academicRanksRoutes);
 sequelize.sync().then(() => {
   console.log('Database synced successfully');
   
