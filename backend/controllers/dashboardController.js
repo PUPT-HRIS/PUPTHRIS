@@ -8,16 +8,32 @@ const UserRole = require('../models/userRoleModel'); // New UserRole model
 exports.getDashboardData = async (req, res) => {
   try {
     // Count total females and males from BasicDetails
-    const totalFemale = await BasicDetails.count({ where: { Sex: 'Female' } });
-    const totalMale = await BasicDetails.count({ where: { Sex: 'Male' } });
+    const totalFemale = await BasicDetails.count({
+      where: { Sex: 'Female' },
+      include: [{
+        model: User,
+        where: { isActive: true },
+        attributes: []
+      }]
+    });
+
+    const totalMale = await BasicDetails.count({
+      where: { Sex: 'Male' },
+      include: [{
+        model: User,
+        where: { isActive: true },
+        attributes: []
+      }]
+    });
 
     // Count employment types from User table
-    const partTime = await User.count({ where: { EmploymentType: 'parttime' } });
-    const fullTime = await User.count({ where: { EmploymentType: 'fulltime' } });
-    const temporary = await User.count({ where: { EmploymentType: 'temporary' } });
+    const partTime = await User.count({ where: { EmploymentType: 'parttime', isActive: true } });
+    const fullTime = await User.count({ where: { EmploymentType: 'fulltime', isActive: true } });
+    const temporary = await User.count({ where: { EmploymentType: 'temporary', isActive: true } });
 
     // Count users who are faculty
     const faculty = await User.count({
+      where: { isActive: true },
       include: [{
         model: Role,
         where: { RoleName: 'faculty' },
@@ -27,6 +43,7 @@ exports.getDashboardData = async (req, res) => {
 
     // Count users who are staff
     const staff = await User.count({
+      where: { isActive: true },
       include: [{
         model: Role,
         where: { RoleName: 'staff' },
@@ -40,12 +57,13 @@ exports.getDashboardData = async (req, res) => {
         model: User,
         as: 'Users',
         attributes: [],
+        where: { isActive: true }  // Only include active users
       }],
       attributes: [
         'DepartmentName',
         [Sequelize.fn('COUNT', Sequelize.col('Users.DepartmentID')), 'count'],
       ],
-      group: ['DepartmentName'],
+      group: ['Department.DepartmentID', 'DepartmentName'],  // Include DepartmentID in GROUP BY
       raw: true,
     });
 
