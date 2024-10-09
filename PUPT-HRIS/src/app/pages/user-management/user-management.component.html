@@ -10,6 +10,7 @@
           <tr class="bg-maroon text-white">
             <th class="p-4">#</th>
             <th class="p-4">Name</th>
+            <th class="p-4">Status</th>
             <th class="p-4">Employment Type</th>
             <th class="p-4">Roles</th>
             <th class="p-4 w-36">Actions</th>
@@ -19,6 +20,11 @@
           <tr *ngFor="let user of users; let i = index" class="hover:bg-gray-100">
             <td class="p-4 text-center">{{ i + 1 }}</td>
             <td class="p-4">{{ user.FirstName }} {{ user.Surname }}</td>
+            <td class="p-4 text-center">
+              <span [class]="user.isActive ? 'text-green-600' : 'text-red-600'">
+                {{ user.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
             <td class="p-4">
               <select class="select select-bordered select-sm w-full max-w-xs" [(ngModel)]="user.EmploymentType">
                 <option value="fulltime">Fulltime</option>
@@ -50,7 +56,11 @@
             </td>
             <td class="p-4 flex justify-center space-x-2">
               <button class="btn btn-save btn-sm" (click)="saveUserDetails(user)">Save</button>
-              <button class="btn btn-inactive btn-sm" (click)="setUserInactive(user.UserID)">Inactive</button>
+              <button class="btn btn-sm" 
+                      [ngClass]="{'btn-error': user.isActive, 'btn-success': !user.isActive}"
+                      (click)="toggleUserActiveStatus(user)">
+                {{ user.isActive ? 'Deactivate' : 'Activate' }}
+              </button>
             </td>
           </tr>
         </tbody>

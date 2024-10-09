@@ -1,7 +1,7 @@
 <div class="dashboard-content">
   <div *ngIf="userRole === 'admin' || userRole === 'superadmin'; else userView">
     <div class="flex-1 mb-2">
-      <a class="text-lg font-normal">You are currently viewing the Dashboard.</a>
+      <a class="text-lg font-normal">You are currently viewing the Dashboard (Active Users Only).</a>
     </div>
     <div class="cards-container grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">

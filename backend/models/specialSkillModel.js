@@ -7,7 +7,7 @@ const SpecialSkill = sequelize.define('specialskills', {
     autoIncrement: true,
     primaryKey: true,
   },
-  UserID: {
+  userID: {
     type: DataTypes.INTEGER,
     references: {
       model: 'users',

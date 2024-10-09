@@ -19,6 +19,13 @@
     <a id="department-management" class="sidebar-link" routerLink="/departments" (click)="setActive('department-management')"
     [class.active]="activeItem === 'department-management'"><i class="fas fa-building mr-3"></i>Departments</a>
   </li>
+    <!-- Coordinator Management - Visible only to Super Admin -->
+    <li *ngIf="canManageCoordinators">
+      <a id="coordinator-management" class="sidebar-link" routerLink="/coordinator-management" (click)="setActive('coordinator-management')"
+      [class.active]="activeItem === 'coordinator-management'">
+        <i class="fas fa-user-tie mr-3"></i>Coordinator Management
+      </a>
+    </li>
 
   <li *ngIf="canManageEmployees">
     <a id="user-management" class="sidebar-link" routerLink="/user-management" (click)="setActive('user-management')"

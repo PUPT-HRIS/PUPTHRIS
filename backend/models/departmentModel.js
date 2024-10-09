@@ -1,31 +1,31 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 
 const Department = sequelize.define('Department', {
   DepartmentID: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     primaryKey: true,
+    autoIncrement: true
   },
   DepartmentName: {
     type: DataTypes.STRING(100),
-    allowNull: false,
-    validate: {
-      notNull: {
-        msg: 'Department Name cannot be null',
-      },
-      notEmpty: {
-        msg: 'Department Name cannot be empty',
-      },
-    },
+    allowNull: false
   },
   Description: {
     type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  CoordinatorID: {
+    type: DataTypes.INTEGER,
     allowNull: true,
+    references: {
+      model: 'users',
+      key: 'UserID'
+    }
   }
 }, {
   tableName: 'departments',
-  timestamps: false,
+  timestamps: false
 });
 
 module.exports = Department;

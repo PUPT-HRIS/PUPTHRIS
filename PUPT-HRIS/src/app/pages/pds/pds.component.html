@@ -42,9 +42,7 @@
             <td class="p-4">{{ user.Fcode }}</td>
             <td class="p-4">{{ user.FirstName }} {{ user.Surname }}</td>
             <td class="p-4">
-              <span *ngFor="let role of user.Roles; let isLast = last">
-                {{ role.RoleName }}<span *ngIf="!isLast">, </span>
-              </span>
+              {{ getRoleName(user.Roles) }}
             </td>
             <td class="p-4">{{ user.Department?.DepartmentName }}</td>
             <td class="p-4 flex justify-center space-x-2">

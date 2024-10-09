@@ -1,5 +1,7 @@
+const sequelize = require('../config/db.config');
 const User = require('../models/userModel');
 const Role = require('../models/roleModel');
+const Coordinator = require('../models/coordinatorModel');
 const { Department } = require('../models/associations');
 require('dotenv').config();
 
@@ -95,6 +97,7 @@ exports.getAllUsers = async (req, res) => {
           attributes: ['RoleID', 'RoleName'],
         },
       ],
+      attributes: { include: ['isActive'] }, // Include isActive in the response
     });
 
     res.status(200).json(users);
@@ -111,5 +114,76 @@ exports.getAllRoles = async (req, res) => {
   } catch (error) {
     console.error('Error fetching roles:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.updateUserDepartment = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { departmentId } = req.body;
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const department = await Department.findByPk(departmentId);
+    if (!department) {
+      return res.status(404).json({ message: 'Department not found' });
+    }
+
+    await user.setDepartment(department);
+
+    res.status(200).json({ message: 'User department updated successfully', user });
+  } catch (error) {
+    console.error('Error updating user department:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Add this new function
+exports.toggleUserActiveStatus = async (req, res) => {
+  let transaction;
+  try {
+    console.log('Toggling user status for userId:', req.params.userId);
+    
+    if (!sequelize) {
+      throw new Error('Database connection not established');
+    }
+    transaction = await sequelize.transaction();
+
+    const { userId } = req.params;
+    const user = await User.findByPk(userId, { transaction });
+    
+    if (!user) {
+      await transaction.rollback();
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log('Current user status:', user.isActive);
+    user.isActive = !user.isActive;
+    await user.save({ transaction });
+    console.log('Updated user status:', user.isActive);
+
+    // If the user is being deactivated and is a coordinator, remove them from the coordinator position
+    if (!user.isActive) {
+      const coordinator = await Coordinator.findOne({ where: { UserID: userId }, transaction });
+      if (coordinator) {
+        console.log('User is a coordinator, removing from position');
+        const department = await Department.findByPk(coordinator.DepartmentID, { transaction });
+        if (department) {
+          department.CoordinatorID = null;
+          await department.save({ transaction });
+        }
+        await coordinator.destroy({ transaction });
+      }
+    }
+
+    await transaction.commit();
+    res.status(200).json({ message: 'User status updated', isActive: user.isActive });
+  } catch (error) {
+    console.error('Error in toggleUserActiveStatus:', error);
+    if (transaction) await transaction.rollback();
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };

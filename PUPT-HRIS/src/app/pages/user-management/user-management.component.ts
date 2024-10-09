@@ -140,4 +140,19 @@ export class UserManagementComponent implements OnInit {
       this.showToast = false;
     }, 3000); // Hide toast after 3 seconds
   }
+
+  toggleUserActiveStatus(user: User): void {
+    console.log('Attempting to toggle status for user:', user);
+    this.userManagementService.toggleUserActiveStatus(user.UserID).subscribe({
+      next: (response) => {
+        console.log('User status updated successfully:', response);
+        user.isActive = !user.isActive;
+        this.showToastNotification(`User ${user.isActive ? 'activated' : 'deactivated'} successfully`, 'success');
+      },
+      error: (error) => {
+        console.error('Error updating user status:', error);
+        this.showToastNotification('Error updating user status: ' + error.message, 'error');
+      },
+    });
+  }
 }

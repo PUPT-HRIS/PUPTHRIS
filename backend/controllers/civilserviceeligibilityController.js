@@ -2,10 +2,12 @@ const CivilServiceEligibility = require('../models/CivilServiceEligibility');
 
 exports.addCivilServiceEligibility = async (req, res) => {
   try {
+    console.log('User ID from request:', req.user.userId); // Add this log
     const newCivilServiceEligibility = await CivilServiceEligibility.create({
       ...req.body,
-      UserID: req.user.userId
+      userID: req.user.userId
     });
+    console.log('Created record:', newCivilServiceEligibility.toJSON()); // Add this log
     res.status(201).json(newCivilServiceEligibility);
   } catch (error) {
     console.error('Error adding civil service eligibility:', error);
@@ -18,7 +20,7 @@ exports.updateCivilServiceEligibility = async (req, res) => {
     const eligibilityId = req.params.id;
     const updatedData = req.body;
     const result = await CivilServiceEligibility.update(updatedData, {
-      where: { CivilServiceEligibilityID: eligibilityId, UserID: req.user.userId }
+      where: { CivilServiceEligibilityID: eligibilityId, userID: req.user.userId }
     });
     if (result[0] === 0) {
       res.status(404).send('Civil Service Eligibility record not found');
@@ -35,7 +37,7 @@ exports.updateCivilServiceEligibility = async (req, res) => {
 exports.getCivilServiceEligibilitiesByEmployee = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const civilServiceEligibilities = await CivilServiceEligibility.findAll({ where: { UserID: userId } });
+    const civilServiceEligibilities = await CivilServiceEligibility.findAll({ where: { userID: userId } });
     if (civilServiceEligibilities.length > 0) {
       res.status(200).json(civilServiceEligibilities);
     } else {
@@ -51,7 +53,7 @@ exports.deleteCivilServiceEligibility = async (req, res) => {
   try {
     const eligibilityId = req.params.id;
     const result = await CivilServiceEligibility.destroy({
-      where: { CivilServiceEligibilityID: eligibilityId, UserID: req.user.userId }
+      where: { CivilServiceEligibilityID: eligibilityId, userID: req.user.userId }
     });
     if (result === 0) {
       res.status(404).send('Civil Service Eligibility record not found');

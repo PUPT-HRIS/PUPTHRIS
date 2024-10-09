@@ -154,4 +154,20 @@ export class PdsComponent implements OnInit {
       this.showToast = false;
     }, 3000); // Hide toast after 3 seconds
   }
+
+  getRoleName(roles: { RoleName: string }[]): string {
+    if (roles && roles.length > 0) {
+      const relevantRoles = roles.filter(role => 
+        role.RoleName.toLowerCase() === 'faculty' || 
+        role.RoleName.toLowerCase() === 'staff'
+      );
+      
+      if (relevantRoles.length > 0) {
+        return relevantRoles.map(role => 
+          role.RoleName.charAt(0).toUpperCase() + role.RoleName.slice(1).toLowerCase()
+        ).join(', ');
+      }
+    }
+    return 'N/A';
+  }
 }

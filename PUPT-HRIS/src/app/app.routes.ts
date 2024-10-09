@@ -30,7 +30,8 @@ import { ProfileImageComponent } from './pages/profile-image/profile-image.compo
 import { SettingsComponent } from './pages/settings/settings.component';
 import { UserManagementComponent } from './pages/user-management/user-management.component';
 import { PdsComponent } from './pages/pds/pds.component';
-
+import { CoordinatorManagementComponent } from './pages/coordinator-management/coordinator-management.component';
+import { AcademicRankComponent } from './pages/academic-rank/academic-rank.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
@@ -68,6 +69,8 @@ export const routes: Routes = [
       { path: 'signature', component: UserSignatureComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
       { path: 'profile-image', component: ProfileImageComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
       { path: 'print-pds', component: PdsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
+      { path: 'academic-rank', component: AcademicRankComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
+      { path: 'coordinator-management', component: CoordinatorManagementComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin'] } },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ]
   },
