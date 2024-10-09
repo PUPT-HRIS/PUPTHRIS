@@ -126,6 +126,7 @@ exports.generatePDSForUser = async (req, res) => {
     let testPdfPath = null;
     try {
         const { userId } = req.params;
+        console.log('Generating PDS for user ID:', userId);
 
         const basicDetails = await BasicDetails.findOne({ where: { UserID: userId } });
         const personalDetails = await PersonalDetails.findOne({ where: { UserID: userId } });
@@ -162,6 +163,7 @@ exports.generatePDSForUser = async (req, res) => {
             !characterReferences ||
             !additionalQuestions
         ) {
+            console.error('Missing user details for user ID:', userId);
             return res.status(400).json({ message: 'Some user details are missing. Please complete the profile before generating the PDS.' });
         }
 
@@ -205,9 +207,7 @@ exports.generatePDSForUser = async (req, res) => {
         console.log('PDS generation successful for user:', userId);
     } catch (error) {
         console.error('Error generating PDS:', error);
-        if (!res.headersSent) {
-            res.status(500).json({ message: 'Error generating PDS', error: error.message });
-        }
+        res.status(500).json({ message: 'Error generating PDS', error: error.message });
     } finally {
         try {
             if (tempExcelFilePath) await fs.remove(tempExcelFilePath);

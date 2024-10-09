@@ -5,6 +5,7 @@ import { UserService } from '../../services/user.service';
 import { jwtDecode } from 'jwt-decode';
 import { CommonModule } from '@angular/common';
 import { User } from '../../model/user.model';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-pds',
@@ -30,10 +31,13 @@ export class PdsComponent implements OnInit {
   errorMessage: string = '';
   toastType: 'success' | 'error' | 'warning' = 'error'; // Default to 'error'
 
+  pdfUrl: SafeResourceUrl | null = null;
+
   constructor(
     private pdsService: PdsService, 
     private userService: UserService, 
-    private authService: AuthService
+    private authService: AuthService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -98,15 +102,30 @@ export class PdsComponent implements OnInit {
       (response: Blob) => {
         const blob = new Blob([response], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
-        const pdfWindow = window.open(url);
-
+        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
         this.isLoading = false;
-        if (pdfWindow) {
-          setTimeout(() => {
-            pdfWindow.focus();
-            pdfWindow.print();
-          }, 1000);
-        }
+      },
+      (error) => {
+        console.error('Error downloading personal PDS', error);
+        this.isLoading = false;
+        this.showToastNotification('Error downloading personal PDS. Please try again.', 'error');
+      }
+    );
+  }
+
+  downloadPds(): void {
+    this.isLoading = true;
+
+    this.pdsService.downloadPDS().subscribe(
+      (response: Blob) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'personal_pds.pdf';
+        link.click();
+        window.URL.revokeObjectURL(url);
+        this.isLoading = false;
       },
       (error) => {
         console.error('Error downloading personal PDS', error);
@@ -120,29 +139,31 @@ export class PdsComponent implements OnInit {
     console.log('Requesting PDS for user ID:', userId);
     this.isLoading = true;
 
-    this.pdsService.downloadPDSForUser(userId).subscribe(
-      (response: Blob) => {
+    this.pdsService.downloadPDSForUser(userId).subscribe({
+      next: (response: Blob) => {
         const blob = new Blob([response], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
-        window.open(url);
-
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `user_${userId}_pds.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
         this.isLoading = false;
         this.showToastNotification('PDS downloaded successfully.', 'success');
       },
-      (error) => {
+      error: (error) => {
         console.error('Error downloading user PDS', error);
+        console.error('Error details:', error.error);
         this.isLoading = false;
-
-        // Check for missing user information error message
         let errorMessage = 'Error generating PDS. Please try again.';
-        if (error.status === 404 && error.error?.message === 'User details not found') {
+        if (error.status === 400) {
+          errorMessage = 'Bad request. Please check the user ID and try again.';
+        } else if (error.status === 404 && error.error?.message === 'User details not found') {
           errorMessage = 'The information for this user is incomplete.';
         }
-
-        // Display error message in toast notification
         this.showToastNotification(errorMessage, 'error');
       }
-    );
+    });
   }
 
   private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
