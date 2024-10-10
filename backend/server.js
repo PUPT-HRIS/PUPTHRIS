@@ -33,6 +33,7 @@ const userManagementRoutes = require('./routes/userManagementRoutes');
 const pdsRoutes = require('./routes/pdsRoutes'); 
 const coordinatorRoutes = require('./routes/coordinatorRoute');
 const academicRanksRoutes = require('./routes/academicRanksRoute');
+const excelImportRoutes = require('./routes/excelImportRoute');
 
 
 require('./models/associations');
@@ -74,6 +75,8 @@ app.use('/api/user-management', userManagementRoutes);
 app.use('/api/pds', pdsRoutes);
 app.use('/api/coordinators', coordinatorRoutes);
 app.use('/api/academic-ranks', academicRanksRoutes);
+app.use('/api/excel-import', excelImportRoutes);
+
 sequelize.sync().then(() => {
   console.log('Database synced successfully');
   

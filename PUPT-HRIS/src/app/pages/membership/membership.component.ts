@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { OfficershipMembershipService } from '../../services/officership-membership.service';
 import { AuthService } from '../../services/auth.service';
+import { ExcelImportService } from '../../services/excel-import.service';
 import { CommonModule } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
 
@@ -36,6 +37,7 @@ export class OfficershipMembershipComponent implements OnInit {
     private fb: FormBuilder,
     private membershipService: OfficershipMembershipService,
     private authService: AuthService,
+    private excelImportService: ExcelImportService,
     private cdr: ChangeDetectorRef
   ) {
     const token = this.authService.getToken();
@@ -157,6 +159,22 @@ export class OfficershipMembershipComponent implements OnInit {
     } else {
       this.selectedFileName = 'No file chosen';
       this.selectedFile = null;
+    }
+  }
+
+  importExcelData(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.excelImportService.importExcelData(file, this.userId).subscribe(
+        (response) => {
+          this.loadMemberships();
+          this.showToastNotification('Data imported successfully', 'success');
+        },
+        (error) => {
+          this.showToastNotification('Error importing data', 'error');
+          console.error('Error importing data', error);
+        }
+      );
     }
   }
 

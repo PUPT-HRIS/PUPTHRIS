@@ -45,6 +45,11 @@
         </table>
       </div>
 
+      <div class="mb-4">
+        <label for="excelImport" class="btn btn-primary">Import Excel Data</label>
+        <input type="file" id="excelImport" (change)="importExcelData($event)" accept=".xlsx, .xls" class="hidden">
+      </div>
+
       <div class="mt-6">
         <button class="btn btn-add-info text-white w-full" (click)="addNewAchievementAward()">Add Achievement Award</button>
       </div>

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AchievementAward } from '../../model/achievement-awards.model';
 import { AchievementAwardService } from '../../services/achievement-awards.service';
 import { AuthService } from '../../services/auth.service';
+import { ExcelImportService } from '../../services/excel-import.service';
 import { jwtDecode } from 'jwt-decode';
 import { CommonModule } from '@angular/common';
 
@@ -38,7 +39,8 @@ export class AchievementAwardComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private achievementAwardService: AchievementAwardService,
-    private authService: AuthService
+    private authService: AuthService,
+    private excelImportService: ExcelImportService
   ) {
     const token = this.authService.getToken();
     if (token) {
@@ -226,5 +228,21 @@ export class AchievementAwardComponent implements OnInit {
     setTimeout(() => {
       this.showToast = false;
     }, 3000);
+  }
+
+  importExcelData(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.excelImportService.importExcelData(file, this.userId).subscribe(
+        (response) => {
+          this.loadAchievementAwards();
+          this.showToastNotification('Data imported successfully', 'success');
+        },
+        (error) => {
+          this.showToastNotification('Error importing data', 'error');
+          console.error('Error importing data', error);
+        }
+      );
+    }
   }
 }
