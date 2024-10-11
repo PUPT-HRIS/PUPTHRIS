@@ -4,13 +4,12 @@
   </div>
 
   <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="memberships.length > 0" class="p-6 space-y-6">
+    <div *ngIf="paginatedMemberships.length > 0" class="p-6 space-y-6">
       <div class="overflow-auto">
         <div class="flex-1 mb-2">
           <a class="text-lg font-normal">You are currently viewing the list/s of Officerships/Memberships.</a>
         </div>
 
-        <!-- Add this just before the table or where you want the import button to appear -->
         <div class="mb-4">
           <label for="excelImport" class="btn btn-primary">Import Excel Data</label>
           <input type="file" id="excelImport" (change)="importExcelData($event)" accept=".xlsx, .xls" class="hidden">
@@ -24,8 +23,7 @@
               <th class="p-4">Position</th>
               <th class="p-4">Level</th>
               <th class="p-4">Classification</th>
-              <th class="p-4">Inclusive Dates From</th>
-              <th class="p-4">Inclusive Dates To</th>
+              <th class="p-4">Inclusive Dates</th>
               <th class="p-4">Proof</th>
               <th class="p-4 w-36">Actions</th>
             </tr>
@@ -40,16 +38,22 @@
               <td class="p-4">{{ membership.Position }}</td>
               <td class="p-4">{{ membership.Level }}</td>
               <td class="p-4">{{ membership.Classification }}</td>
-              <td class="p-4">{{ membership.InclusiveDatesFrom | date }}</td>
-              <td class="p-4">{{ membership.InclusiveDatesTo | date }}</td>
               <td class="p-4">
-                <button *ngIf="membership.Proof" (click)="openProofModal(membership.Proof, membership.SupportingDocument)" class="btn btn-link">View Proof</button>
-                <span *ngIf="!membership.Proof">No Proof Uploaded</span>
+                {{ membership.InclusiveDatesFrom | date }} - {{ membership.InclusiveDatesTo | date }}
+              </td>
+              <td class="p-4">
+                <ng-container *ngIf="membership.Proof; else noProof">
+                  <button *ngIf="membership.ProofType === 'file'" (click)="openProofModal(membership.Proof, membership.SupportingDocument)" class="btn btn-link">View File</button>
+                  <a *ngIf="membership.ProofType === 'link'" [href]="membership.Proof" target="_blank" class="btn btn-link">View Link</a>
+                </ng-container>
+                <ng-template #noProof>
+                  <span>No Proof Uploaded</span>
+                </ng-template>
               </td>
               <td class="p-4">
                 <div class="btn-container">
-                  <button (click)="editMembership(membership.OfficershipMembershipID!)" class="btn btn-primary btn-sm">Edit</button>
-                  <button (click)="deleteMembership(membership.OfficershipMembershipID!)" class="btn btn-error btn-sm">Delete</button>
+                  <button (click)="editMembership(membership.OfficershipMembershipID!)" class="btn btn-edit btn-sm">Edit</button>
+                  <button (click)="deleteMembership(membership.OfficershipMembershipID!)" class="btn btn-delete btn-sm">Delete</button>
                 </div>
               </td>
             </tr>
@@ -57,11 +61,6 @@
         </table>
       </div>
 
-      <div class="mt-6">
-        <button class="btn btn-add text-white w-full" (click)="addNewMembership()">Add Officership/Membership</button>
-      </div>
-
-      <!-- Pagination Controls -->
       <div class="pagination-controls mt-4">
         <button class="btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
         <button class="btn-pagination" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
@@ -69,9 +68,13 @@
         </button>
         <button class="btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
+
+      <div class="mt-6">
+        <button class="btn btn-add text-white w-full" (click)="addNewMembership()">Add Officership/Membership</button>
+      </div>
     </div>
 
-    <div *ngIf="memberships.length === 0" class="p-6 space-y-6">
+    <div *ngIf="paginatedMemberships.length === 0" class="p-6 space-y-6">
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <p class="text-lg">No officership or membership information available.</p>
       </div>
@@ -99,31 +102,21 @@
           </div>
           <div class="form-control w-full">
             <label for="Level" class="label-text font-bold text-lg">Level</label>
-            <div class="relative">
-              <select id="Level" formControlName="Level" class="input input-bordered w-full appearance-none pr-10">
-                <option value="Local">Local</option>
-                <option value="National">National</option>
-                <option value="International">International</option>
-              </select>
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <i class="fas fa-chevron-down"></i>
-              </span>
-            </div>
+            <select id="Level" formControlName="Level" class="select select-bordered w-full">
+              <option value="Local">Local</option>
+              <option value="National">National</option>
+              <option value="International">International</option>
+            </select>
           </div>
           <div class="form-control w-full">
             <label for="Classification" class="label-text font-bold text-lg">Classification</label>
-            <div class="relative">
-              <select id="Classification" formControlName="Classification" class="input input-bordered w-full appearance-none pr-10">
-                <option value="Learning and Development Interventions">Learning and Development Interventions</option>
-                <option value="Training Programs">Training Programs</option>
-                <option value="Seminars">Seminars</option>
-                <option value="Conferences">Conferences</option>
-                <option value="Others">Others</option>
-              </select>
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <i class="fas fa-chevron-down"></i>
-              </span>
-            </div>
+            <select id="Classification" formControlName="Classification" class="select select-bordered w-full">
+              <option value="Learning and Development Interventions">Learning and Development Interventions</option>
+              <option value="Training Programs">Training Programs</option>
+              <option value="Seminars">Seminars</option>
+              <option value="Conferences">Conferences</option>
+              <option value="Others">Others</option>
+            </select>
           </div>
           <div class="form-control w-full">
             <label for="InclusiveDatesFrom" class="label-text font-bold text-lg">Inclusive Dates From</label>
@@ -137,25 +130,30 @@
             <label for="Remarks" class="label-text font-bold text-lg">Remarks</label>
             <textarea id="Remarks" formControlName="Remarks" class="textarea textarea-bordered w-full" placeholder="Enter remarks"></textarea>
           </div>
-          <div class="form-control w-full file-input-container">
+          <div class="form-control w-full">
             <label for="SupportingDocument" class="label-text font-bold text-lg">Supporting Document</label>
             <input id="SupportingDocument" formControlName="SupportingDocument" class="input input-bordered w-full" placeholder="Enter a description of the supporting document">
           </div>
-          <div class="form-control w-full file-input-container">
-            <label for="Proof" class="label-text">Proof</label>
-            <div class="file-input-wrapper">
-              <label for="Proof" class="custom-file-label">Choose File</label>
-              <input id="Proof" type="file" formControlName="Proof" class="file-input" (change)="onFileSelected($event)">
-              <span class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</span>
-            </div>
-            <small class="file-input-instructions">
-              Attachments should be an image in JPEG format and less than 100kb in file size.
-            </small>
+          <div class="form-control w-full">
+            <label for="ProofType" class="label-text font-bold text-lg">Proof Type</label>
+            <select id="ProofType" formControlName="ProofType" class="select select-bordered w-full">
+              <option value="file">File</option>
+              <option value="link">Link</option>
+            </select>
+          </div>
+          <div class="form-control w-full">
+            <label for="Proof" class="label-text font-bold text-lg">Proof</label>
+            <ng-container *ngIf="membershipForm.get('ProofType')?.value === 'file'; else proofLink">
+              <input id="Proof" type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full">
+            </ng-container>
+            <ng-template #proofLink>
+              <input id="Proof" formControlName="Proof" class="input input-bordered w-full" placeholder="Enter proof link">
+            </ng-template>
           </div>
         </div>
         <div class="flex justify-end mt-6">
-          <button type="submit" class="btn btn-add bg-black text-white mr-4">{{ currentMembershipId ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn btn-cancel bg-maroon text-white" (click)="resetForm()">Cancel</button>
+          <button type="submit" class="btn btn-save mr-4">{{ currentMembershipId ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
         </div>
       </form>
     </div>
@@ -168,15 +166,33 @@
     <h3 class="font-bold text-lg">Proof Document</h3>
     <div class="modal-body">
       <p class="py-4"><strong>Description:</strong> {{ selectedSupportingDocument || 'No description available' }}</p>
-      <ng-container *ngIf="isImage(selectedProofUrl || ''); else pdfTemplate">
-        <img [src]="selectedProofUrl || ''" alt="Proof Image" class="img-fluid" (error)="onImageError()" />
+      <ng-container *ngIf="selectedProofType === 'file'; else linkProof">
+        <ng-container *ngIf="isImage(selectedProofUrl || ''); else pdfTemplate">
+          <img [src]="selectedProofUrl || ''" alt="Proof Image" class="img-fluid" (error)="onImageError()" />
+        </ng-container>
+        <ng-template #pdfTemplate>
+          <iframe [src]="selectedProofUrl || ''" width="100%" height="500px"></iframe>
+        </ng-template>
       </ng-container>
-      <ng-template #pdfTemplate>
-        <iframe [src]="selectedProofUrl || ''" width="100%" height="500px"></iframe>
+      <ng-template #linkProof>
+        <a [href]="selectedProofUrl" target="_blank" class="btn btn-primary">Open Link</a>
       </ng-template>
     </div>
     <div class="modal-action">
       <button class="btn" (click)="closeModal()">Close</button>
     </div>
+  </div>
+</div>
+
+<!-- Toast Notifications -->
+<div *ngIf="showToast" class="toast toast-end">
+  <div *ngIf="toastType === 'success'" class="alert alert-success">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'error'" class="alert alert-error">
+    <span>{{ toastMessage }}</span>
+  </div>
+  <div *ngIf="toastType === 'warning'" class="alert alert-warning">
+    <span>{{ toastMessage }}</span>
   </div>
 </div>

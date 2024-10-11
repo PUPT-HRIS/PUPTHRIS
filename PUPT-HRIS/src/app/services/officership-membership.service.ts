@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { OfficershipMembership } from '../model/officership-membership.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,20 +19,20 @@ export class OfficershipMembershipService {
   }
 
   // Add Officership/Membership
-  addMembership(membership: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/add`, membership, { headers: this.getHeaders() })
+  addMembership(membership: FormData): Observable<OfficershipMembership> {
+    return this.http.post<OfficershipMembership>(`${this.apiUrl}/add`, membership, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   // Update Officership/Membership
-  updateMembership(id: number, membership: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/update/${id}`, membership, { headers: this.getHeaders() })
+  updateMembership(id: number, membership: FormData): Observable<OfficershipMembership> {
+    return this.http.patch<OfficershipMembership>(`${this.apiUrl}/update/${id}`, membership, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   // Get all memberships for a user
-  getMembershipsByUserId(userId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() })
+  getMembershipsByUserId(userId: number): Observable<OfficershipMembership[]> {
+    return this.http.get<OfficershipMembership[]>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
@@ -44,6 +45,6 @@ export class OfficershipMembershipService {
   // Error handling
   private handleError(error: any): Observable<never> {
     console.error('An error occurred:', error);
-    return throwError(error.message || 'Server error');
+    return throwError(() => new Error(error.message || 'Server error'));
   }
 }

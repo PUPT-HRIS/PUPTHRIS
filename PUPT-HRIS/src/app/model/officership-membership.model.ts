@@ -11,4 +11,5 @@ export interface OfficershipMembership {
   Remarks?: string;
   SupportingDocument?: string;
   Proof?: string;
+  ProofType?: 'file' | 'link';
 }

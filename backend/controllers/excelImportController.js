@@ -1,7 +1,7 @@
 const multer = require('multer');
 const xlsx = require('xlsx');
 const AchievementAward = require('../models/achievementAwardsModel');
-
+const OfficershipMembership = require('../models/officerMembershipModel');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -28,6 +28,14 @@ exports.importExcelData = [
 
       // Save data to database
       await saveAchievementAwards(achievementAwards, req.body.userId);
+
+      // Process Officership/Membership
+      const officershipMemberships = processOfficershipMemberships(workbook, sheetName);
+      console.log('Officership/Memberships processed:', officershipMemberships.length);
+      console.log('Officership/Memberships:', JSON.stringify(officershipMemberships, null, 2));
+
+      // Save data to database
+      await saveOfficershipMemberships(officershipMemberships, req.body.userId);
 
       res.status(200).json({ 
         message: 'Data imported successfully',
@@ -137,6 +145,108 @@ async function saveAchievementAwards(awards, userId) {
       console.log(`Achievement Award ${created ? 'created' : 'already exists'}:`, JSON.stringify(record, null, 2));
     } catch (error) {
       console.error('Error saving Achievement Award:', error);
+    }
+  }
+}
+
+function processOfficershipMemberships(workbook, sheetName) {
+  console.log('Processing Officership/Memberships');
+  const results = [];
+  const sheet = workbook.Sheets[sheetName];
+  const data = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+  
+  let startRow = -1;
+
+  // Find the start of the Officership/Membership section
+  for (let i = 0; i < data.length; i++) {
+    if (data[i][0] === 'B.2. Officership/ Membership in Professional Organization/s') {
+      startRow = i + 2; // Skip one row after the header
+      break;
+    }
+  }
+
+  if (startRow === -1) {
+    console.log('Officership/Membership section not found');
+    return results;
+  }
+
+  console.log(`Starting to process from row ${startRow}`);
+
+  // Process rows
+  for (let i = startRow; i < data.length; i++) {
+    const row = data[i];
+    
+    // Stop processing if we reach an empty row or a new section
+    if (!row[0] || row[0].trim() === '' || row[0].startsWith('B.3')) {
+      break;
+    }
+
+    // Skip rows that are likely headers or notes
+    if (row[0].startsWith('*') || row[0].includes('Name of Organization')) {
+      continue;
+    }
+
+    // Extract hyperlink from column J
+    const cellAddress = xlsx.utils.encode_cell({r: i, c: 9}); // Column J
+    const cell = sheet[cellAddress];
+    let proofLink = '';
+    if (cell && cell.l) {
+      proofLink = cell.l.Target || '';
+    } else if (cell && cell.f && cell.f.startsWith('HYPERLINK')) {
+      // Extract URL from HYPERLINK formula
+      const match = cell.f.match(/"([^"]*)"/);
+      if (match && match[1]) {
+        proofLink = match[1];
+      }
+    }
+
+    const membership = {
+      OrganizationName: row[1],
+      Classification: row[2],
+      Position: row[3],
+      Level: row[4],
+      OrganizationAddress: row[5],
+      InclusiveDatesFrom: row[6],
+      InclusiveDatesTo: row[7],
+      Remarks: row[7],
+      SupportingDocument: row[8],
+      Proof: proofLink,
+      ProofType: 'link'
+    };
+
+    results.push(membership);
+    console.log('Processed membership:', JSON.stringify(membership, null, 2));
+  }
+
+  console.log(`Finished processing. Total memberships processed: ${results.length}`);
+  return results;
+}
+
+async function saveOfficershipMemberships(memberships, userId) {
+  console.log(`Saving ${memberships.length} Officership/Memberships for user ${userId}`);
+  for (const membership of memberships) {
+    try {
+      console.log('Processing membership:', JSON.stringify(membership, null, 2));
+
+      const [record, created] = await OfficershipMembership.findOrCreate({
+        where: {
+          UserID: userId,
+          OrganizationName: membership.OrganizationName,
+          Position: membership.Position,
+          InclusiveDatesFrom: membership.InclusiveDatesFrom,
+          InclusiveDatesTo: membership.InclusiveDatesTo
+        },
+        defaults: {
+          ...membership,
+          UserID: userId,
+          Level: membership.Level,
+          Classification: membership.Classification
+        }
+      });
+
+      console.log(`Officership/Membership ${created ? 'created' : 'already exists'}:`, JSON.stringify(record, null, 2));
+    } catch (error) {
+      console.error('Error saving Officership/Membership:', error);
     }
   }
 }

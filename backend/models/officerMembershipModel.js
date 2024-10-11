@@ -28,17 +28,11 @@ const OfficershipMembership = sequelize.define('OfficershipMembership', {
     allowNull: true,
   },
   Level: {
-    type: DataTypes.ENUM('Local', 'National', 'International'),
+    type: DataTypes.STRING(255),  // Changed from ENUM to STRING
     allowNull: true,
   },
   Classification: {
-    type: DataTypes.ENUM(
-      'Learning and Development Interventions',
-      'Training Programs',
-      'Seminars',
-      'Conferences',
-      'Others'
-    ),
+    type: DataTypes.STRING(255),  // Changed from ENUM to STRING
     allowNull: true,
   },
   InclusiveDatesFrom: {
@@ -60,6 +54,11 @@ const OfficershipMembership = sequelize.define('OfficershipMembership', {
   Proof: {
     type: DataTypes.STRING(255),
     allowNull: true,
+  },
+  ProofType: {
+    type: DataTypes.ENUM('file', 'link'),
+    allowNull: false,
+    defaultValue: 'file',
   },
 }, {
   tableName: 'officershipmembership',
