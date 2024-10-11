@@ -31,8 +31,13 @@
               <td class="p-4">{{ award.AwardingBody }}</td>
               <td class="p-4">{{ award.InclusiveDates }}</td>
               <td class="p-4">
-                <button *ngIf="award.Proof" (click)="openProofModal(award.Proof, award.SupportingDocument)" class="btn btn-link">View Proof</button>
-                <span *ngIf="!award.Proof">No Proof Uploaded</span>
+                <ng-container *ngIf="award.Proof; else noProof">
+                  <button *ngIf="award.ProofType === 'file'" (click)="openProofModal(award.Proof, award.SupportingDocument)" class="btn btn-link">View File</button>
+                  <a *ngIf="award.ProofType === 'link'" [href]="award.Proof" target="_blank" class="btn btn-link">View Link</a>
+                </ng-container>
+                <ng-template #noProof>
+                  <span>No Proof Uploaded</span>
+                </ng-template>
               </td>
               <td class="p-4">
                 <div class="btn-container">
@@ -136,8 +141,25 @@
             <input id="SupportingDocument" formControlName="SupportingDocument" class="input input-bordered w-full" placeholder="Enter a description of the supporting document">
           </div>
           <div class="form-control w-full">
+            <label for="ProofType" class="label-text font-bold text-lg">Proof Type</label>
+            <div class="relative">
+              <select id="ProofType" formControlName="ProofType" class="input input-bordered w-full appearance-none pr-10">
+                <option value="file">File</option>
+                <option value="link">Link</option>
+              </select>
+              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
+          </div>
+          <div class="form-control w-full">
             <label for="Proof" class="label-text font-bold text-lg">Proof</label>
-            <input id="Proof" type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full">
+            <ng-container *ngIf="achievementAwardForm.get('ProofType')?.value === 'file'; else proofLink">
+              <input id="Proof" type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full">
+            </ng-container>
+            <ng-template #proofLink>
+              <input id="Proof" formControlName="Proof" class="input input-bordered w-full" placeholder="Enter proof link">
+            </ng-template>
           </div>
         </div>
         <div class="flex justify-end mt-6">
@@ -155,20 +177,19 @@
     <h3 class="font-bold text-lg">Proof Document</h3>
 
     <div class="modal-body">
-      <!-- Description of the supporting document -->
       <p class="py-4">
         <strong>Description:</strong> {{ selectedSupportingDocument || 'No description available' }}
       </p>
-
-      <!-- Proof Image or PDF -->
-      <ng-container *ngIf="isImage(selectedProofUrl || ''); else pdfTemplate">
-        <!-- Image proof -->
-        <img [src]="selectedProofUrl || ''" alt="Proof Image" class="img-fluid" (error)="onImageError()" />
+      <ng-container *ngIf="selectedProofType === 'file'; else linkProof">
+        <ng-container *ngIf="isImage(selectedProofUrl || ''); else pdfTemplate">
+          <img [src]="selectedProofUrl || ''" alt="Proof Image" class="img-fluid" (error)="onImageError()" />
+        </ng-container>
+        <ng-template #pdfTemplate>
+          <iframe [src]="selectedProofUrl || ''" width="100%" height="500px"></iframe>
+        </ng-template>
       </ng-container>
-
-      <!-- Fallback to PDF if not an image -->
-      <ng-template #pdfTemplate>
-        <iframe [src]="selectedProofUrl || ''" width="100%" height="500px"></iframe>
+      <ng-template #linkProof>
+        <a [href]="selectedProofUrl" target="_blank" class="btn btn-primary">Open Link</a>
       </ng-template>
     </div>
 

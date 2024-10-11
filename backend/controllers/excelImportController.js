@@ -19,14 +19,10 @@ exports.importExcelData = [
       const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
       console.log('Workbook sheets:', workbook.SheetNames);
 
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const sheetName = workbook.SheetNames[0];
       
-      // Convert the sheet to JSON
-      const data = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-      console.log('Total rows in sheet:', data.length);
-
       // Process Achievement Awards
-      const achievementAwards = processAchievementAwards(data);
+      const achievementAwards = processAchievementAwards(workbook, sheetName);
       console.log('Achievement Awards processed:', achievementAwards.length);
       console.log('Achievement Awards:', JSON.stringify(achievementAwards, null, 2));
 
@@ -44,9 +40,12 @@ exports.importExcelData = [
   }
 ];
 
-function processAchievementAwards(data) {
+function processAchievementAwards(workbook, sheetName) {
   console.log('Processing Achievement Awards');
   const results = [];
+  const sheet = workbook.Sheets[sheetName];
+  const data = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+  
   let startRow = -1;
 
   // Find the start of the Achievement Awards section
@@ -78,6 +77,20 @@ function processAchievementAwards(data) {
       continue;
     }
 
+    // Extract hyperlink from column J
+    const cellAddress = xlsx.utils.encode_cell({r: i, c: 9}); // Column J
+    const cell = sheet[cellAddress];
+    let proofLink = '';
+    if (cell && cell.l) {
+      proofLink = cell.l.Target || '';
+    } else if (cell && cell.f && cell.f.startsWith('HYPERLINK')) {
+      // Extract URL from HYPERLINK formula
+      const match = cell.f.match(/"([^"]*)"/);
+      if (match && match[1]) {
+        proofLink = match[1];
+      }
+    }
+
     const award = {
       nameOfEmployee: row[0],
       natureOfAchievement: row[1],
@@ -87,7 +100,9 @@ function processAchievementAwards(data) {
       venue: row[5],
       fromDate: row[6],
       toDate: row[7],
-      supportingDocuments: row[8]
+      supportingDocuments: row[8], // This is column I
+      proof: proofLink, // Use the extracted hyperlink
+      proofType: 'link'
     };
 
     results.push(award);
@@ -114,7 +129,9 @@ async function saveAchievementAwards(awards, userId) {
           Classification: award.classification,
           Level: award.level,
           Venue: award.venue,
-          SupportingDocument: award.supportingDocuments
+          SupportingDocument: award.supportingDocuments,
+          Proof: award.proof, // This should now contain the extracted hyperlink
+          ProofType: award.proofType
         }
       });
       console.log(`Achievement Award ${created ? 'created' : 'already exists'}:`, JSON.stringify(record, null, 2));

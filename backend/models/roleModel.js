@@ -11,7 +11,6 @@ const Role = sequelize.define('Role', {
   RoleName: {
     type: DataTypes.STRING(50),
     allowNull: false,
-    unique: true, // Roles like 'admin', 'superadmin', 'faculty' should be unique
   },
 }, {
   tableName: 'roles',

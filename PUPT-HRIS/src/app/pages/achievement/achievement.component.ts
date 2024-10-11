@@ -27,6 +27,7 @@ export class AchievementAwardComponent implements OnInit {
 
   selectedProofUrl: string | null = null;
   selectedSupportingDocument: string | null = null;
+  selectedProofType: 'file' | 'link' = 'file';
 
   showToast: boolean = false;
   toastMessage: string = '';
@@ -59,7 +60,8 @@ export class AchievementAwardComponent implements OnInit {
       InclusiveDates: [''],
       Remarks: [''],
       SupportingDocument: [''], 
-      Proof: ['']           
+      Proof: [''],
+      ProofType: ['file']
     });
   }
 
@@ -132,12 +134,14 @@ export class AchievementAwardComponent implements OnInit {
     const formData = new FormData();
 
     Object.keys(this.achievementAwardForm.value).forEach((key) => {
-      formData.append(key, this.achievementAwardForm.get(key)?.value || '');
+      if (key !== 'Proof' || this.achievementAwardForm.get('ProofType')?.value === 'link') {
+        formData.append(key, this.achievementAwardForm.get(key)?.value || '');
+      }
     });
 
     formData.append('UserID', this.userId.toString());
 
-    if (this.fileToUpload) {
+    if (this.achievementAwardForm.get('ProofType')?.value === 'file' && this.fileToUpload) {
       formData.append('proof', this.fileToUpload);
     }
 
@@ -191,9 +195,10 @@ export class AchievementAwardComponent implements OnInit {
     }
   }
 
-  openProofModal(proofUrl: string, supportingDocument?: string): void {
+  openProofModal(proofUrl: string, supportingDocument?: string, proofType?: 'file' | 'link'): void {
     this.selectedProofUrl = proofUrl;
     this.selectedSupportingDocument = supportingDocument || 'No description available';
+    this.selectedProofType = proofType || 'file';
     this.isModalOpen = true;
   }
 

@@ -39,6 +39,9 @@ exports.addAchievementAward = [
       if (req.file) {
         const proofUrl = await uploadFileToS3(req.file);
         achievementData.Proof = proofUrl;
+        achievementData.ProofType = 'file';
+      } else if (achievementData.Proof) {
+        achievementData.ProofType = 'link';
       }
 
       const newAchievement = await AchievementAward.create(achievementData);
@@ -64,7 +67,7 @@ exports.updateAchievementAward = [
       }
 
       if (req.file) {
-        if (achievement.Proof) {
+        if (achievement.Proof && achievement.ProofType === 'file') {
           const oldS3Key = achievement.Proof.split('/').pop();
           const deleteParams = { Bucket: S3_BUCKET_NAME, Key: oldS3Key };
           await s3Client.send(new DeleteObjectCommand(deleteParams));
@@ -72,6 +75,9 @@ exports.updateAchievementAward = [
 
         const proofUrl = await uploadFileToS3(req.file);
         updates.Proof = proofUrl;
+        updates.ProofType = 'file';
+      } else if (updates.Proof && updates.Proof !== achievement.Proof) {
+        updates.ProofType = 'link';
       }
 
       const [updated] = await AchievementAward.update(updates, { where: { AchievementID: id } });
@@ -131,7 +137,7 @@ exports.deleteAchievementAward = async (req, res) => {
       return res.status(404).json({ error: 'Achievement record not found' });
     }
 
-    if (achievement.Proof) {
+    if (achievement.Proof && achievement.ProofType === 'file') {
       const s3Key = achievement.Proof.split('/').pop();
       const deleteParams = { Bucket: S3_BUCKET_NAME, Key: s3Key };
       try {
@@ -139,14 +145,14 @@ exports.deleteAchievementAward = async (req, res) => {
         console.log('File successfully deleted from S3:', s3Key);
       } catch (error) {
         console.error('Error deleting file from S3:', error);
-        return res.status(500).json({ error: 'Failed to delete file from S3' });
+        // Continue with deletion even if S3 deletion fails
       }
     }
 
     const result = await AchievementAward.destroy({ where: { AchievementID: id } });
 
     if (result) {
-      res.status(200).json({ message: 'Achievement award and associated file deleted successfully' });
+      res.status(200).json({ message: 'Achievement award deleted successfully' });
     } else {
       res.status(404).json({ error: 'Achievement record not found' });
     }

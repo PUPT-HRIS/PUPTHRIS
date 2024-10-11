@@ -51,6 +51,11 @@ const AchievementAward = sequelize.define('AchievementAward', {
     type: DataTypes.STRING(255),
     allowNull: true,
   },
+  ProofType: {
+    type: DataTypes.ENUM('file', 'link'),
+    allowNull: false,
+    defaultValue: 'link',
+  },
 }, {
   tableName: 'achievement_awards',
   timestamps: false,
