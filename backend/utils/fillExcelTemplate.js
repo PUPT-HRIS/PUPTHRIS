@@ -276,13 +276,35 @@ async function fillExcelTemplate(userDetails,
 
             const rightPadding = 20;
 
+            worksheet.addImage(imageId, {
+                tl: { col: 3, row: 59 },  // D60
+                br: { col: 4, row: 60 },  // E61
+                editAs: 'oneCell'
+            });
+
+            worksheet2.addImage(imageId, {
+                tl: { col: 3, row: 46 }, 
+                br: { col: 4, row: 47 }, 
+                editAs: 'oneCell'
+            });
+
+            worksheet3.addImage(imageId, {
+                tl: { col: 2, row: 49 }, 
+                br: { col: 3, row: 50 }, 
+                editAs: 'oneCell'
+            });
+
             worksheet4.addImage(imageId, {
                 tl: { col: 5, row: 60, colOff: rightPadding * 10000 },
                 ext: { width: cellWidth, height: cellHeight },
                 editAs: 'oneCell'
             });
 
-            // Set the row height to accommodate the image
+            
+            worksheet.getRow(60).height = 90; // Adjust signature row height
+            worksheet2.getRow(47).height = 60;
+            worksheet3.getRow(50).height = 70;
+            worksheet3.getColumn('C').width = 10;
             worksheet4.getRow(60).height = cellHeight;
 
             // ... (keep the rest of the existing code for other worksheets)
