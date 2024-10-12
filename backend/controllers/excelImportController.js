@@ -2,6 +2,7 @@ const multer = require('multer');
 const xlsx = require('xlsx');
 const AchievementAward = require('../models/achievementAwardsModel');
 const OfficershipMembership = require('../models/officerMembershipModel');
+const Trainings = require('../models/trainingsModel');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -37,9 +38,18 @@ exports.importExcelData = [
       // Save data to database
       await saveOfficershipMemberships(officershipMemberships, req.body.userId);
 
+      // Process Trainings and Seminars
+      const trainingsAndSeminars = processTrainingsAndSeminars(workbook, sheetName);
+      console.log('Trainings and Seminars processed:', trainingsAndSeminars.length);
+      console.log('Trainings and Seminars:', JSON.stringify(trainingsAndSeminars, null, 2));
+
+      // Save data to database
+      await saveTrainingsAndSeminars(trainingsAndSeminars, req.body.userId);
+
       res.status(200).json({ 
         message: 'Data imported successfully',
-        achievementsImported: achievementAwards.length
+        achievementsImported: achievementAwards.length,
+        trainingsImported: trainingsAndSeminars.length
       });
     } catch (error) {
       console.error('Error importing Excel data:', error);
@@ -233,14 +243,16 @@ async function saveOfficershipMemberships(memberships, userId) {
           UserID: userId,
           OrganizationName: membership.OrganizationName,
           Position: membership.Position,
-          InclusiveDatesFrom: membership.InclusiveDatesFrom,
-          InclusiveDatesTo: membership.InclusiveDatesTo
+          InclusiveDatesFrom: parseDate(membership.InclusiveDatesFrom),
+          InclusiveDatesTo: parseDate(membership.InclusiveDatesTo)
         },
         defaults: {
           ...membership,
           UserID: userId,
           Level: membership.Level,
-          Classification: membership.Classification
+          Classification: membership.Classification,
+          InclusiveDatesFrom: parseDate(membership.InclusiveDatesFrom),
+          InclusiveDatesTo: parseDate(membership.InclusiveDatesTo)
         }
       });
 
@@ -249,4 +261,115 @@ async function saveOfficershipMemberships(memberships, userId) {
       console.error('Error saving Officership/Membership:', error);
     }
   }
+}
+
+function processTrainingsAndSeminars(workbook, sheetName) {
+  console.log('Processing Trainings and Seminars');
+  const results = [];
+  const sheet = workbook.Sheets[sheetName];
+  const data = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+  
+  let startRow = -1;
+  let currentSection = '';
+
+  // Process both sections
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    
+    // Check for section headers
+    if (row[0] && row[0].includes('B.3.1 Attendance in Relevant Faculty Development Program')) {
+      startRow = i + 2;
+      currentSection = 'FacultyDevelopment';
+      console.log(`Found Faculty Development section at row ${startRow + 1}`);
+      continue;
+    } else if (row[0] && row[0].includes('B.3.2. Attendance in Training/s')) {
+      startRow = i + 2;
+      currentSection = 'Training';
+      console.log(`Found Training section at row ${startRow + 1}`);
+      continue;
+    }
+
+    // Process rows if we're in a valid section
+    if (startRow !== -1 && i >= startRow) {
+      console.log(`Processing row ${i + 1}:`, JSON.stringify(row));
+
+      // Stop processing if we reach an empty row or a new section
+      if (row.every(cell => !cell) || (row[0] && row[0].startsWith('*'))) {
+        console.log(`Stopping at row ${i + 1} due to empty row or new section`);
+        startRow = -1; // Reset startRow to look for the next section
+        continue;
+      }
+
+      // Skip rows that don't have a title (assuming title is in the second column)
+      if (!row[1]) {
+        console.log(`Skipping row ${i + 1} due to missing title`);
+        continue;
+      }
+
+      // Extract hyperlink from column J (index 9) for Faculty Development or column M (index 12) for Training
+      const cellAddress = xlsx.utils.encode_cell({r: i, c: currentSection === 'FacultyDevelopment' ? 9 : 12});
+      const cell = sheet[cellAddress];
+      let proofLink = '';
+      if (cell && cell.l) {
+        proofLink = cell.l.Target || '';
+      } else if (cell && cell.f && cell.f.startsWith('HYPERLINK')) {
+        const match = cell.f.match(/"([^"]*)"/);
+        if (match && match[1]) {
+          proofLink = match[1];
+        }
+      }
+
+      const training = {
+        Title: row[1],
+        Classification: row[2],
+        Nature: row[3],
+        Budget: row[4],
+        SourceOfFund: row[5],
+        Organizer: row[6],
+        Level: row[7],
+        Venue: row[8],
+        DateFrom: row[9],
+        DateTo: row[10],
+        NumberOfHours: row[11],
+        SupportingDocuments: currentSection === 'FacultyDevelopment' ? row[12] : row[13],
+        Proof: proofLink,
+        ProofType: 'link',
+        Type: currentSection
+      };
+
+      results.push(training);
+      console.log('Processed training:', JSON.stringify(training, null, 2));
+    }
+  }
+
+  console.log(`Finished processing. Total trainings processed: ${results.length}`);
+  return results;
+}
+
+async function saveTrainingsAndSeminars(trainings, userId) {
+  console.log(`Saving ${trainings.length} Trainings and Seminars for user ${userId}`);
+  for (const training of trainings) {
+    try {
+      const [record, created] = await Trainings.findOrCreate({
+        where: {
+          UserID: userId,
+          Title: training.Title,
+          DateFrom: training.DateFrom,
+          DateTo: training.DateTo
+        },
+        defaults: {
+          ...training,
+          UserID: userId
+        }
+      });
+      console.log(`Training/Seminar ${created ? 'created' : 'already exists'}:`, JSON.stringify(record, null, 2));
+    } catch (error) {
+      console.error('Error saving Training/Seminar:', error);
+    }
+  }
+}
+
+function parseDate(dateString) {
+  const [month, day, year] = dateString.split('/');
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
