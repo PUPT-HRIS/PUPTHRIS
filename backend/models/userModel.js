@@ -72,6 +72,14 @@ const User = sequelize.define('User', {
     allowNull: false,
     defaultValue: true,
   },
+  CollegeCampusID: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'collegecampuses',
+      key: 'CollegeCampusID',
+    },
+  },
 }, {
   tableName: 'users',
   timestamps: false,

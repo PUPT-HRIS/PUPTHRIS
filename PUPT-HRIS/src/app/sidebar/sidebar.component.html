@@ -27,6 +27,13 @@
       </a>
     </li>
 
+    <li *ngIf="canManageCollegeCampuses">
+      <a id="college-campus-management" class="sidebar-link" routerLink="/college-campuses" (click)="setActive('college-campus-management')"
+      [class.active]="activeItem === 'college-campus-management'">
+        <i class="fas fa-university mr-3"></i>College Campuses
+      </a>
+    </li>
+
   <li *ngIf="canManageEmployees">
     <a id="user-management" class="sidebar-link" routerLink="/user-management" (click)="setActive('user-management')"
     [class.active]="activeItem === 'user-management'"><i class="fas fa-user-cog mr-3"></i>User Management</a>
@@ -115,5 +122,6 @@
       <i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
   </li>
 </ul>
+
 
 
