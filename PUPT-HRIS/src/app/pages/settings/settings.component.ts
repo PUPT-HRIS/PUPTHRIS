@@ -23,6 +23,7 @@ export class SettingsComponent implements OnInit {
   toastType: 'success' | 'error' | 'warning' = 'success';
   campuses: CollegeCampus[] = [];
   userID: number;
+  userRole: string = '';
 
   @Output() campusChanged = new EventEmitter<number>();
 
@@ -55,6 +56,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     console.log('ngOnInit called');
+    this.determineUserRole();
     this.loadCollegeCampuses();
     this.loadCurrentCampus();
 
@@ -64,6 +66,18 @@ export class SettingsComponent implements OnInit {
         this.campusForm.patchValue({ selectedCampus: campusId });
       }
     });
+  }
+
+  determineUserRole(): void {
+    const roles = this.authService.getUserRoles();
+    if (roles.includes('admin')) {
+      this.userRole = 'admin';
+    } else if (roles.includes('superadmin')) {
+      this.userRole = 'superadmin';
+    } else {
+      this.userRole = 'user';
+    }
+    console.log('User role:', this.userRole);
   }
 
   loadCollegeCampuses() {
@@ -143,5 +157,10 @@ export class SettingsComponent implements OnInit {
     setTimeout(() => {
       this.showToast = false;
     }, 3000); // Hide toast after 3 seconds
+  }
+
+  // You might want to add a method to check if the campus selection should be visible
+  showCampusSelection(): boolean {
+    return this.userRole === 'admin' || this.userRole === 'superadmin';
   }
 }

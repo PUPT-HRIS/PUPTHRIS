@@ -7,7 +7,7 @@
 
   <div class="p-6 space-y-12">
     <!-- Campus Selection Form -->
-    <form [formGroup]="campusForm" (ngSubmit)="onCampusChange()">
+    <form *ngIf="showCampusSelection()" [formGroup]="campusForm" (ngSubmit)="onCampusChange()">
       <div class="form-control w-full mb-10">
         <label for="selectedCampus" class="label-text font-bold text-lg">Select Campus</label>
         <select
