@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import { CommonModule } from '@angular/common';
 import { User } from '../../model/user.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { CampusContextService } from '../../services/campus-context.service';
 
 @Component({
   selector: 'app-pds',
@@ -20,16 +21,17 @@ export class PdsComponent implements OnInit {
   paginatedUsers: User[] = [];
   isLoading: boolean = false;
   canManageEmployees: boolean = false;
+  campusId: number | null = null;
 
   // Pagination variables
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 0;
 
-  // New properties for toast notification
+  // Toast notification
   showToast: boolean = false;
   errorMessage: string = '';
-  toastType: 'success' | 'error' | 'warning' = 'error'; // Default to 'error'
+  toastType: 'success' | 'error' | 'warning' = 'error';
 
   pdfUrl: SafeResourceUrl | null = null;
 
@@ -37,7 +39,8 @@ export class PdsComponent implements OnInit {
     private pdsService: PdsService, 
     private userService: UserService, 
     private authService: AuthService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private campusContextService: CampusContextService
   ) {}
 
   ngOnInit(): void {
@@ -48,28 +51,38 @@ export class PdsComponent implements OnInit {
       this.canManageEmployees = decodedToken.roles.includes('admin') || decodedToken.roles.includes('superadmin');
     }
 
-    this.fetchAllUsers();
+    this.campusContextService.getCampusId().subscribe(id => {
+      if (id !== null) {
+        this.campusId = id;
+        this.fetchAllUsers();
+      }
+    });
   }
 
   fetchAllUsers(): void {
-    this.userService.getUsers().subscribe({
+    if (this.campusId === null) {
+      console.error('Campus ID is null');
+      return;
+    }
+    this.userService.getUsers(this.campusId).subscribe({
       next: (users) => {
         this.users = users;
         this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
         this.updatePaginatedUsers();
       },
-      error: (error) => console.error('Error fetching users', error),
+      error: (error) => {
+        console.error('Error fetching users', error);
+        this.showToastNotification('Failed to load users. Please try again.', 'error');
+      },
     });
   }
 
-  // Update paginated users based on the current page
   updatePaginatedUsers(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedUsers = this.users.slice(startIndex, endIndex);
   }
 
-  // Pagination methods
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -91,46 +104,42 @@ export class PdsComponent implements OnInit {
     }
   }
 
-  get totalPagesArray(): number[] {
-    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
-  }
-
   viewPds(): void {
-    this.isLoading = true;
-
-    this.pdsService.downloadPDS().subscribe(
-      (response: Blob) => {
-        const blob = new Blob([response], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error downloading personal PDS', error);
-        this.isLoading = false;
-        this.showToastNotification('Error downloading personal PDS. Please try again.', 'error');
-      }
-    );
+    if (this.userId) {
+      this.isLoading = true;
+      this.pdsService.downloadPDS().subscribe(
+        (pdfBlob: Blob) => {
+          const pdfUrl = URL.createObjectURL(pdfBlob);
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfUrl);
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error generating PDS', error);
+          this.isLoading = false;
+          this.showToastNotification('Failed to generate PDS. Please try again.', 'error');
+        }
+      );
+    }
   }
 
   downloadPds(): void {
     this.isLoading = true;
-
     this.pdsService.downloadPDS().subscribe(
-      (response: Blob) => {
-        const blob = new Blob([response], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'personal_pds.pdf';
-        link.click();
+      (pdfBlob: Blob) => {
+        const url = window.URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.setAttribute('style', 'display: none');
+        a.href = url;
+        a.download = `PDS_${this.userId}.pdf`;
+        a.click();
         window.URL.revokeObjectURL(url);
         this.isLoading = false;
       },
       (error) => {
-        console.error('Error downloading personal PDS', error);
+        console.error('Error downloading PDS', error);
         this.isLoading = false;
-        this.showToastNotification('Error downloading personal PDS. Please try again.', 'error');
+        this.showToastNotification('Failed to download PDS. Please try again.', 'error');
       }
     );
   }
@@ -138,35 +147,41 @@ export class PdsComponent implements OnInit {
   downloadUserPds(userId: number): void {
     console.log('Requesting PDS for user ID:', userId);
     this.isLoading = true;
-
-    this.pdsService.downloadPDSForUser(userId).subscribe({
-      next: (response: Blob) => {
-        const blob = new Blob([response], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `user_${userId}_pds.pdf`;
-        link.click();
+    this.pdsService.downloadPDSForUser(userId).subscribe(
+      (pdfBlob: Blob) => {
+        const url = window.URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.setAttribute('style', 'display: none');
+        a.href = url;
+        a.download = `PDS_${userId}.pdf`;
+        a.click();
         window.URL.revokeObjectURL(url);
         this.isLoading = false;
-        this.showToastNotification('PDS downloaded successfully.', 'success');
       },
-      error: (error) => {
-        console.error('Error downloading user PDS', error);
-        console.error('Error details:', error.error);
+      (error) => {
+        console.error('Error downloading PDS for user', error);
         this.isLoading = false;
-        let errorMessage = 'Error generating PDS. Please try again.';
-        if (error.status === 400) {
-          errorMessage = 'Bad request. Please check the user ID and try again.';
-        } else if (error.status === 404 && error.error?.message === 'User details not found') {
-          errorMessage = 'The information for this user is incomplete.';
-        }
-        this.showToastNotification(errorMessage, 'error');
+        this.showToastNotification('Failed to download PDS. Please try again.', 'error');
       }
-    });
+    );
   }
 
-  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+  getRoleName(roles: any[]): string {
+    const relevantRoles = roles.filter(role => 
+      role.RoleName.toLowerCase() === 'faculty' || 
+      role.RoleName.toLowerCase() === 'staff'
+    );
+    
+    if (relevantRoles.length > 0) {
+      return relevantRoles.map(role => 
+        role.RoleName.charAt(0).toUpperCase() + role.RoleName.slice(1).toLowerCase()
+      ).join(', ');
+    }
+    return 'N/A';
+  }
+
+  showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
     this.errorMessage = message;
     this.toastType = type;
     this.showToast = true;
@@ -176,19 +191,7 @@ export class PdsComponent implements OnInit {
     }, 3000); // Hide toast after 3 seconds
   }
 
-  getRoleName(roles: { RoleName: string }[]): string {
-    if (roles && roles.length > 0) {
-      const relevantRoles = roles.filter(role => 
-        role.RoleName.toLowerCase() === 'faculty' || 
-        role.RoleName.toLowerCase() === 'staff'
-      );
-      
-      if (relevantRoles.length > 0) {
-        return relevantRoles.map(role => 
-          role.RoleName.charAt(0).toUpperCase() + role.RoleName.slice(1).toLowerCase()
-        ).join(', ');
-      }
-    }
-    return 'N/A';
+  get totalPagesArray(): number[] {
+    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
   }
 }
