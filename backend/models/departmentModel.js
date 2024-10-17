@@ -22,6 +22,14 @@ const Department = sequelize.define('Department', {
       model: 'users',
       key: 'UserID'
     }
+  },
+  CollegeCampusID: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'collegecampuses',
+      key: 'CollegeCampusID'
+    }
   }
 }, {
   tableName: 'departments',

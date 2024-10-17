@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const User = require('../models/userModel');
-const { Department } = require('../models/associations');
+const { Department, CollegeCampus } = require('../models/associations');
 const Role = require('../models/roleModel'); // Add this line
 const bcrypt = require('bcrypt');
 require('dotenv').config();
@@ -47,8 +47,15 @@ exports.addUser = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
   try {
+    const { campusId } = req.query;
+
+    let whereClause = { isActive: true };
+    if (campusId) {
+      whereClause.CollegeCampusID = campusId;
+    }
+
     const users = await User.findAll({
-      where: { isActive: true }, // Add this line to filter active users
+      where: whereClause,
       include: [
         {
           model: Department,
@@ -56,17 +63,23 @@ exports.getUsers = async (req, res) => {
           attributes: ['DepartmentName']
         },
         {
-          model: Role, // Include the roles in the response
+          model: Role,
           as: 'Roles', 
-          through: { attributes: [] }, // Include roles without join table attributes
+          through: { attributes: [] },
           attributes: ['RoleName']
+        },
+        {
+          model: CollegeCampus,
+          as: 'CollegeCampus',
+          attributes: ['Name']
         }
       ]
     });
-    res.status(200).json(users);
+
+    res.json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
@@ -155,6 +168,41 @@ exports.toggleUserActiveStatus = async (req, res) => {
     res.status(200).json({ message: 'User status updated', isActive: user.isActive });
   } catch (error) {
     console.error('Error toggling user status:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+
+exports.getCurrentUserCampus = async (req, res) => {
+  console.log('getCurrentUserCampus controller method called');
+  const userId = req.params.userId;
+  console.log('User ID:', userId);
+  try {
+    const user = await User.findByPk(userId, {
+      include: [{ model: CollegeCampus, as: 'CollegeCampus' }]
+    });
+    if (!user || !user.CollegeCampus) {
+      console.log('Campus not found for user');
+      return res.status(404).json({ message: 'Campus not found for user' });
+    }
+    console.log('User campus found:', user.CollegeCampus);
+    res.json(user.CollegeCampus);
+  } catch (error) {
+    console.error('Error in getCurrentUserCampus:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+exports.updateUserCampus = async (req, res) => {
+  try {
+    const userId = req.user.UserID; // Assuming you have user info in the request
+    const { campusId } = req.body;
+    
+    await User.update({ CollegeCampusID: campusId }, { where: { UserID: userId } });
+    
+    res.status(200).json({ message: 'Campus updated successfully' });
+  } catch (error) {
+    console.error('Error updating user campus:', error);
     res.status(500).send('Internal Server Error');
   }
 };

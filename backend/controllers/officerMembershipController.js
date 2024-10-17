@@ -39,6 +39,9 @@ exports.addOfficershipMembership = [
         console.log(req.file);
         const proofUrl = await uploadFileToS3(req.file);
         membershipData.Proof = proofUrl;
+        membershipData.ProofType = 'file';
+      } else if (membershipData.Proof) {
+        membershipData.ProofType = 'link';
       }
 
       const newMembership = await OfficershipMembership.create(membershipData);
@@ -64,7 +67,7 @@ exports.updateOfficershipMembership = [
       }
 
       if (req.file) {
-        if (membership.Proof) {
+        if (membership.Proof && membership.ProofType === 'file') {
           const oldS3Key = membership.Proof.split('/').pop();
           const deleteParams = { Bucket: S3_BUCKET_NAME, Key: oldS3Key };
           await s3Client.send(new DeleteObjectCommand(deleteParams));
@@ -72,6 +75,9 @@ exports.updateOfficershipMembership = [
 
         const proofUrl = await uploadFileToS3(req.file);
         updates.Proof = proofUrl;
+        updates.ProofType = 'file';
+      } else if (updates.Proof && updates.Proof !== membership.Proof) {
+        updates.ProofType = 'link';
       }
 
       const [updated] = await OfficershipMembership.update(updates, { where: { OfficershipMembershipID: id } });

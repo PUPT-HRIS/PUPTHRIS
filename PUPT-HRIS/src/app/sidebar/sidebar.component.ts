@@ -146,6 +146,8 @@ export class SidebarComponent implements OnInit {
       this.activeItem = 'settings';
     } else if (url.includes('coordinator-management')) {
       this.activeItem = 'coordinator-management';
+    } else if (url.includes('college-campuses')) {
+      this.activeItem = 'college-campus-management';
     } else {
       this.activeItem = '';
     }
@@ -161,6 +163,10 @@ export class SidebarComponent implements OnInit {
   }
 
   get canManageCoordinators(): boolean {
+    return this.hasRole('superadmin');
+  }
+
+  get canManageCollegeCampuses(): boolean {
     return this.hasRole('superadmin');
   }
 }

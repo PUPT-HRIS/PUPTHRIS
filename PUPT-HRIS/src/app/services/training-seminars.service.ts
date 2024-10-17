@@ -24,13 +24,13 @@ export class TrainingSeminarsService {
     );
   }
 
-  addTraining(training: TrainingSeminar): Observable<TrainingSeminar> {
+  addTraining(training: FormData): Observable<TrainingSeminar> {
     return this.http.post<TrainingSeminar>(`${this.apiUrl}/add`, training, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
-  updateTraining(id: number, training: TrainingSeminar): Observable<TrainingSeminar> {
+  updateTraining(id: number, training: FormData): Observable<TrainingSeminar> {
     return this.http.patch<TrainingSeminar>(`${this.apiUrl}/update/${id}`, training, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );

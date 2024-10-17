@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { BasicDetailsService } from '../../services/basic-details.service';
 import { EducationService } from '../../services/education.service';
@@ -25,6 +25,8 @@ import { VoluntaryWork } from '../../model/voluntary-work.model';
 import { CharacterReference } from '../../model/character-reference.model';
 import { CommonModule } from '@angular/common';
 import { RoleName, Role } from '../../model/role.model';
+import { CampusContextService } from '../../services/campus-context.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-employee',
@@ -33,7 +35,7 @@ import { RoleName, Role } from '../../model/role.model';
   standalone: true,
   imports: [CommonModule]
 })
-export class EmployeeComponent implements OnInit {
+export class EmployeeComponent implements OnInit, OnDestroy {
   users: User[] = [];
   paginatedUsers: User[] = []; // To hold the users for the current page
   basicDetails: BasicDetails | null = null;
@@ -50,13 +52,15 @@ export class EmployeeComponent implements OnInit {
   isModalOpen: boolean = false;
   activeTab: string = 'basic';
   roleName = RoleName;
-
+  campusId: number | null = null;
   // Pagination variables
   currentPage: number = 1;
   itemsPerPage: number = 10; // Set the number of users per page to 10
   totalPages: number = 0;
+  private campusSubscription: Subscription | undefined;
 
   constructor(
+    private campusContextService: CampusContextService,
     private userService: UserService,
     private basicDetailsService: BasicDetailsService,
     private educationService: EducationService,
@@ -72,11 +76,29 @@ export class EmployeeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadActiveUsers();
+    this.campusSubscription = this.campusContextService.getCampusId().subscribe(
+      id => {
+        console.log('Received campus ID:', id);
+        if (id !== null) {
+          this.campusId = id;
+          this.loadActiveUsers();
+        }
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.campusSubscription) {
+      this.campusSubscription.unsubscribe();
+    }
   }
 
   loadActiveUsers(): void {
-    this.userService.getUsers().subscribe(
+    if (this.campusId === null) {
+      console.error('Campus ID is null');
+      return;
+    }
+    this.userService.getUsers(this.campusId).subscribe(
       (data) => {
         this.users = data;
         this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
@@ -97,19 +119,6 @@ export class EmployeeComponent implements OnInit {
       return roles[0].RoleName; // Return the first role if none of the above match
     }
     return 'Unknown';
-  }
-
-  loadUsers(): void {
-    this.userService.getUsers().subscribe(
-      (data) => {
-        this.users = data;
-        this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
-        this.paginateUsers();
-      },
-      (error) => {
-        console.error('Error fetching users', error);
-      }
-    );
   }
 
   // Method to paginate users based on the current page

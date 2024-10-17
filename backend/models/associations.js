@@ -5,6 +5,13 @@ const CivilServiceEligibility = require('./CivilServiceEligibility');
 const WorkExperience = require('./workexperienceModel');
 const BasicDetails = require('./basicDetailsModel');
 const AcademicRank = require('./academicRanksModel');
+const CollegeCampus = require('./collegeCampusModel');
+const Role = require('./roleModel');
+
+// CollegeCampus and User associations
+CollegeCampus.hasMany(User, { foreignKey: 'CollegeCampusID', as: 'Users' });
+User.belongsTo(CollegeCampus, { foreignKey: 'CollegeCampusID', as: 'CollegeCampus' });
+
 // User and Department associations
 Department.hasMany(User, { foreignKey: 'DepartmentID', as: 'Users' });
 User.belongsTo(Department, { foreignKey: 'DepartmentID', as: 'Department' });
@@ -15,7 +22,7 @@ Department.belongsTo(Coordinator, {
     as: 'Coordinator',
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE'
-  });
+});
 
 Coordinator.belongsTo(User, { foreignKey: 'UserID' });
 Coordinator.belongsTo(Department, { foreignKey: 'DepartmentID' });
@@ -36,5 +43,20 @@ BasicDetails.belongsTo(User, { foreignKey: 'UserID' });
 User.hasOne(AcademicRank, { foreignKey: 'UserID' });
 AcademicRank.belongsTo(User, { foreignKey: 'UserID' });
 
+// You might want to add an association between Department and CollegeCampus if needed
+CollegeCampus.hasMany(Department, { foreignKey: 'CollegeCampusID', as: 'Departments' });
+Department.belongsTo(CollegeCampus, { foreignKey: 'CollegeCampusID', as: 'CollegeCampus' });
 
-module.exports = { User, Department, Coordinator, CivilServiceEligibility, WorkExperience };
+User.belongsToMany(Role, { through: 'UserRoles', foreignKey: 'UserID' });
+Role.belongsToMany(User, { through: 'UserRoles', foreignKey: 'RoleID' });
+
+module.exports = { 
+    User, 
+    Department, 
+    Coordinator, 
+    CivilServiceEligibility, 
+    WorkExperience, 
+    BasicDetails, 
+    AcademicRank, 
+    CollegeCampus 
+};

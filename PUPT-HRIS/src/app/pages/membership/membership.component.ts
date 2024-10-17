@@ -2,8 +2,10 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { OfficershipMembershipService } from '../../services/officership-membership.service';
 import { AuthService } from '../../services/auth.service';
+import { ExcelImportService } from '../../services/excel-import.service';
 import { CommonModule } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
+import { OfficershipMembership } from '../../model/officership-membership.model';
 
 @Component({
   selector: 'app-officership-membership',
@@ -14,15 +16,16 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class OfficershipMembershipComponent implements OnInit {
   membershipForm: FormGroup;
-  memberships: any[] = [];
-  paginatedMemberships: any[] = [];
+  memberships: OfficershipMembership[] = [];
+  paginatedMemberships: OfficershipMembership[] = [];
   isEditing: boolean = false;
   currentMembershipId: number | null = null;
   userId: number;
-  selectedFile: File | null = null;
+  fileToUpload: File | null = null;
   selectedFileName: string | null = null;
   selectedProofUrl: string | null = null;
   selectedSupportingDocument: string | null = null;
+  selectedProofType: 'file' | 'link' | null = null;
   isModalOpen: boolean = false;
   currentPage: number = 1;
   itemsPerPage: number = 5;
@@ -36,6 +39,7 @@ export class OfficershipMembershipComponent implements OnInit {
     private fb: FormBuilder,
     private membershipService: OfficershipMembershipService,
     private authService: AuthService,
+    private excelImportService: ExcelImportService,
     private cdr: ChangeDetectorRef
   ) {
     const token = this.authService.getToken();
@@ -57,8 +61,10 @@ export class OfficershipMembershipComponent implements OnInit {
       Remarks: [''],
       SupportingDocument: [''],
       Proof: [''],
+      ProofType: ['file']
     });
   }
+
 
   ngOnInit(): void {
     this.loadMemberships();
@@ -72,7 +78,10 @@ export class OfficershipMembershipComponent implements OnInit {
         this.updatePaginatedData();
       },
       (error) => {
-        console.error('Error fetching memberships:', error);
+        if (error.status !== 404) {
+          this.showToastNotification('Error fetching officership/membership data.', 'error');
+        }
+        console.error('Error fetching officership/membership data', error);
       }
     );
   }
@@ -108,17 +117,104 @@ export class OfficershipMembershipComponent implements OnInit {
     return Array(this.totalPages).fill(0).map((_, i) => i + 1);
   }
 
-  openProofModal(proofUrl: string, supportingDocument?: string): void {
+  addNewMembership(): void {
+    this.resetForm(false);
+    this.isEditing = true;
+  }
+
+  editMembership(id: number): void {
+    const membership = this.memberships.find(m => m.OfficershipMembershipID === id);
+    if (membership) {
+      this.isEditing = true;
+      this.currentMembershipId = id;
+      this.membershipForm.patchValue(membership);
+    }
+  }
+
+  onSubmit(): void {
+    const formData = new FormData();
+
+    Object.keys(this.membershipForm.value).forEach((key) => {
+      if (key !== 'Proof' || this.membershipForm.get('ProofType')?.value === 'link') {
+        formData.append(key, this.membershipForm.get(key)?.value || '');
+      }
+    });
+
+    formData.append('UserID', this.userId.toString());
+
+    if (this.membershipForm.get('ProofType')?.value === 'file' && this.fileToUpload) {
+      formData.append('proof', this.fileToUpload);
+    }
+
+    if (this.currentMembershipId) {
+      this.membershipService.updateMembership(this.currentMembershipId, formData).subscribe(
+        (response) => {
+          this.loadMemberships();
+          this.resetForm();
+          this.showToastNotification('Officership/Membership updated successfully.', 'success');
+        },
+        (error) => {
+          this.showToastNotification('There is an error saving/updating the changes.', 'error');
+        }
+      );
+    } else {
+      this.membershipService.addMembership(formData).subscribe(
+        (response) => {
+          this.loadMemberships();
+          this.resetForm();
+          this.showToastNotification('Officership/Membership added successfully.', 'success');
+        },
+        (error) => {
+          this.showToastNotification('There is an error saving/updating the changes.', 'error');
+        }
+      );
+    }
+  }
+
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.fileToUpload = file;
+      this.selectedFileName = file.name;
+    }
+  }
+
+  deleteMembership(id: number): void {
+    if (confirm('Are you sure you want to delete this record?')) {
+      this.membershipService.deleteMembership(id).subscribe(
+        (response) => {
+          this.memberships = this.memberships.filter(membership => membership.OfficershipMembershipID !== id);
+          this.showToastNotification('Officership/Membership deleted successfully.', 'success');
+        },
+        (error) => {
+          this.showToastNotification('Error deleting officership/membership.', 'error');
+          console.error('Error deleting officership/membership', error);
+        }
+      );
+    }
+  }
+
+  openProofModal(proofUrl: string, supportingDocument?: string, proofType?: 'file' | 'link'): void {
     this.selectedProofUrl = proofUrl;
     this.selectedSupportingDocument = supportingDocument || 'No description available';
+    this.selectedProofType = proofType || 'file';
     this.isModalOpen = true;
-    this.cdr.detectChanges();
   }
 
   closeModal(): void {
     this.selectedProofUrl = null;
     this.isModalOpen = false;
-    this.cdr.detectChanges();
+  }
+
+  resetForm(showToast: boolean = true): void {
+    this.membershipForm.reset();
+    this.fileToUpload = null;
+    this.selectedFileName = null;
+    this.currentMembershipId = null;
+    this.isEditing = false;
+    if (showToast) {
+      this.showToastNotification('Form reset', 'warning');
+    }
   }
 
   isImage(url: string): boolean {
@@ -127,17 +223,6 @@ export class OfficershipMembershipComponent implements OnInit {
 
   onImageError(): void {
     alert('Failed to load image. Please check the URL.');
-  }
-
-  resetForm(showToast: boolean = true): void {
-    this.membershipForm.reset();
-    this.currentMembershipId = null;
-    this.isEditing = false;
-    this.selectedFile = null;
-    this.selectedFileName = null;
-    if (showToast) {
-      this.showToastNotification('Form reset', 'warning');
-    }
   }
 
   showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
@@ -149,81 +234,19 @@ export class OfficershipMembershipComponent implements OnInit {
     }, 3000);
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
-      this.selectedFileName = input.files[0].name;
-    } else {
-      this.selectedFileName = 'No file chosen';
-      this.selectedFile = null;
-    }
-  }
-
-  onSubmit(): void {
-    const membershipData = { ...this.membershipForm.value, UserID: this.userId };
-    const formData = new FormData();
-
-    Object.keys(membershipData).forEach((key) => {
-      formData.append(key, membershipData[key]);
-    });
-
-    if (this.selectedFile) {
-      formData.append('proof', this.selectedFile);
-    }
-
-    if (this.currentMembershipId) {
-      this.membershipService.updateMembership(this.currentMembershipId, formData).subscribe(
+  importExcelData(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.excelImportService.importExcelData(file, this.userId).subscribe(
         (response) => {
           this.loadMemberships();
-          this.resetForm();
-          this.showToastNotification('Membership updated successfully.', 'success');
+          this.showToastNotification('Data imported successfully', 'success');
         },
         (error) => {
-          this.showToastNotification('There is an error saving/updating the changes.', 'error');
-        }
-      );
-    } else {
-      this.membershipService.addMembership(formData).subscribe(
-        (response) => {
-          this.loadMemberships();
-          this.resetForm();
-          this.showToastNotification('Membership added successfully.', 'success');
-        },
-        (error) => {
-          this.showToastNotification('There is an error saving/updating the changes.', 'error');
+          this.showToastNotification('Error importing data', 'error');
+          console.error('Error importing data', error);
         }
       );
     }
-  }
-
-  editMembership(id: number): void {
-    const membership = this.memberships.find((m) => m.OfficershipMembershipID === id);
-    if (membership) {
-      this.membershipForm.patchValue(membership);
-      this.currentMembershipId = id;
-      this.isEditing = true;
-    }
-  }
-
-  deleteMembership(id: number): void {
-    if (confirm('Are you sure you want to delete this record?')) {
-      this.membershipService.deleteMembership(id).subscribe(
-        (response) => {
-          this.memberships = this.memberships.filter(
-            (m) => m.OfficershipMembershipID !== id
-          );
-          this.showToastNotification('Membership deleted successfully.', 'success');
-        },
-        (error) => {
-          this.showToastNotification('There is an error deleting the record.', 'error');
-        }
-      );
-    }
-  }
-
-  addNewMembership(): void {
-    this.resetForm(false);
-    this.isEditing = true;
   }
 }

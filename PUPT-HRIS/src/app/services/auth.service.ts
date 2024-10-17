@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { jwtDecode } from 'jwt-decode'; 
+import { CampusContextService } from './campus-context.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private apiUrl = `${environment.apiBaseUrl}/auth`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private injector: Injector) {}
 
   login(email: string, password: string): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { email, password }).pipe(
@@ -23,6 +24,9 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    // Use injector to get CampusContextService only when needed
+    const campusContextService = this.injector.get('CampusContextService');
+    campusContextService.clearCampusId();
   }
 
   getToken(): string | null {
@@ -82,5 +86,19 @@ export class AuthService {
   hasRole(role: string): boolean {
     const roles = this.getUserRoles();
     return roles.includes(role);
+  }
+
+  // Add this new method
+  getDecodedToken(): any | null {
+    const token = this.getToken();
+    if (token) {
+      try {
+        return jwtDecode(token);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
+    return null;
   }
 }

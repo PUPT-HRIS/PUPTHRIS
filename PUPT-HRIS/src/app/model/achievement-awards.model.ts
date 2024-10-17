@@ -10,4 +10,5 @@ export interface AchievementAward {
   Remarks?: string;
   SupportingDocument?: string;
   Proof?: string;
+  ProofType?: 'file' | 'link';
 }

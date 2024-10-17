@@ -1,36 +1,48 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { TrainingSeminarsService } from '../../services/training-seminars.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TrainingSeminar } from '../../model/training-seminars.model';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { TrainingSeminarsService } from '../../services/training-seminars.service';
 import { AuthService } from '../../services/auth.service';
+import { ExcelImportService } from '../../services/excel-import.service';
 import { jwtDecode } from 'jwt-decode';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-training-seminars',
   templateUrl: './training-seminars.component.html',
   styleUrls: ['./training-seminars.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class TrainingSeminarsComponent implements OnInit {
   trainingForm: FormGroup;
   trainingData: TrainingSeminar[] = [];
   paginatedTrainingData: TrainingSeminar[] = [];
   isEditing: boolean = false;
-  currentTrainingId: number | null | undefined = null;
+  currentTrainingId: number | null = null;
   userId: number;
-  initialFormValue: any;
-  currentPage: number = 1;
-  itemsPerPage: number = 5;
-  totalPages: number = 0;
+  fileToUpload: File | null = null;
+  selectedFileName: string | null = null;
+  isModalOpen: boolean = false;
+
+  selectedProofUrl: string | null = null;
+  selectedSupportingDocument: string | null = null;
+  selectedProofType: 'file' | 'link' = 'file';
 
   showToast: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'warning' = 'success';
 
-  constructor(private fb: FormBuilder, private trainingService: TrainingSeminarsService, private authService: AuthService) {
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
+
+  constructor(
+    private fb: FormBuilder,
+    private trainingSeminarsService: TrainingSeminarsService,
+    private authService: AuthService,
+    private excelImportService: ExcelImportService
+  ) {
     const token = this.authService.getToken();
     if (token) {
       const decoded: any = jwtDecode(token);
@@ -40,10 +52,20 @@ export class TrainingSeminarsComponent implements OnInit {
     }
 
     this.trainingForm = this.fb.group({
-      TrainingTitle: [''],
+      Title: [''],
+      Classification: [''],
+      Nature: [''],
+      Budget: [''],
+      SourceOfFund: [''],
+      Organizer: [''],
+      Level: [''],
+      Venue: [''],
       DateFrom: [''],
       DateTo: [''],
-      ConductedBy: ['']
+      NumberOfHours: [''],
+      SupportingDocuments: [''],
+      Proof: [''],
+      ProofType: ['file']
     });
   }
 
@@ -52,14 +74,16 @@ export class TrainingSeminarsComponent implements OnInit {
   }
 
   loadTrainings(): void {
-    this.trainingService.getTrainings(this.userId).subscribe(
-      data => {
+    this.trainingSeminarsService.getTrainings(this.userId).subscribe(
+      (data) => {
         this.trainingData = data;
         this.totalPages = Math.ceil(this.trainingData.length / this.itemsPerPage);
         this.updatePaginatedData();
       },
-      error => {
-        this.showToastNotification('Error fetching trainings data.', 'error');
+      (error) => {
+        if (error.status !== 404) {
+          this.showToastNotification('Error fetching trainings data.', 'error');
+        }
         console.error('Error fetching trainings data', error);
       }
     );
@@ -93,97 +117,141 @@ export class TrainingSeminarsComponent implements OnInit {
   }
 
   get totalPagesArray(): number[] {
-    return Array(this.totalPages).fill(0).map((_, i) => i + 1);
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  editTraining(training: TrainingSeminar): void {
+  addNewTraining(): void {
     this.isEditing = true;
-    this.currentTrainingId = training.TrainingID;
-    this.trainingForm.patchValue(training);
-    this.initialFormValue = this.trainingForm.getRawValue();
+    this.currentTrainingId = null;
+    this.trainingForm.reset();
   }
 
-  toggleForm(): void {
-    this.isEditing = !this.isEditing;
-
-    if (this.isEditing) {
-      this.trainingForm.reset();
-      this.currentTrainingId = null;
-      this.initialFormValue = this.trainingForm.getRawValue();
-    } else {
-      if (this.hasUnsavedChanges()) {
-        this.showToastNotification('The changes are not saved.', 'error');
-      }
+  editTraining(id: number): void {
+    const training = this.trainingData.find(t => t.TrainingID === id);
+    if (training) {
+      this.trainingForm.patchValue(training);
+      this.currentTrainingId = id;
+      this.isEditing = true;
     }
   }
 
   onSubmit(): void {
-    if (!this.hasUnsavedChanges()) {
-      this.showToastNotification('There are no current changes to be saved.', 'warning');
+    if (this.trainingForm.invalid) {
+      this.showToastNotification('Please fill in all required fields.', 'error');
       return;
     }
 
-    const trainingData = { ...this.trainingForm.value, UserID: this.userId };
+    const formData = new FormData();
+    Object.keys(this.trainingForm.value).forEach(key => {
+      formData.append(key, this.trainingForm.get(key)?.value);
+    });
+    formData.append('UserID', this.userId.toString());
 
-    if (this.currentTrainingId !== null && this.currentTrainingId !== undefined) {
-      this.trainingService.updateTraining(this.currentTrainingId, trainingData).subscribe(
-        response => {
+    if (this.fileToUpload) {
+      formData.append('Proof', this.fileToUpload, this.fileToUpload.name);
+    }
+
+    if (this.currentTrainingId) {
+      this.trainingSeminarsService.updateTraining(this.currentTrainingId, formData).subscribe(
+        (response) => {
           this.loadTrainings();
-          this.toggleForm();
-          this.showToastNotification('Information updated successfully.', 'success');
+          this.resetForm();
+          this.showToastNotification('Training updated successfully.', 'success');
         },
-        error => {
-          this.showToastNotification('There is an error saving/updating the changes.', 'error');
+        (error) => {
+          this.showToastNotification('Error updating training.', 'error');
           console.error('Error updating training', error);
         }
       );
     } else {
-      this.trainingService.addTraining(trainingData).subscribe(
-        response => {
+      this.trainingSeminarsService.addTraining(formData).subscribe(
+        (response) => {
           this.loadTrainings();
-          this.toggleForm();
+          this.resetForm();
           this.showToastNotification('Training added successfully.', 'success');
         },
-        error => {
-          this.showToastNotification('There is an error saving/updating the changes.', 'error');
+        (error) => {
+          this.showToastNotification('Error adding training.', 'error');
           console.error('Error adding training', error);
         }
       );
     }
   }
 
-  deleteTraining(id: number | undefined): void {
-    if (id === undefined) {
-      this.showToastNotification('Invalid Training ID.', 'error');
-      return;
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.fileToUpload = file;
+      this.selectedFileName = file.name;
     }
-  
-    if (confirm('Are you sure you want to delete this training?')) {
-      this.trainingService.deleteTraining(id).subscribe(
-        response => {
-          this.loadTrainings();
-          this.showToastNotification('Training record deleted successfully.', 'success');
+  }
+
+  deleteTraining(id: number): void {
+    if (confirm('Are you sure you want to delete this record?')) {
+      this.trainingSeminarsService.deleteTraining(id).subscribe(
+        (response) => {
+          this.trainingData = this.trainingData.filter(training => training.TrainingID !== id);
+          this.updatePaginatedData();
+          this.showToastNotification('Training deleted successfully.', 'success');
         },
-        error => {
-          this.showToastNotification('There was an error deleting the training.', 'error');
+        (error) => {
+          this.showToastNotification('Error deleting training.', 'error');
           console.error('Error deleting training', error);
         }
       );
     }
-  }  
-
-  private hasUnsavedChanges(): boolean {
-    const currentFormValue = this.trainingForm.getRawValue();
-    return JSON.stringify(currentFormValue) !== JSON.stringify(this.initialFormValue);
   }
 
-  private showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
+  openProofModal(proofUrl: string, supportingDocument?: string): void {
+    this.selectedProofUrl = proofUrl;
+    this.selectedSupportingDocument = supportingDocument || 'No description available';
+    this.selectedProofType = this.isImage(proofUrl) ? 'file' : 'link';
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.selectedProofUrl = null;
+    this.isModalOpen = false;
+  }
+
+  resetForm(): void {
+    this.trainingForm.reset();
+    this.fileToUpload = null;
+    this.selectedFileName = null;
+    this.currentTrainingId = null;
+    this.isEditing = false;
+  }
+
+  isImage(url: string): boolean {
+    return /\.(jpg|jpeg|png|gif)$/i.test(url);
+  }
+
+  onImageError(): void {
+    this.showToastNotification('Failed to load image. Please check the URL.', 'error');
+  }
+
+  showToastNotification(message: string, type: 'success' | 'error' | 'warning'): void {
     this.toastMessage = message;
     this.toastType = type;
     this.showToast = true;
-
     setTimeout(() => {
       this.showToast = false;
-    }, 3000); // Hide toast after 3 seconds
+    }, 3000);
+  }
+
+  importExcelData(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.excelImportService.importExcelData(file, this.userId).subscribe(
+        (response) => {
+          this.loadTrainings();
+          this.showToastNotification('Data imported successfully', 'success');
+        },
+        (error) => {
+          this.showToastNotification('Error importing data', 'error');
+          console.error('Error importing data', error);
+        }
+      );
+    }
   }
 }

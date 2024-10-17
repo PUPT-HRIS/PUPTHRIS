@@ -15,7 +15,35 @@ const Trainings = sequelize.define('trainings_seminars', {
     },
     allowNull: false,
   },
-  TrainingTitle: {
+  Title: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  Classification: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  Nature: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  Budget: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: true,
+  },
+  SourceOfFund: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  },
+  Organizer: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  Level: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  Venue: {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
@@ -27,9 +55,22 @@ const Trainings = sequelize.define('trainings_seminars', {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  ConductedBy: {
+  NumberOfHours: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  SupportingDocuments: {
     type: DataTypes.STRING(255),
     allowNull: false,
+  },
+  Proof: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  ProofType: {
+    type: DataTypes.ENUM('file', 'link'),
+    allowNull: false,
+    defaultValue: 'file',
   },
 }, {
   tableName: 'trainings_seminars',
