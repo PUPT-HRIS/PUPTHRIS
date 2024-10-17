@@ -2,10 +2,29 @@
 
 <div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
-    <h1 class="text-2xl font-bold">Change Password</h1>
+    <h1 class="text-2xl font-bold">Settings</h1>
   </div>
 
-  <div class="p-6 space-y-12"> <!-- Increased vertical spacing between form elements -->
+  <div class="p-6 space-y-12">
+    <!-- Campus Selection Form -->
+    <form [formGroup]="campusForm" (ngSubmit)="onCampusChange()">
+      <div class="form-control w-full mb-10">
+        <label for="selectedCampus" class="label-text font-bold text-lg">Select Campus</label>
+        <select
+          id="selectedCampus"
+          formControlName="selectedCampus"
+          class="select select-bordered w-full"
+          (change)="onCampusChange()"
+        >
+          <option value="">Select a campus</option>
+          <option *ngFor="let campus of campuses" [value]="campus.CollegeCampusID">
+            {{ campus.Name }}
+          </option>
+        </select>
+      </div>
+    </form>
+
+    <!-- Change Password Form -->
     <form [formGroup]="changePasswordForm" (ngSubmit)="onSubmit()">
       <div class="form-control w-full mb-10"> <!-- Further increased bottom margin -->
         <label for="currentPassword" class="label-text font-bold text-lg">Current Password</label>
@@ -68,4 +87,3 @@
     <span>{{ toastMessage }}</span>
   </div>
 </div>
-

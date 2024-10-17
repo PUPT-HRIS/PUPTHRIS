@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { CollegeCampus } from '../model/college-campus.model'; // You'll need to create this model
 import { environment } from '../../environments/environment';
 
@@ -19,8 +19,12 @@ export class CollegeCampusService {
   }
 
   getCollegeCampuses(): Observable<CollegeCampus[]> {
+    console.log('Fetching college campuses from:', this.apiUrl);
     return this.http.get<CollegeCampus[]>(this.apiUrl, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        tap(campuses => console.log('College campuses fetched:', campuses)),
+        catchError(this.handleError)
+      );
   }
 
   getCollegeCampusById(id: number): Observable<CollegeCampus> {

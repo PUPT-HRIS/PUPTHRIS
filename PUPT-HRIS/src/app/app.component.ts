@@ -6,16 +6,18 @@ import { LoginComponent } from "./login/login.component";
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
+import { CampusContextService } from './services/campus-context.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [SidebarComponent, NavbarComponent, RouterModule, LoginComponent, CommonModule,MainLayoutComponent],
+  providers: [CampusContextService],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private campusContextService: CampusContextService) {}
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
@@ -24,5 +26,8 @@ export class AppComponent {
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
+  }
+  onCampusChanged(campusId: number): void {
+    this.campusContextService.setCampusId(campusId);
   }
 }
