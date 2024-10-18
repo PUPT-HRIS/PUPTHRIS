@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { CampusContextService } from '../services/campus-context.service';
+import { UserService } from '../services/user.service';
+import { AuthService } from '../services/auth.service';
+import { Subscription, combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,13 +14,23 @@ import { jwtDecode } from 'jwt-decode';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   activeItem: string = '';
   isProfileDropdownOpen: boolean = false;
   roles: string[] = [];
   isReportsDropdownOpen: boolean = false;
   isReportsActive: boolean = false;
-  constructor(private router: Router) {
+  private userDefaultCampusId: number | null = null;
+  private currentCampusId: number | null = null;
+  private campusSubscription: Subscription = new Subscription();
+
+  constructor(
+    private router: Router,
+    private campusContextService: CampusContextService,
+    private userService: UserService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.setActiveItemBasedOnRoute(event.urlAfterRedirects);
@@ -33,6 +47,23 @@ export class SidebarComponent implements OnInit {
 
     // Set active item based on the initial route
     this.setActiveItemBasedOnRoute(this.router.url);
+
+    // Combine observables for default campus and current campus
+    this.campusSubscription = combineLatest([
+      this.campusContextService.getUserDefaultCampus(),
+      this.campusContextService.getCampusId()
+    ]).subscribe(([defaultCampusId, currentCampusId]) => {
+      this.userDefaultCampusId = defaultCampusId;
+      this.currentCampusId = currentCampusId;
+      this.updateCurrentCampus();
+      this.cdr.detectChanges(); // Force change detection
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.campusSubscription) {
+      this.campusSubscription.unsubscribe();
+    }
   }
 
   hasRole(role: string): boolean {
@@ -168,5 +199,17 @@ export class SidebarComponent implements OnInit {
 
   get canManageCollegeCampuses(): boolean {
     return this.hasRole('superadmin');
+  }
+
+  private updateCurrentCampus(): void {
+    console.log('Current campus updated:', this.currentCampusId);
+    console.log('Default campus:', this.userDefaultCampusId);
+    console.log('Can add new account:', this.canAddNewAccount);
+    // Implement any logic that depends on the current campus
+  }
+
+  get canAddNewAccount(): boolean {
+    return (this.hasRole('superadmin') || this.hasRole('admin')) && 
+           this.currentCampusId === this.userDefaultCampusId;
   }
 }

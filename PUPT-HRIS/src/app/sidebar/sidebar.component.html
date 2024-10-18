@@ -45,8 +45,8 @@
     [class.active]="activeItem === 'employees'"><i class="fas fa-users mr-3"></i>Employees</a>
   </li>
 
-  <!-- New Account - Visible to Admin and Super Admin -->
-  <li *ngIf="canManageEmployees">
+  <!-- New Account - Visible to Admin and Super Admin only in their default campus -->
+  <li *ngIf="canAddNewAccount">
     <a id="new-account" class="sidebar-link" routerLink="/new-account" (click)="setActive('new-account')"
     [class.active]="activeItem === 'new-account'"><i class="fas fa-user-plus mr-3"></i>New Account</a>
   </li>
@@ -122,6 +122,7 @@
       <i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
   </li>
 </ul>
+
 
 
 

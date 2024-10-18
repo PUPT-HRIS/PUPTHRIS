@@ -32,7 +32,7 @@ export class SettingsComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private collegeCampusService: CollegeCampusService,
-    private campusContextService: CampusContextService
+    private campusContextService: CampusContextService,
   ) {
     this.changePasswordForm = this.fb.group({
       currentPassword: ['', Validators.required],
@@ -66,6 +66,12 @@ export class SettingsComponent implements OnInit {
         this.campusForm.patchValue({ selectedCampus: campusId });
       }
     });
+
+    // Load current campus
+    const currentCampusId = this.campusContextService.getCurrentCampusId();
+    if (currentCampusId) {
+      this.campusForm.patchValue({ selectedCampus: currentCampusId });
+    }
   }
 
   determineUserRole(): void {
@@ -121,7 +127,7 @@ export class SettingsComponent implements OnInit {
   onCampusChange(): void {
     const selectedCampusId = this.campusForm.get('selectedCampus')?.value;
     if (selectedCampusId) {
-      this.campusContextService.setCampusId(selectedCampusId);
+      this.campusContextService.updateCampus(Number(selectedCampusId));
       console.log('Campus changed to:', selectedCampusId);
       this.showToastNotification('Campus selection updated!', 'success');
     }
