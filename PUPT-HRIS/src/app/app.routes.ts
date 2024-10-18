@@ -44,7 +44,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'departments', component: DepartmentManagementComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin'] } },
+      { path: 'departments', component: DepartmentManagementComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin', 'admin'] } },
 
       { path: 'employees', component: EmployeeComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin', 'admin'] } },
       { path: 'new-account', component: NewAccountComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin', 'admin'] } },
@@ -72,7 +72,7 @@ export const routes: Routes = [
       { path: 'profile-image', component: ProfileImageComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
       { path: 'print-pds', component: PdsComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
       { path: 'academic-rank', component: AcademicRankComponent, canActivate: [RoleGuard], data: { expectedRoles: ['faculty', 'staff', 'admin', 'superadmin'] } },
-      { path: 'coordinator-management', component: CoordinatorManagementComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin'] } },
+      { path: 'coordinator-management', component: CoordinatorManagementComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin', 'admin'] } },
       { path: 'college-campuses', component: CollegeCampusManagementComponent, canActivate: [RoleGuard], data: { expectedRoles: ['superadmin'] } },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     ]

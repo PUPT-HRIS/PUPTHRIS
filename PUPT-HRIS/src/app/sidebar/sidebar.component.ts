@@ -72,7 +72,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   // Sidebar items visibility logic
   get canManageDepartments(): boolean {
-    return this.hasRole('superadmin');
+    return this.hasRole('superadmin') || this.hasRole('admin');
   }
 
   get canManageEmployees(): boolean {
@@ -194,7 +194,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   get canManageCoordinators(): boolean {
-    return this.hasRole('superadmin');
+    return this.hasRole('superadmin') || this.hasRole('admin');
   }
 
   get canManageCollegeCampuses(): boolean {
