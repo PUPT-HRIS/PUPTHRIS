@@ -205,10 +205,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
     console.log('Current campus updated:', this.currentCampusId);
     console.log('Default campus:', this.userDefaultCampusId);
     console.log('Can add new account:', this.canAddNewAccount);
+    console.log('Can manage users:', this.canManageUsers);
     // Implement any logic that depends on the current campus
   }
 
   get canAddNewAccount(): boolean {
+    return (this.hasRole('superadmin') || this.hasRole('admin')) && 
+           this.currentCampusId === this.userDefaultCampusId;
+  }
+
+  get canManageUsers(): boolean {
     return (this.hasRole('superadmin') || this.hasRole('admin')) && 
            this.currentCampusId === this.userDefaultCampusId;
   }

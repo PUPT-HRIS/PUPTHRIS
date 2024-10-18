@@ -34,7 +34,7 @@
       </a>
     </li>
 
-  <li *ngIf="canManageEmployees">
+  <li *ngIf="canManageUsers">
     <a id="user-management" class="sidebar-link" routerLink="/user-management" (click)="setActive('user-management')"
     [class.active]="activeItem === 'user-management'"><i class="fas fa-user-cog mr-3"></i>User Management</a>
   </li>
