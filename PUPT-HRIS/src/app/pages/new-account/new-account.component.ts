@@ -6,6 +6,8 @@ import { Department } from '../../model/department.model';
 import { Role } from '../../model/role.model'; // Import the Role model
 import { CommonModule } from '@angular/common';
 import { RoleService } from '../../services/role.service';
+import { CollegeCampusService } from '../../services/college-campus.service';
+import { CollegeCampus } from '../../model/college-campus.model';
 
 @Component({
   selector: 'app-new-account',
@@ -21,12 +23,16 @@ export class NewAccountComponent implements OnInit {
   toastType: 'success' | 'error' = 'success';
   departments: Department[] = []; // Array to store departments
   roles: Role[] = []; // Use the Role model here
+  collegeCampuses: CollegeCampus[] = [];
+  showCollegeCampus: boolean = false;
+  adminRoleId: string = ''; // We'll set this in ngOnInit
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private departmentService: DepartmentService,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private collegeCampusService: CollegeCampusService
   ) {
     this.newAccountForm = this.fb.group({
       Fcode: ['', Validators.required],
@@ -38,13 +44,15 @@ export class NewAccountComponent implements OnInit {
       EmploymentType: ['', Validators.required],
       Password: ['', [Validators.required, Validators.minLength(6)]],
       Roles: [[], Validators.required], // Multi-select for roles
-      DepartmentID: [{ value: '', disabled: true }]
+      DepartmentID: [{ value: '', disabled: true }],
+      CollegeCampusID: [{ value: '', disabled: true }],
     });
   }
 
   ngOnInit(): void {
     this.loadDepartments();
-    this.loadRoles();  // Load roles on initialization
+    this.loadRoles();
+    this.loadCollegeCampuses();
 
     this.newAccountForm.get('Roles')?.valueChanges.subscribe((selectedRoles: string[]) => {
       this.handleRoleSelection(selectedRoles);
@@ -55,6 +63,11 @@ export class NewAccountComponent implements OnInit {
     this.roleService.getRoles().subscribe({
       next: roles => {
         this.roles = roles;
+        // Find the admin role and store its ID
+        const adminRole = roles.find(role => role.RoleName.toLowerCase() === 'admin');
+        if (adminRole) {
+          this.adminRoleId = adminRole.RoleID.toString();
+        }
       },
       error: error => console.error('Error fetching roles', error)
     });
@@ -67,19 +80,40 @@ export class NewAccountComponent implements OnInit {
     });
   }
 
+  loadCollegeCampuses(): void {
+    this.collegeCampusService.getCollegeCampuses().subscribe({
+      next: campuses => this.collegeCampuses = campuses,
+      error: error => console.error('Error fetching college campuses', error)
+    });
+  }
+
   // Handle role selection logic
   handleRoleSelection(selectedRoles: string[]): void {
     const departmentControl = this.newAccountForm.get('DepartmentID');
+    const collegeCampusControl = this.newAccountForm.get('CollegeCampusID');
 
-    // Check if "staff" role is selected
-    const isStaffSelected = selectedRoles.includes('staff'); // Adjust to your exact RoleID value for 'staff'
+    const isStaffSelected = selectedRoles.includes(this.roles.find(r => r.RoleName.toLowerCase() === 'staff')?.RoleID?.toString() || '');
+    const isAdminSelected = selectedRoles.includes(this.adminRoleId);
 
     if (isStaffSelected) {
       departmentControl?.disable();
-      departmentControl?.setValue(''); // Clear department value when staff is selected
+      departmentControl?.setValue('');
     } else {
       departmentControl?.enable();
     }
+
+    if (isAdminSelected) {
+      this.showCollegeCampus = true;
+      collegeCampusControl?.enable();
+      collegeCampusControl?.setValidators(Validators.required);
+    } else {
+      this.showCollegeCampus = false;
+      collegeCampusControl?.disable();
+      collegeCampusControl?.clearValidators();
+      collegeCampusControl?.setValue('');
+    }
+
+    collegeCampusControl?.updateValueAndValidity();
   }
 
   // Update selected roles when checkbox changes
@@ -88,14 +122,15 @@ export class NewAccountComponent implements OnInit {
     const roleValue = event.target.value;
 
     if (event.target.checked) {
-      selectedRoles.push(roleValue); // Add role if checked
+      selectedRoles.push(roleValue);
     } else {
       const index = selectedRoles.indexOf(roleValue);
       if (index > -1) {
-        selectedRoles.splice(index, 1); // Remove role if unchecked
+        selectedRoles.splice(index, 1);
       }
     }
-    this.newAccountForm.get('Roles')?.setValue(selectedRoles); // Update the form control value
+    this.newAccountForm.get('Roles')?.setValue(selectedRoles);
+    this.handleRoleSelection(selectedRoles);
   }
 
   generatePassword(): string {
@@ -128,9 +163,14 @@ export class NewAccountComponent implements OnInit {
     if (this.newAccountForm.valid) {
       const formData = this.newAccountForm.value;
 
-      // Ensure the DepartmentID field is submitted with null if the role is "Staff"
-      if (formData.Roles.includes('staff')) {
-        formData.DepartmentID = null; // Set to null if staff is selected
+      // Handle DepartmentID
+      if (formData.Roles.includes(this.roles.find(r => r.RoleName.toLowerCase() === 'staff')?.RoleID)) {
+        formData.DepartmentID = null;
+      }
+
+      // Handle CollegeCampusID
+      if (!formData.Roles.includes(this.adminRoleId)) {
+        formData.CollegeCampusID = null;
       }
 
       this.userService.addUser(formData).subscribe({
@@ -140,7 +180,7 @@ export class NewAccountComponent implements OnInit {
           this.newAccountForm.markAsPristine();
         },
         error: error => {
-          console.log("Backend error details:", error); // Log the exact error
+          console.log("Backend error details:", error);
           this.showToast('error', 'Error creating account');
         }
       });

@@ -7,7 +7,7 @@ require('dotenv').config();
 
 exports.addUser = async (req, res) => {
   try {
-    const { Fcode, Surname, FirstName, MiddleName, NameExtension, Email, EmploymentType, Password, Roles, DepartmentID } = req.body;
+    const { Fcode, Surname, FirstName, MiddleName, NameExtension, Email, EmploymentType, Password, Roles, DepartmentID, CollegeCampusID } = req.body;
     
     // If DepartmentID is 'na' (Not Applicable), set it to null
     const finalDepartmentID = DepartmentID === 'na' ? null : DepartmentID;
@@ -27,13 +27,14 @@ exports.addUser = async (req, res) => {
       PasswordHash,
       Salt: salt,
       DepartmentID: finalDepartmentID,
-      isActive: true, // Explicitly set isActive to true (optional due to default value)
+      CollegeCampusID: CollegeCampusID || null, // Set CollegeCampusID to null if not provided
+      isActive: true,
     });
 
     // Assign roles to the user
     if (Roles && Roles.length > 0) {
-      const roles = await Role.findAll({ where: { RoleID: Roles } }); // Find selected roles by ID
-      await newUser.setRoles(roles); // Associate roles with the user
+      const roles = await Role.findAll({ where: { RoleID: Roles } });
+      await newUser.setRoles(roles, { through: { timestamps: false } });
     }
 
     await sendEmail(Email, Password, FirstName);
@@ -206,3 +207,4 @@ exports.updateUserCampus = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
