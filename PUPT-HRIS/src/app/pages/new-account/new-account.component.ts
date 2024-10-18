@@ -6,13 +6,25 @@ import { Department } from '../../model/department.model';
 import { Role } from '../../model/role.model'; // Import the Role model
 import { CommonModule } from '@angular/common';
 import { RoleService } from '../../services/role.service';
+import { trigger, transition, style, animate } from '@angular/animations'; // Import Angular animations
 
 @Component({
   selector: 'app-new-account',
   templateUrl: './new-account.component.html',
   styleUrls: ['./new-account.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule],
+  animations: [ // Add animations for toast
+    trigger('toastAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(20px)' }))
+      ])
+    ])
+  ]
 })
 export class NewAccountComponent implements OnInit {
   newAccountForm: FormGroup;
@@ -136,8 +148,11 @@ export class NewAccountComponent implements OnInit {
       this.userService.addUser(formData).subscribe({
         next: response => {
           this.showToast('success', 'Account created successfully');
-          this.newAccountForm.reset();
-          this.newAccountForm.markAsPristine();
+          // Delay the form reset to allow the toast to display
+          setTimeout(() => {
+            this.newAccountForm.reset();
+            this.newAccountForm.markAsPristine();
+          }, 100); // Adjust the delay as needed
         },
         error: error => {
           console.log("Backend error details:", error); // Log the exact error
