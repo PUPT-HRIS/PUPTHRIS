@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { RoleService } from '../../services/role.service';
 import { CollegeCampusService } from '../../services/college-campus.service';
 import { CollegeCampus } from '../../model/college-campus.model';
+import { AuthService } from '../../services/auth.service'; // Add this import
 
 @Component({
   selector: 'app-new-account',
@@ -26,13 +27,15 @@ export class NewAccountComponent implements OnInit {
   collegeCampuses: CollegeCampus[] = [];
   showCollegeCampus: boolean = false;
   adminRoleId: string = ''; // We'll set this in ngOnInit
+  currentUserCollegeCampusID: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private departmentService: DepartmentService,
     private roleService: RoleService,
-    private collegeCampusService: CollegeCampusService
+    private collegeCampusService: CollegeCampusService,
+    private authService: AuthService // Add this
   ) {
     this.newAccountForm = this.fb.group({
       Fcode: ['', Validators.required],
@@ -57,6 +60,8 @@ export class NewAccountComponent implements OnInit {
     this.newAccountForm.get('Roles')?.valueChanges.subscribe((selectedRoles: string[]) => {
       this.handleRoleSelection(selectedRoles);
     });
+
+    this.getCurrentUserCollegeCampus();
   }
 
   loadRoles(): void {
@@ -170,7 +175,7 @@ export class NewAccountComponent implements OnInit {
 
       // Handle CollegeCampusID
       if (!formData.Roles.includes(this.adminRoleId)) {
-        formData.CollegeCampusID = null;
+        formData.CollegeCampusID = this.currentUserCollegeCampusID;
       }
 
       this.userService.addUser(formData).subscribe({
@@ -183,6 +188,18 @@ export class NewAccountComponent implements OnInit {
           console.log("Backend error details:", error);
           this.showToast('error', 'Error creating account');
         }
+      });
+    }
+  }
+
+  getCurrentUserCollegeCampus(): void {
+    const decodedToken = this.authService.getDecodedToken();
+    if (decodedToken && decodedToken.userId) {
+      this.userService.getUserById(decodedToken.userId).subscribe({
+        next: (user) => {
+          this.currentUserCollegeCampusID = user.CollegeCampusID;
+        },
+        error: (error) => console.error('Error fetching current user details:', error)
       });
     }
   }

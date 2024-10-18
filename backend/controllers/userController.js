@@ -1,9 +1,12 @@
 const nodemailer = require('nodemailer');
 const User = require('../models/userModel');
 const { Department, CollegeCampus } = require('../models/associations');
-const Role = require('../models/roleModel'); // Add this line
+const Role = require('../models/roleModel');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
+
+// Add this constant at the top of your file
+const ADMIN_ROLE_NAME = 'admin'; // Adjust this if your admin role has a different name
 
 exports.addUser = async (req, res) => {
   try {
@@ -14,6 +17,20 @@ exports.addUser = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const PasswordHash = await bcrypt.hash(Password, salt);
+
+    // Fetch the admin role
+    const adminRole = await Role.findOne({ where: { RoleName: ADMIN_ROLE_NAME } });
+    if (!adminRole) {
+      throw new Error('Admin role not found');
+    }
+
+    // Determine the CollegeCampusID
+    let finalCollegeCampusID = CollegeCampusID;
+    if (!Roles.includes(adminRole.RoleID.toString())) {
+      // If not an admin, use the CollegeCampusID from the request
+      // This will be the current user's CollegeCampusID set by the frontend
+      finalCollegeCampusID = CollegeCampusID;
+    }
 
     // Create a new user
     const newUser = await User.create({
@@ -27,7 +44,7 @@ exports.addUser = async (req, res) => {
       PasswordHash,
       Salt: salt,
       DepartmentID: finalDepartmentID,
-      CollegeCampusID: CollegeCampusID || null, // Set CollegeCampusID to null if not provided
+      CollegeCampusID: finalCollegeCampusID,
       isActive: true,
     });
 
