@@ -1,0 +1,85 @@
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Container styling */
+.bg-base-200 {
+  background-color: #f9f9f9;
+}
+
+.bg-maroon {
+  background-color: #800000;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+/* Button styling */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-save {
+  background-color: #000000; /* Black for save */
+  color: #ffffff;
+}
+
+.btn-cancel {
+  background-color: #800000; /* Maroon for cancel */
+  color: #ffffff;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-save:hover {
+  background-color: #333333; /* Darker black on hover */
+}
+
+.btn-cancel:hover {
+  background-color: #6b0000; /* Darker maroon on hover */
+}
+
+/* Form control styling */
+.form-control {
+  margin-bottom: 1.5rem;
+}
+
+/* Toast styling */
+.toast {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 9999;
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 0.375rem;
+  color: #ffffff;
+}
+
+.alert-success {
+  background-color: #10b981;
+}
+
+.alert-error {
+  background-color: #ef4444;
+}
+
+.alert-warning {
+  background-color: #f59e0b;
+}
+
