@@ -9,7 +9,8 @@ import { RoleService } from '../../services/role.service';
 import { trigger, transition, style, animate } from '@angular/animations'; // Import Angular animations
 import { CollegeCampusService } from '../../services/college-campus.service';
 import { CollegeCampus } from '../../model/college-campus.model';
-import { AuthService } from '../../services/auth.service'; // Add this import
+import { AuthService } from '../../services/auth.service';
+import { CampusContextService } from '../../services/campus-context.service'; // Add this import
 
 @Component({
   selector: 'app-new-account',
@@ -47,7 +48,8 @@ export class NewAccountComponent implements OnInit {
     private departmentService: DepartmentService,
     private roleService: RoleService,
     private collegeCampusService: CollegeCampusService,
-    private authService: AuthService // Add this
+    private authService: AuthService,
+    private campusContextService: CampusContextService
   ) {
     this.newAccountForm = this.fb.group({
       Fcode: ['', Validators.required],
@@ -65,15 +67,25 @@ export class NewAccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadDepartments();
+    console.log('NewAccountComponent initialized');
     this.loadRoles();
     this.loadCollegeCampuses();
-
+  
     this.newAccountForm.get('Roles')?.valueChanges.subscribe((selectedRoles: string[]) => {
       this.handleRoleSelection(selectedRoles);
     });
-
+  
+    // Initial load of current user's college campus
     this.getCurrentUserCollegeCampus();
+  
+    // Subscribe to future campus changes
+    this.campusContextService.getCampusId().subscribe(campusId => {
+      console.log('Campus changed in NewAccountComponent:', campusId);
+      if (campusId !== null && campusId !== this.currentUserCollegeCampusID) {
+        this.currentUserCollegeCampusID = campusId;
+        this.loadDepartments();
+      }
+    });
   }
 
   loadRoles(): void {
@@ -91,10 +103,28 @@ export class NewAccountComponent implements OnInit {
   }
 
   loadDepartments(): void {
-    this.departmentService.getDepartments().subscribe({
-      next: departments => this.departments = departments,
-      error: error => console.error('Error fetching departments', error)
-    });
+    console.log('Loading departments. Current user college campus ID:', this.currentUserCollegeCampusID);
+    if (this.currentUserCollegeCampusID) {
+      this.departmentService.getDepartments(this.currentUserCollegeCampusID).subscribe({
+        next: departments => {
+          console.log('Fetched departments:', departments);
+          this.departments = departments;
+          // Clear the selected department
+          this.newAccountForm.get('DepartmentID')?.setValue('');
+          if (departments.length === 0) {
+            console.log('No departments found for this campus');
+            this.showToast('error', 'No departments found for this campus');
+          }
+        },
+        error: error => {
+          console.error('Error fetching departments', error);
+          this.showToast('error', 'Failed to load departments');
+        }
+      });
+    } else {
+      console.error('No college campus ID available');
+      this.showToast('error', 'Unable to load departments: No campus ID');
+    }
   }
 
   loadCollegeCampuses(): void {
@@ -208,14 +238,33 @@ export class NewAccountComponent implements OnInit {
   }
 
   getCurrentUserCollegeCampus(): void {
-    const decodedToken = this.authService.getDecodedToken();
-    if (decodedToken && decodedToken.userId) {
-      this.userService.getUserById(decodedToken.userId).subscribe({
-        next: (user) => {
-          this.currentUserCollegeCampusID = user.CollegeCampusID;
-        },
-        error: (error) => console.error('Error fetching current user details:', error)
-      });
-    }
+    this.campusContextService.getCampusId().subscribe(campusId => {
+      if (campusId !== null) {
+        console.log('Using campus ID from context:', campusId);
+        this.currentUserCollegeCampusID = campusId;
+        this.loadDepartments();
+      } else {
+        console.log('No campus ID in context, fetching from user details');
+        const decodedToken = this.authService.getDecodedToken();
+        if (decodedToken && decodedToken.userId) {
+          this.userService.getUserById(decodedToken.userId).subscribe({
+            next: (user) => {
+              console.log('Current user:', user);
+              this.currentUserCollegeCampusID = user.CollegeCampusID;
+              console.log('Set currentUserCollegeCampusID:', this.currentUserCollegeCampusID);
+              this.campusContextService.updateCampus(this.currentUserCollegeCampusID);
+              this.loadDepartments();
+            },
+            error: (error) => {
+              console.error('Error fetching current user details:', error);
+              this.showToast('error', 'Failed to fetch user details');
+            }
+          });
+        } else {
+          console.error('No user ID found in token');
+          this.showToast('error', 'Authentication error');
+        }
+      }
+    });
   }
 }

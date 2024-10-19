@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DepartmentService } from '../../services/department.service';
+import { CampusContextService } from '../../services/campus-context.service';
 import { Department } from '../../model/department.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-department-management',
@@ -11,11 +13,13 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule]
 })
-export class DepartmentManagementComponent implements OnInit {
+export class DepartmentManagementComponent implements OnInit, OnDestroy {
   departments: Department[] = [];
   departmentForm: FormGroup;
   isEditing: boolean = false;
   currentDepartmentId: number | null = null;
+  currentCampusId: number | null = null;
+  private campusSubscription: Subscription | undefined;
 
   // Toast variables
   showToast: boolean = false;
@@ -24,6 +28,7 @@ export class DepartmentManagementComponent implements OnInit {
 
   constructor(
     private departmentService: DepartmentService,
+    private campusContextService: CampusContextService,
     private fb: FormBuilder
   ) {
     this.departmentForm = this.fb.group({
@@ -33,11 +38,26 @@ export class DepartmentManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadDepartments();
+    this.campusSubscription = this.campusContextService.getCampusId().subscribe(
+      campusId => {
+        this.currentCampusId = campusId;
+        this.loadDepartments();
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.campusSubscription) {
+      this.campusSubscription.unsubscribe();
+    }
   }
 
   loadDepartments(): void {
-    this.departmentService.getDepartments().subscribe(
+    if (this.currentCampusId === null) {
+      this.showToastNotification('No campus selected', 'warning');
+      return;
+    }
+    this.departmentService.getDepartments(this.currentCampusId).subscribe(
       (data) => {
         this.departments = data;
       },
@@ -54,7 +74,10 @@ export class DepartmentManagementComponent implements OnInit {
       return;
     }
 
-    const department: Department = this.departmentForm.value;
+    const department: Department = {
+      ...this.departmentForm.value,
+      CollegeCampusID: this.currentCampusId
+    };
 
     if (this.isEditing && this.currentDepartmentId !== null) {
       this.departmentService.updateDepartment(this.currentDepartmentId, department).subscribe(
@@ -85,11 +108,15 @@ export class DepartmentManagementComponent implements OnInit {
 
   editDepartment(department: Department): void {
     this.isEditing = true;
-    this.currentDepartmentId = department.DepartmentID;
+    this.currentDepartmentId = department.DepartmentID ?? null;
     this.departmentForm.patchValue(department);
   }
 
-  deleteDepartment(id: number): void {
+  deleteDepartment(id: number | undefined): void {
+    if (id === undefined) {
+      this.showToastNotification('Cannot delete department with undefined ID', 'error');
+      return;
+    }
     if (confirm('Are you sure you want to delete this department?')) {
       this.departmentService.deleteDepartment(id).subscribe(
         () => {

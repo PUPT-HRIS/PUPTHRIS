@@ -61,11 +61,10 @@ export class CampusContextService {
     this.campusIdSubject.next(null);
   }
 
-  // New method to update campus without refreshing
   updateCampus(id: number): void {
+    console.log('Updating campus in CampusContextService:', id);
     this.setCampusId(id);
-    // You can add additional logic here if needed
-    console.log('Campus updated without refresh:', id);
+    this.campusIdSubject.next(id);
   }
 
   // New method to get the user's default campus

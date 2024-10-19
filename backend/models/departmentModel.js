@@ -25,7 +25,7 @@ const Department = sequelize.define('Department', {
   },
   CollegeCampusID: {
     type: DataTypes.INTEGER,
-    allowNull: true,
+    allowNull: false,
     references: {
       model: 'collegecampuses',
       key: 'CollegeCampusID'
