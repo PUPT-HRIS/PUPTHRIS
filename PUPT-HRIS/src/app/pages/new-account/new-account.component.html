@@ -167,7 +167,10 @@
 </form>
 
 <!-- Toast Notifications -->
-<div class="toast" [ngClass]="{'show': toastVisible, 'hide': !toastVisible}">
+<div class="toast" 
+     [ngClass]="{'show': toastVisible, 'hide': !toastVisible}" 
+     [@toastAnimation]
+>
   <div *ngIf="toastType === 'success'" class="alert alert-success">
     <span>{{ toastMessage }}</span>
   </div>
