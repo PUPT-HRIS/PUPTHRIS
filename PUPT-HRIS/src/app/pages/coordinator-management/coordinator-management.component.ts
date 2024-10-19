@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CoordinatorService } from '../../services/coordinator.service';
 import { UserManagementService } from '../../services/user-management.service';
 import { Department, Coordinator } from '../../model/coodinatorModel';
 import { User } from '../../model/user.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CampusContextService } from '../../services/campus-context.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-coordinator-management',
@@ -13,7 +15,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule]
 })
-export class CoordinatorManagementComponent implements OnInit {
+export class CoordinatorManagementComponent implements OnInit, OnDestroy {
   departments: Department[] = [];
   facultyUsers: User[] = [];
   showToast: boolean = false;
@@ -21,15 +23,32 @@ export class CoordinatorManagementComponent implements OnInit {
   toastType: 'success' | 'error' | 'warning' = 'success';
   showAssignModal: boolean = false;
   selectedDepartment: Department | null = null;
+  campusId: number | null = null;
+  private campusSubscription: Subscription | undefined;
 
   constructor(
     private coordinatorService: CoordinatorService,
-    private userManagementService: UserManagementService
+    private userManagementService: UserManagementService,
+    private campusContextService: CampusContextService
   ) {}
 
   ngOnInit(): void {
-    this.loadDepartments();
-    this.loadActiveFacultyUsers();
+    this.campusSubscription = this.campusContextService.getCampusId().subscribe(
+      id => {
+        console.log('Received campus ID:', id);
+        if (id !== null) {
+          this.campusId = id;
+          this.loadDepartments();
+          this.loadActiveFacultyUsers();
+        }
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.campusSubscription) {
+      this.campusSubscription.unsubscribe();
+    }
   }
 
   loadDepartments(): void {
@@ -37,6 +56,7 @@ export class CoordinatorManagementComponent implements OnInit {
       next: (departments) => {
         console.log('Fetched departments in component:', departments);
         this.departments = departments;
+        this.loadCoordinatorDepartments();
       },
       error: (error) => {
         console.error('Error fetching departments:', error);
@@ -48,7 +68,7 @@ export class CoordinatorManagementComponent implements OnInit {
   loadCoordinatorDepartments(): void {
     this.departments.forEach(department => {
       console.log('Processing department:', department);
-      if (department.Coordinator?.UserID) {  // Change this line
+      if (department.Coordinator?.UserID) {
         this.userManagementService.getUserDetails(department.Coordinator.UserID).subscribe({
           next: (user) => {
             console.log('Fetched user details:', user);
@@ -65,7 +85,11 @@ export class CoordinatorManagementComponent implements OnInit {
   }
 
   loadActiveFacultyUsers(): void {
-    this.userManagementService.getAllUsers().subscribe({
+    if (this.campusId === null) {
+      console.error('Campus ID is null');
+      return;
+    }
+    this.userManagementService.getAllUsers(this.campusId).subscribe({
       next: (users) => {
         this.facultyUsers = users.filter(user => 
           user.Roles.some(role => role.RoleName.toLowerCase() === 'faculty') && user.isActive

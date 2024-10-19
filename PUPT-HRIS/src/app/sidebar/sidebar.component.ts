@@ -23,6 +23,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private userDefaultCampusId: number | null = null;
   private currentCampusId: number | null = null;
   private campusSubscription: Subscription = new Subscription();
+  isSuperAdmin: boolean = false;
 
   constructor(
     private router: Router,
@@ -42,7 +43,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken: any = jwtDecode(token);
-      this.roles = decodedToken.roles; // This is now an array of roles
+      this.roles = decodedToken.roles;
+      this.isSuperAdmin = this.roles.includes('superadmin');
     }
 
     // Set active item based on the initial route
@@ -72,11 +74,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   // Sidebar items visibility logic
   get canManageDepartments(): boolean {
-    return this.hasRole('superadmin') || this.hasRole('admin');
+    return this.isSuperAdmin || this.hasRole('admin');
   }
 
   get canManageEmployees(): boolean {
-    return this.hasRole('superadmin') || this.hasRole('admin');
+    return this.isSuperAdmin || this.hasRole('admin');
   }
 
   get canAccessProfile(): boolean {
@@ -194,28 +196,26 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   get canManageCoordinators(): boolean {
-    return this.hasRole('superadmin') || this.hasRole('admin');
+    return this.isSuperAdmin || this.hasRole('admin');
   }
 
   get canManageCollegeCampuses(): boolean {
-    return this.hasRole('superadmin');
+    return this.isSuperAdmin;
   }
 
   private updateCurrentCampus(): void {
     console.log('Current campus updated:', this.currentCampusId);
     console.log('Default campus:', this.userDefaultCampusId);
-    console.log('Can add new account:', this.canAddNewAccount);
+    console.log('Is Super Admin:', this.isSuperAdmin);
     console.log('Can manage users:', this.canManageUsers);
     // Implement any logic that depends on the current campus
   }
 
   get canAddNewAccount(): boolean {
-    return (this.hasRole('superadmin') || this.hasRole('admin')) && 
-           this.currentCampusId === this.userDefaultCampusId;
+    return this.isSuperAdmin || (this.hasRole('admin') && this.currentCampusId === this.userDefaultCampusId);
   }
 
   get canManageUsers(): boolean {
-    return (this.hasRole('superadmin') || this.hasRole('admin')) && 
-           this.currentCampusId === this.userDefaultCampusId;
+    return this.isSuperAdmin || (this.hasRole('admin') && this.currentCampusId === this.userDefaultCampusId);
   }
 }

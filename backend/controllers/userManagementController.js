@@ -2,7 +2,7 @@ const sequelize = require('../config/db.config');
 const User = require('../models/userModel');
 const Role = require('../models/roleModel');
 const Coordinator = require('../models/coordinatorModel');
-const { Department } = require('../models/associations');
+const { Department, CollegeCampus } = require('../models/associations');
 require('dotenv').config();
 
 exports.updateEmploymentType = async (req, res) => {
@@ -67,6 +67,11 @@ exports.getUserDetails = async (req, res) => {
           through: { attributes: [] },
           attributes: ['RoleName'],
         },
+        {
+          model: CollegeCampus,
+          as: 'CollegeCampus',
+          attributes: ['Name']
+        },
       ],
     });
 
@@ -83,7 +88,16 @@ exports.getUserDetails = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
+    const { campusId } = req.query;
+    console.log('Received campusId:', campusId); // Add this log
+
+    let whereClause = {};
+    if (campusId) {
+      whereClause.CollegeCampusID = campusId;
+    }
+
     const users = await User.findAll({
+      where: whereClause,
       include: [
         {
           model: Department,
@@ -96,9 +110,16 @@ exports.getAllUsers = async (req, res) => {
           through: { attributes: [] },
           attributes: ['RoleID', 'RoleName'],
         },
+        {
+          model: CollegeCampus,
+          as: 'CollegeCampus',
+          attributes: ['Name']
+        },
       ],
-      attributes: { include: ['isActive'] }, // Include isActive in the response
+      attributes: { include: ['isActive'] },
     });
+
+    console.log(`Found ${users.length} users for campus ID ${campusId}`); // Add this log
 
     res.status(200).json(users);
   } catch (error) {
@@ -185,5 +206,31 @@ exports.toggleUserActiveStatus = async (req, res) => {
     console.error('Error in toggleUserActiveStatus:', error);
     if (transaction) await transaction.rollback();
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+};
+
+// Add this new function
+exports.updateUserCampus = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { campusId } = req.body;
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const campus = await CollegeCampus.findByPk(campusId);
+    if (!campus) {
+      return res.status(404).json({ message: 'College Campus not found' });
+    }
+
+    user.CollegeCampusID = campusId;
+    await user.save();
+
+    res.status(200).json({ message: 'User campus updated successfully', user });
+  } catch (error) {
+    console.error('Error updating user campus:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };

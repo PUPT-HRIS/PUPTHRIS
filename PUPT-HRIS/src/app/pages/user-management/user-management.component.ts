@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserManagementService } from '../../services/user-management.service';
 import { User } from '../../model/user.model';
 import { Role } from '../../model/role.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CampusContextService } from '../../services/campus-context.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-management',
@@ -12,33 +14,64 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
-export class UserManagementComponent implements OnInit {
+export class UserManagementComponent implements OnInit, OnDestroy {
   users: User[] = [];
   availableRoles: Role[] = [];
   employmentTypes: string[] = ['fulltime', 'parttime', 'temporary', 'designee'];
+  campusId: number | null = null;
+  private campusSubscription: Subscription | undefined;
 
   showToast: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'warning' = 'success';
 
-  constructor(private userManagementService: UserManagementService) {}
+  constructor(
+    private userManagementService: UserManagementService,
+    private campusContextService: CampusContextService
+  ) {}
 
   ngOnInit(): void {
-    this.fetchAllUsers();
+    console.log('UserManagementComponent initialized');
+    this.campusSubscription = this.campusContextService.getCampusId().subscribe(
+      id => {
+        console.log('Received campus ID in UserManagementComponent:', id);
+        if (id !== null) {
+          this.campusId = id;
+          this.fetchUsers();
+        } else {
+          console.log('Campus ID is null, not fetching users');
+        }
+      },
+      error => {
+        console.error('Error getting campus ID:', error);
+      }
+    );
     this.fetchAvailableRoles();
     this.logEmploymentTypes();
   }
 
-  fetchAllUsers(): void {
-    this.userManagementService.getAllUsers().subscribe({
+  ngOnDestroy(): void {
+    if (this.campusSubscription) {
+      this.campusSubscription.unsubscribe();
+    }
+  }
+
+  fetchUsers(): void {
+    if (this.campusId === null) {
+      console.error('Campus ID is null, cannot fetch users');
+      return;
+    }
+    console.log('Fetching users for campus ID:', this.campusId);
+    this.userManagementService.getAllUsers(this.campusId).subscribe({
       next: (users) => {
-        this.users = users;
-        this.users.forEach(user => console.log(user.EmploymentType));
+        console.log('Received users:', users);
+        console.log('Number of users received:', users.length);
+        this.users = users.filter(user => user.CollegeCampusID === this.campusId);
+        console.log('Number of users after filtering:', this.users.length);
       },
       error: (error) => {
-        console.error('Error fetching users', error);
-        this.showToastNotification('Error fetching users', 'error');
-      },
+        console.error('Error fetching users:', error);
+      }
     });
   }
 
