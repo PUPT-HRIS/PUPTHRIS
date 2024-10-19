@@ -5,9 +5,20 @@
   <div class="flex flex-1 items-center justify-center bg-red-700 max-w-5xl">
     <div class="flex-1 flex items-center justify-center bg-red-700 p-6">
       <div class="bg-white rounded-lg shadow-lg p-5 w-full h-full flex items-center justify-center">
-        <div>
-          <img src="assets/loginAsset.svg" alt="PUP Campus" class="max-w-full h-auto rounded-lg">
-          <p class="text-center font-bold mt-4">Polytechnic University of the Philippines - Taguig</p>
+        <div class="w-full h-full relative">
+          <div class="carousel">
+            <img [src]="images[currentImageIndex].src" [alt]="images[currentImageIndex].alt" class="w-full h-full object-cover rounded-lg">
+            <button (click)="prevImage()" class="carousel-button left-4">&lt;</button>
+            <button (click)="nextImage()" class="carousel-button right-4">&gt;</button>
+            <div class="carousel-indicators">
+              <span *ngFor="let image of images; let i = index" 
+                    [class.active]="i === currentImageIndex"
+                    (click)="setCurrentImage(i)"
+                    class="dot">
+              </span>
+            </div>
+          </div>
+          <p class="text-center font-bold mt-4">Polytechnic University of the Philippines</p>
         </div>
       </div>
     </div>
@@ -17,8 +28,10 @@
           <!-- PUP Logo and Title -->
           <div class="flex items-center justify-center mb-4">
             <img src="assets/PUPLogo.svg" alt="PUP Logo" class="w-14 h-14 mr-4">
-            <h1 class="text-4xl font-bold text-black">PUP TAGUIG HRIS</h1>
+            <h1 class="text-3xl font-bold text-black">PUP HR INFO SYSTEM</h1>
           </div>
+          
+          <div class="divider"></div>
           <!-- Sign In Section -->
           <div class="flex items-center justify-center mt-6">
             <h2 class="text-3xl font-bold ml-4">Sign In</h2>
