@@ -2,62 +2,103 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* Container styling */
-.bg-base-200 {
-  background-color: #f9f9f9;
-}
-
 .bg-maroon {
   background-color: #800000;
 }
 
-.text-white {
-  color: #ffffff;
+.text-maroon {
+  color: #800000;
 }
 
-/* Button styling */
+.hover\:bg-maroon-dark:hover {
+  background-color: #600000;
+}
+
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  @apply font-bold py-2 px-4 rounded;
 }
 
 .btn-save {
-  background-color: #000000; /* Black for save */
-  color: #ffffff;
-}
-
-.btn-cancel {
-  background-color: #800000; /* Maroon for cancel */
-  color: #ffffff;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
+  background-color: #000;
+  border-color: #000;
+  color: #fff;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-save:hover {
-  background-color: #333333; /* Darker black on hover */
+  background-color: #222222;
+  transform: translateY(-1px);
+}
+
+.btn-cancel {
+  background-color: #800000;
+  border-color: #800000;
+  color: #fff;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-cancel:hover {
-  background-color: #6b0000; /* Darker maroon on hover */
+  background-color: #9f0303;
+  transform: translateY(-1px);
 }
 
-/* Form control styling */
+.btn-add-info {
+  @apply bg-maroon text-white;
+}
+
 .form-control {
   margin-bottom: 1.5rem;
 }
 
-/* Toast styling */
+.label-text {
+  color: #000000;
+  font-weight: 500;
+}
+
+.select-bordered {
+  border: 1px solid #ddd;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  transition: border-color 0.3s ease;
+}
+
+.select-bordered:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.text-gray-600 {
+  color: #4B5563;
+}
+
+.text-gray-900 {
+  color: #111827;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #E5E7EB;
+}
+
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+
 .toast {
   position: fixed;
   bottom: 1rem;
@@ -82,4 +123,3 @@
 .alert-warning {
   background-color: #f59e0b;
 }
-

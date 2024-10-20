@@ -6,61 +6,67 @@
   </div>
 
   <ng-container *ngIf="!isEditing; else editForm">
-    <!-- Display Section -->
     <div *ngIf="academicRank" class="p-6 space-y-8">
-      <div class="p-6 bg-white rounded-lg shadow-lg">
-        <div class="grid grid-cols-1 gap-y-4">
-          <p class="text-lg"><strong>Current Rank:</strong> <span class="text-green-600">{{ academicRank.Rank }}</span></p>
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-maroon">Current Rank</h2>
+        <div class="flex flex-col border-b pb-2">
+          <span class="text-gray-600 font-medium text-sm">Academic Rank</span>
+          <span class="text-gray-900 font-semibold">{{ academicRank.Rank }}</span>
         </div>
       </div>
       <div class="flex justify-end">
-        <button class="btn bg-black text-white" (click)="edit()">Edit</button>
+        <button class="btn bg-maroon text-white hover:bg-maroon-dark transition duration-300 ease-in-out" (click)="edit()">Edit</button>
       </div>
     </div>
 
-    <!-- Add Info Section -->
     <div *ngIf="!academicRank" class="p-6 space-y-6">
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <p class="text-lg">No academic rank available.</p>
       </div>
       <div class="flex justify-end">
-        <button class="btn btn-add-info bg-black text-white" (click)="edit()">Add Info</button>
+        <button class="btn btn-add-info bg-maroon text-white hover:bg-maroon-dark transition duration-300 ease-in-out" (click)="edit()">Add Info</button>
       </div>
     </div>
   </ng-container>
 
   <ng-template #editForm>
-    <div class="p-6">
-      <form [formGroup]="academicRankForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <div class="form-control">
-          <label class="label-text">Academic Rank <span class="text-red-500">*</span></label>
-          <select 
-            formControlName="Rank" 
-            class="select select-bordered w-full" 
-            [ngClass]="{'border-red-500': academicRankForm.get('Rank')?.invalid && submitted}"
-            required>
-            <option value="">Select Rank</option>
-            <option value="Instructor 1">Instructor 1</option>
-            <option value="Instructor 2">Instructor 2</option>
-            <option value="Instructor 3">Instructor 3</option>
-            <option value="Assistant Professor 1">Assistant Professor 1</option>
-            <option value="Assistant Professor 2">Assistant Professor 2</option>
-            <option value="Assistant Professor 3">Assistant Professor 3</option>
-            <option value="Assistant Professor 4">Assistant Professor 4</option>
-            <option value="Associate Professor 1">Associate Professor 1</option>
-            <option value="Associate Professor 2">Associate Professor 2</option>
-            <option value="Associate Professor 3">Associate Professor 3</option>
-            <option value="Associate Professor 4">Associate Professor 4</option>
-            <option value="Associate Professor 5">Associate Professor 5</option>
-            <option value="Professor 1">Professor 1</option>
-            <option value="Professor 2">Professor 2</option>
-            <option value="Professor 3">Professor 3</option>
-            <option value="Professor 4">Professor 4</option>
-            <option value="Professor 5">Professor 5</option>
-            <option value="Professor 6">Professor 6</option>
-          </select>
-          <div *ngIf="academicRankForm.get('Rank')?.invalid && submitted" class="text-red-500 text-sm">
-            Academic Rank is required.
+    <div class="p-6 space-y-8">
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+        <p class="font-bold">Note: You are currently editing your Academic Rank.</p>
+      </div>
+      <form [formGroup]="academicRankForm" (ngSubmit)="onSubmit()">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-semibold mb-4 text-maroon">Academic Rank</h2>
+          <div class="form-control">
+            <label class="label-text">Academic Rank <span class="text-red-500">*</span></label>
+            <select 
+              formControlName="Rank" 
+              class="select select-bordered w-full" 
+              [ngClass]="{'border-red-500': academicRankForm.get('Rank')?.invalid && submitted}"
+              required>
+              <option value="">Select Rank</option>
+              <option value="Instructor 1">Instructor 1</option>
+              <option value="Instructor 2">Instructor 2</option>
+              <option value="Instructor 3">Instructor 3</option>
+              <option value="Assistant Professor 1">Assistant Professor 1</option>
+              <option value="Assistant Professor 2">Assistant Professor 2</option>
+              <option value="Assistant Professor 3">Assistant Professor 3</option>
+              <option value="Assistant Professor 4">Assistant Professor 4</option>
+              <option value="Associate Professor 1">Associate Professor 1</option>
+              <option value="Associate Professor 2">Associate Professor 2</option>
+              <option value="Associate Professor 3">Associate Professor 3</option>
+              <option value="Associate Professor 4">Associate Professor 4</option>
+              <option value="Associate Professor 5">Associate Professor 5</option>
+              <option value="Professor 1">Professor 1</option>
+              <option value="Professor 2">Professor 2</option>
+              <option value="Professor 3">Professor 3</option>
+              <option value="Professor 4">Professor 4</option>
+              <option value="Professor 5">Professor 5</option>
+              <option value="Professor 6">Professor 6</option>
+            </select>
+            <div *ngIf="academicRankForm.get('Rank')?.invalid && submitted" class="text-red-500 text-sm mt-1">
+              Academic Rank is required.
+            </div>
           </div>
         </div>
 
