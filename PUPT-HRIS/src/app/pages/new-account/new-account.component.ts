@@ -86,6 +86,13 @@ export class NewAccountComponent implements OnInit {
         this.loadDepartments();
       }
     });
+
+    // Add this new subscription
+    this.newAccountForm.get('CollegeCampusID')?.valueChanges.subscribe((campusId) => {
+      if (campusId) {
+        this.loadDepartmentsForCampus(campusId);
+      }
+    });
   }
 
   loadRoles(): void {
@@ -153,6 +160,7 @@ export class NewAccountComponent implements OnInit {
       this.showCollegeCampus = true;
       collegeCampusControl?.enable();
       collegeCampusControl?.setValidators(Validators.required);
+      departmentControl?.enable(); // Enable department selection for admin
     } else {
       this.showCollegeCampus = false;
       collegeCampusControl?.disable();
@@ -264,6 +272,26 @@ export class NewAccountComponent implements OnInit {
           console.error('No user ID found in token');
           this.showToast('error', 'Authentication error');
         }
+      }
+    });
+  }
+
+  loadDepartmentsForCampus(campusId: number): void {
+    console.log('Loading departments for campus ID:', campusId);
+    this.departmentService.getDepartments(campusId).subscribe({
+      next: departments => {
+        console.log('Fetched departments:', departments);
+        this.departments = departments;
+        // Clear the selected department
+        this.newAccountForm.get('DepartmentID')?.setValue('');
+        if (departments.length === 0) {
+          console.log('No departments found for this campus');
+          this.showToast('error', 'No departments found for this campus');
+        }
+      },
+      error: error => {
+        console.error('Error fetching departments', error);
+        this.showToast('error', 'Failed to load departments');
       }
     });
   }
