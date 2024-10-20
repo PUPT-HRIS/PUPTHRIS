@@ -123,3 +123,15 @@
 .alert-warning {
   background-color: #f59e0b;
 }
+
+.btn-edit {
+  background-color: #000000;
+  border-color: #000000;
+  color: #ffffff;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-edit:hover {
+  background-color: #333333;
+  transform: translateY(-1px);
+}
