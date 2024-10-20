@@ -13,23 +13,23 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Place of Birth</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.PlaceOfBirth }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.PlaceOfBirth || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Civil Status</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.CivilStatus }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.CivilStatus || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Height</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.Height }} m</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.Height ? (personalDetails.Height + ' m') : 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Weight</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.Weight }} kg</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.Weight ? (personalDetails.Weight + ' kg') : 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Blood Type</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.BloodType }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.BloodType || 'No Information Entered' }}</span>
           </div>
         </div>
       </div>
@@ -40,27 +40,27 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">GSIS Number</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.GSISNumber }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.GSISNumber || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Pag-Ibig Number</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.PagIbigNumber }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.PagIbigNumber || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">PhilHealth Number</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.PhilHealthNumber }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.PhilHealthNumber || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">SSS Number</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.SSSNumber }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.SSSNumber || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">TIN Number</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.TINNumber }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.TINNumber || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Agency Employee Number</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.AgencyEmployeeNumber }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.AgencyEmployeeNumber || 'No Information Entered' }}</span>
           </div>
         </div>
       </div>
@@ -71,15 +71,15 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Citizenship</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.CitizenshipType }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.CitizenshipType || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2" *ngIf="personalDetails.CitizenshipType === 'Dual Citizenship'">
             <span class="text-gray-600 font-medium text-sm">Acquisition</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.CitizenshipAcquisition }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.CitizenshipAcquisition || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2" *ngIf="personalDetails.CitizenshipType === 'Dual Citizenship'">
             <span class="text-gray-600 font-medium text-sm">Country</span>
-            <span class="text-gray-900 font-semibold">{{ personalDetails.CitizenshipCountry }}</span>
+            <span class="text-gray-900 font-semibold">{{ personalDetails.CitizenshipCountry || 'No Information Entered' }}</span>
           </div>
         </div>
       </div>
@@ -93,13 +93,22 @@
             <div class="flex flex-col border-b pb-2">
               <span class="text-gray-600 font-medium text-sm">Full Address</span>
               <span class="text-gray-900 font-semibold">
-                {{ personalDetails.ResidentialHouseBlockLot }},
-                {{ personalDetails.ResidentialStreet }},
-                {{ personalDetails.ResidentialSubdivisionVillage }},
-                {{ personalDetails.ResidentialBarangay }},
-                {{ personalDetails.ResidentialCityMunicipality }},
-                {{ personalDetails.ResidentialProvince }} - 
-                {{ personalDetails.ResidentialZipCode }}
+                {{ 
+                  (personalDetails.ResidentialHouseBlockLot || 
+                   personalDetails.ResidentialStreet || 
+                   personalDetails.ResidentialSubdivisionVillage || 
+                   personalDetails.ResidentialBarangay || 
+                   personalDetails.ResidentialCityMunicipality || 
+                   personalDetails.ResidentialProvince || 
+                   personalDetails.ResidentialZipCode) ? 
+                  (personalDetails.ResidentialHouseBlockLot + ', ' + 
+                   personalDetails.ResidentialStreet + ', ' + 
+                   personalDetails.ResidentialSubdivisionVillage + ', ' + 
+                   personalDetails.ResidentialBarangay + ', ' + 
+                   personalDetails.ResidentialCityMunicipality + ', ' + 
+                   personalDetails.ResidentialProvince + ' - ' + 
+                   personalDetails.ResidentialZipCode) : 'No Information Entered'
+                }}
               </span>
             </div>
           </div>
@@ -108,13 +117,22 @@
             <div class="flex flex-col border-b pb-2">
               <span class="text-gray-600 font-medium text-sm">Full Address</span>
               <span class="text-gray-900 font-semibold">
-                {{ personalDetails.PermanentHouseBlockLot }},
-                {{ personalDetails.PermanentStreet }},
-                {{ personalDetails.PermanentSubdivisionVillage }},
-                {{ personalDetails.PermanentBarangay }},
-                {{ personalDetails.PermanentCityMunicipality }},
-                {{ personalDetails.PermanentProvince }} - 
-                {{ personalDetails.PermanentZipCode }}
+                {{ 
+                  (personalDetails.PermanentHouseBlockLot || 
+                   personalDetails.PermanentStreet || 
+                   personalDetails.PermanentSubdivisionVillage || 
+                   personalDetails.PermanentBarangay || 
+                   personalDetails.PermanentCityMunicipality || 
+                   personalDetails.PermanentProvince || 
+                   personalDetails.PermanentZipCode) ? 
+                  (personalDetails.PermanentHouseBlockLot + ', ' + 
+                   personalDetails.PermanentStreet + ', ' + 
+                   personalDetails.PermanentSubdivisionVillage + ', ' + 
+                   personalDetails.PermanentBarangay + ', ' + 
+                   personalDetails.PermanentCityMunicipality + ', ' + 
+                   personalDetails.PermanentProvince + ' - ' + 
+                   personalDetails.PermanentZipCode) : 'No Information Entered'
+                }}
               </span>
             </div>
           </div>

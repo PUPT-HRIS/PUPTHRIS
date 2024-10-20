@@ -13,15 +13,15 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Telephone Number</span>
-            <span class="text-gray-900 font-semibold">{{ contactDetails.TelephoneNumber }}</span>
+            <span class="text-gray-900 font-semibold">{{ contactDetails.TelephoneNumber || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Mobile Number</span>
-            <span class="text-gray-900 font-semibold">{{ contactDetails.MobileNumber }}</span>
+            <span class="text-gray-900 font-semibold">{{ contactDetails.MobileNumber || 'No Information Entered' }}</span>
           </div>
           <div class="flex flex-col border-b pb-2">
             <span class="text-gray-600 font-medium text-sm">Email Address</span>
-            <span class="text-gray-900 font-semibold">{{ contactDetails.EmailAddress }}</span>
+            <span class="text-gray-900 font-semibold">{{ contactDetails.EmailAddress || 'No Information Entered' }}</span>
           </div>
         </div>
       </div>
