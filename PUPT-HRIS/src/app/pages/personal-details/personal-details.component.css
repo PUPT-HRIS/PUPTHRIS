@@ -44,7 +44,7 @@
   
   /* Label text */
   .label-text {
-    color: #555;
+    color: #000000;
     font-weight: 500;
   }
   
@@ -120,3 +120,56 @@
     justify-content: flex-end;
   }
   
+  /* Add these new styles */
+  .bg-maroon {
+    background-color: #800000;
+  }
+  
+  .text-maroon {
+    color: #800000;
+  }
+  
+  .hover\:bg-maroon-dark:hover {
+    background-color: #600000;
+  }
+  
+  /* Update existing styles if necessary */
+  .btn {
+    @apply font-bold py-2 px-4 rounded;
+  }
+  
+  .btn-add-info {
+    @apply bg-maroon text-white;
+  }
+
+/* New styles for the display mode */
+.text-gray-600 {
+  color: #4B5563;
+}
+
+.text-gray-900 {
+  color: #111827;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #E5E7EB;
+}
+
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
