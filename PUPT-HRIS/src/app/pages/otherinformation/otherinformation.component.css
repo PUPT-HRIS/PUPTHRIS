@@ -111,3 +111,19 @@
       grid-template-columns: 1fr; /* Stack columns on small screens */
     }
   }
+
+  /* Textarea styling */
+  .textarea-bordered {
+    border: 1px solid #ddd;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    transition: border-color 0.3s ease;
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 100px; /* Set a minimum height */
+  }
+
+  .textarea-bordered:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  }

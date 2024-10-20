@@ -77,7 +77,7 @@
       <form [formGroup]="specialSkillsForm" (ngSubmit)="onSubmitSkill()" class="space-y-4">
         <div class="form-control w-full">
           <label for="Skill" class="label-text font-bold">Skill</label>
-          <input id="Skill" formControlName="Skill" type="text" class="input input-bordered w-full" placeholder="Describe your special skill">
+          <textarea id="Skill" formControlName="Skill" class="textarea textarea-bordered w-full h-24" placeholder="Describe your special skill"></textarea>
         </div>
         <div class="flex justify-end space-x-2">
           <button type="submit" class="btn btn-save bg-black text-white">{{ currentSkillId ? 'Update' : 'Add' }} Skill</button>
@@ -92,7 +92,7 @@
       <form [formGroup]="nonAcademicForm" (ngSubmit)="onSubmitDistinction()" class="space-y-4">
         <div class="form-control w-full">
           <label for="Distinction" class="label-text font-bold">Distinction</label>
-          <input id="Distinction" formControlName="Distinction" type="text" class="input input-bordered w-full" placeholder="Enter your non-academic distinction">
+          <textarea id="Distinction" formControlName="Distinction" class="textarea textarea-bordered w-full h-24" placeholder="Enter your non-academic distinction"></textarea>
         </div>
         <div class="flex justify-end space-x-2">
           <button type="submit" class="btn btn-save bg-black text-white">{{ currentDistinctionId ? 'Update' : 'Add' }} Distinction</button>
@@ -107,7 +107,7 @@
       <form [formGroup]="membershipForm" (ngSubmit)="onSubmitMembership()" class="space-y-4">
         <div class="form-control w-full">
           <label for="Association" class="label-text font-bold">Association</label>
-          <input id="Association" formControlName="Association" type="text" class="input input-bordered w-full" placeholder="Enter the name of the association or organization">
+          <textarea id="Association" formControlName="Association" class="textarea textarea-bordered w-full h-24" placeholder="Enter the name of the association or organization"></textarea>
         </div>
         <div class="flex justify-end space-x-2">
           <button type="submit" class="btn btn-save bg-black text-white">{{ currentMembershipId ? 'Update' : 'Add' }} Membership</button>
