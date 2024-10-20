@@ -166,9 +166,15 @@ export class NewAccountComponent implements OnInit {
       collegeCampusControl?.disable();
       collegeCampusControl?.clearValidators();
       collegeCampusControl?.setValue('');
+      
+      // Reset department selection when admin is deselected
+      departmentControl?.setValue('');
+      this.departments = []; // Clear the departments array
+      this.loadDepartments(); // Reload departments for the current user's campus
     }
 
     collegeCampusControl?.updateValueAndValidity();
+    departmentControl?.updateValueAndValidity();
   }
 
   // Update selected roles when checkbox changes
