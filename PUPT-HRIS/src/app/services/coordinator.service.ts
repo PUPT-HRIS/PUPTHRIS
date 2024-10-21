@@ -18,8 +18,8 @@ export class CoordinatorService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  assignCoordinator(departmentId: number, userId: number): Observable<Coordinator> {
-    return this.http.post<Coordinator>(`${this.apiUrl}/assign`, { departmentId, userId }, { headers: this.getHeaders() })
+  assignCoordinator(departmentId: number, userId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/assign`, { departmentId, userId }, { headers: this.getHeaders() })
       .pipe(
         tap(response => console.log('Assign coordinator response:', response)),
         catchError(this.handleError)

@@ -61,15 +61,6 @@ export class CoordinatorManagementComponent implements OnInit, OnDestroy {
       next: (departments) => {
         console.log('Received departments:', JSON.stringify(departments, null, 2));
         this.departments = departments;
-        console.log('Departments after assignment:', JSON.stringify(this.departments, null, 2));
-        
-        // Check if any department has a coordinator assigned
-        const hasCoordinators = this.departments.some(dept => dept.Coordinator !== null);
-        console.log('Has coordinators assigned:', hasCoordinators);
-        
-        if (!hasCoordinators) {
-          console.log('No coordinators assigned to any department');
-        }
       },
       error: (error) => {
         console.error('Error fetching departments:', error);
@@ -78,25 +69,6 @@ export class CoordinatorManagementComponent implements OnInit, OnDestroy {
     });
   }
   
-  loadCoordinatorDepartments(): void {
-    this.departments.forEach(department => {
-      console.log('Processing department:', department);
-      if (department.Coordinator?.UserID) {
-        this.userManagementService.getUserDetails(department.Coordinator.UserID).subscribe({
-          next: (user) => {
-            console.log('Fetched user details:', user);
-            if (department.Coordinator) {
-              department.Coordinator.User = user;
-            }
-          },
-          error: (error) => {
-            console.error(`Error fetching user details for coordinator of department ${department.DepartmentID}:`, error);
-          }
-        });
-      }
-    });
-  }
-
   loadActiveFacultyUsers(): void {
     if (this.campusId === null) {
       console.error('Campus ID is null');
@@ -127,8 +99,12 @@ export class CoordinatorManagementComponent implements OnInit, OnDestroy {
 
   assignCoordinator(department: Department, userId: number): void {
     this.coordinatorService.assignCoordinator(department.DepartmentID, userId).subscribe({
-      next: (coordinator: Coordinator) => {
-        department.Coordinator = coordinator;
+      next: (response) => {
+        console.log('Coordinator assigned:', response);
+        if (response.department && response.department.Coordinator) {
+          department.Coordinator = response.department.Coordinator;
+          department.CoordinatorID = response.department.CoordinatorID;
+        }
         this.showToastNotification('Coordinator assigned successfully', 'success');
         this.closeAssignModal();
         this.loadDepartments(); // Reload departments to reflect changes
@@ -148,8 +124,8 @@ export class CoordinatorManagementComponent implements OnInit, OnDestroy {
     this.coordinatorService.removeCoordinator(department.DepartmentID).subscribe({
       next: () => {
         department.Coordinator = null;
+        department.CoordinatorID = null;
         this.showToastNotification('Coordinator removed successfully', 'success');
-        this.loadDepartments(); // Reload departments to reflect changes
       },
       error: (error) => {
         console.error('Error removing coordinator:', error);

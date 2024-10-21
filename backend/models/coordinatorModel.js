@@ -14,6 +14,14 @@ const Coordinator = sequelize.define('Coordinator', {
       model: 'users',
       key: 'UserID'
     }
+  },
+  DepartmentID: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'departments',
+      key: 'DepartmentID'
+    }
   }
 }, {
   tableName: 'coordinators',

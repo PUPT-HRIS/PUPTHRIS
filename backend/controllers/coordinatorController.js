@@ -5,46 +5,59 @@ const Department = require('../models/departmentModel');
 const CollegeCampus = require('../models/collegeCampusModel');
 
 exports.assignCoordinator = async (req, res) => {
+  console.log('Received request body:', req.body);
+  const transaction = await sequelize.transaction();
   try {
     const { departmentId, userId } = req.body;
 
-    const department = await Department.findByPk(departmentId);
+    // Find the department
+    const department = await Department.findByPk(departmentId, { transaction });
     if (!department) {
+      await transaction.rollback();
       return res.status(404).json({ message: 'Department not found' });
     }
 
-    const user = await User.findByPk(userId);
+    // Find the user
+    const user = await User.findByPk(userId, { transaction });
     if (!user) {
+      await transaction.rollback();
       return res.status(404).json({ message: 'User not found' });
     }
 
-    let coordinator = await Coordinator.findOne({ 
-      include: [{ 
-        model: Department, 
-        as: 'Department', 
-        where: { DepartmentID: departmentId } 
+    // Find or create coordinator
+    const [coordinator, created] = await Coordinator.findOrCreate({
+      where: { DepartmentID: departmentId },
+      defaults: { UserID: userId },
+      transaction
+    });
+
+    if (!created) {
+      // Update existing coordinator
+      await coordinator.update({ UserID: userId }, { transaction });
+    }
+
+    // Update department
+    await department.update({ CoordinatorID: userId }, { transaction });
+
+    await transaction.commit();
+
+    // Fetch updated department with coordinator info
+    const updatedDepartment = await Department.findByPk(departmentId, {
+      include: [{
+        model: User,
+        as: 'Coordinator',
+        attributes: ['UserID', 'FirstName', 'Surname']
       }]
     });
 
-    if (coordinator) {
-      await coordinator.update({ UserID: userId });
-    } else {
-      coordinator = await Coordinator.create({ UserID: userId });
-      await department.update({ CoordinatorID: coordinator.CoordinatorID });
-    }
-
-    const updatedCoordinator = await Coordinator.findOne({
-      where: { CoordinatorID: coordinator.CoordinatorID },
-      include: [
-        { model: User, attributes: ['FirstName', 'Surname'] },
-        { model: Department, as: 'Department' }
-      ]
+    res.status(200).json({ 
+      message: 'Coordinator assigned successfully', 
+      department: updatedDepartment 
     });
-
-    res.status(201).json(updatedCoordinator);
   } catch (error) {
+    await transaction.rollback();
     console.error('Error assigning coordinator:', error);
-    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
@@ -122,12 +135,9 @@ exports.getAllDepartmentsWithCoordinators = async (req, res) => {
       where: whereClause,
       include: [
         {
-          model: Coordinator,
+          model: User,
           as: 'Coordinator',
-          include: [{
-            model: User,
-            attributes: ['FirstName', 'Surname']
-          }]
+          attributes: ['UserID', 'FirstName', 'Surname']
         },
         {
           model: CollegeCampus,
@@ -138,24 +148,7 @@ exports.getAllDepartmentsWithCoordinators = async (req, res) => {
       attributes: ['DepartmentID', 'DepartmentName', 'CoordinatorID']
     });
 
-    const simplifiedDepartments = departments.map(dept => ({
-      DepartmentID: dept.DepartmentID,
-      DepartmentName: dept.DepartmentName,
-      CollegeCampus: dept.CollegeCampus ? {
-        CollegeCampusID: dept.CollegeCampus.CollegeCampusID,
-        Name: dept.CollegeCampus.Name
-      } : null,
-      Coordinator: dept.Coordinator ? {
-        CoordinatorID: dept.Coordinator.CoordinatorID,
-        UserID: dept.Coordinator.UserID,
-        User: dept.Coordinator.User ? {
-          FirstName: dept.Coordinator.User.FirstName,
-          Surname: dept.Coordinator.User.Surname
-        } : null
-      } : null
-    }));
-
-    res.json(simplifiedDepartments);
+    res.json(departments);
   } catch (error) {
     console.error('Error in getAllDepartmentsWithCoordinators:', error);
     res.status(500).json({ message: "Error retrieving departments with coordinators", error: error.message });

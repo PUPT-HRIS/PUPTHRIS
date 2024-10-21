@@ -17,19 +17,16 @@ User.belongsTo(CollegeCampus, { foreignKey: 'CollegeCampusID', as: 'CollegeCampu
 Department.hasMany(User, { foreignKey: 'DepartmentID', as: 'Users' });
 User.belongsTo(Department, { foreignKey: 'DepartmentID', as: 'Department' });
 
-// Coordinator associations
-Department.belongsTo(Coordinator, { 
+// Coordinator association
+Department.belongsTo(User, { 
     foreignKey: 'CoordinatorID', 
     as: 'Coordinator'
 });
 
-Coordinator.hasOne(Department, {
+User.hasOne(Department, {
     foreignKey: 'CoordinatorID',
-    as: 'Department'
+    as: 'CoordinatedDepartment'
 });
-
-Coordinator.belongsTo(User, { foreignKey: 'UserID' });
-User.hasOne(Coordinator, { foreignKey: 'UserID' });
 
 // Civil Service Eligibility associations
 User.hasMany(CivilServiceEligibility, { foreignKey: 'userID' });

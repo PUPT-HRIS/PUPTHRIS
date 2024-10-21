@@ -3,15 +3,17 @@ import { User } from './user.model';
 export interface Coordinator {
   CoordinatorID: number;
   UserID: number;
-  User?: {
-    FirstName: string;
-    Surname: string;
-  };
-  // Add any other properties that are part of the Coordinator object
+  FirstName: string;
+  Surname: string;
 }
 
 export interface Department {
   DepartmentID: number;
   DepartmentName: string;
-  Coordinator?: Coordinator | null;
+  CoordinatorID: number | null;
+  Coordinator: Coordinator | null;
+  CollegeCampus: {
+    CollegeCampusID: number;
+    Name: string;
+  };
 }
