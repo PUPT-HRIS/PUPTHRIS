@@ -1,184 +1,138 @@
 * {
   font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
 }
 
-/* Container styles */
-.container {
-  background-color: #f9fafb;
+body {
+  background-color: #f0f0f0;
+  margin: 0;
   padding: 0;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.bg-maroon {
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
   background-color: #800000;
+  color: white;
+  padding: 20px;
+  border-radius: 8px 8px 0 0;
 }
 
-.table-zebra {
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.content {
   background-color: white;
-  border-radius: 8px;
+  border-radius: 0 0 8px 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.table th,
-.table td {
-  padding: 12px;
-  border: 1px solid #ddd;
-}
-
-/* Table Header Styles */
-.table thead th {
-  background-color: #800000;
-  color: #ffffff;
-  font-weight: bold;
-}
-
-/* Button container */
-.btn-container {
+.actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
+  margin-bottom: 20px;
 }
 
-/* Button styles */
 .btn {
-  padding: 8px 12px;
-  font-size: 14px;
-  cursor: pointer;
+  padding: 10px 20px;
+  border: none;
   border-radius: 4px;
-  transition: background-color 0.3s;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #000000;
   color: white;
-  border: none;
 }
 
-.btn-error {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-}
-
-/* Add button with hover effect */
-.btn-add {
-  background-color: black;
-  color: white;
-  transition: background-color 0.3s ease;
-}
-
-.btn-add:hover {
-  background-color: #333333; /* Near black on hover */
-}
-
-/* Cancel button with hover effect */
-.btn-cancel {
+.btn-secondary {
   background-color: #800000;
   color: white;
 }
 
-.btn-cancel:hover {
-  background-color: #600000; /* Slightly darker maroon on hover */
+.btn-primary:hover, .btn-secondary:hover {
+  opacity: 0.9;
 }
 
-/* Form controls */
-.input,
-.textarea,
-.file-input {
-  border: 1px solid #ddd;
-  padding: 8px;
-  border-radius: 4px;
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.table {
   width: 100%;
-  font-size: 14px;
+  border-collapse: collapse;
 }
 
-.input:focus,
-.textarea:focus,
-.file-input:focus {
-  border-color: #007bff;
-  outline: none;
+.table th, .table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.label-text {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.file-input {
-  padding: 6px;
-  cursor: pointer;
-}
-
-/* Grid layout */
-.grid {
-  display: grid;
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.gap-6 {
-  gap: 24px;
-}
-
-.space-y-6 > * + * {
-  margin-top: 24px;
-}
-
-.flex {
-  display: flex;
-}
-
-.justify-end {
-  justify-content: flex-end;
-}
-
-.mt-6 {
-  margin-top: 24px;
-}
-
-/* Hide the default file input appearance */
-.file-input {
-  display: none; /* This completely hides the default input field */
-}
-
-/* Custom file input button styling */
-.custom-file-label {
-  padding: 8px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  background-color: #333333;
+.table th {
+  background-color: #800000;
   color: white;
+  font-weight: 600;
+}
+
+/* Zebra striping for table rows */
+.table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* Add a hover effect for better user experience */
+.table tbody tr:hover {
+  background-color: #e6e6e6;
+}
+
+.btn-edit, .btn-delete {
+  padding: 3px 8px;
+  margin-right: 5px;
   border: none;
   border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
   transition: background-color 0.3s ease;
-  display: inline-block;
+  line-height: 1.2;
 }
 
-/* Hover effect for file input button */
-.custom-file-label:hover {
-  background-color: #000000;
+.btn-edit {
+  background-color: #007bff;
+  color: white;
 }
 
-/* Instructions text */
-.file-input-instructions {
-  font-size: 12px;
-  color: #6b7280;
-  margin-top: 4px;
-  line-height: 1.5;
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
 }
 
-/* Wrapper for the chosen file name */
-.file-name {
-  margin-left: 10px;
-  font-size: 14px;
-  color: #6b7280;
-  display: inline-block;
+.btn-edit:hover {
+  background-color: #0056b3;
 }
 
-/* Pagination Controls */
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
 .pagination-controls {
   display: flex;
   justify-content: center;
@@ -197,8 +151,12 @@
 }
 
 .pagination-controls button.active {
-  background-color: black; /* Active page is black */
+  background-color: black;
   color: white;
+}
+
+.pagination-controls button.active:hover {
+  background-color: #800000;
 }
 
 .pagination-controls button:disabled {
@@ -208,4 +166,110 @@
 
 .pagination-controls button:hover:not(:disabled) {
   background-color: #a00000;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+.bg-yellow-100 {
+  background-color: #fef3c7;
+}
+
+.border-yellow-500 {
+  border-color: #f59e0b;
+}
+
+.text-yellow-700 {
+  color: #b45309;
+}
+
+.text-maroon {
+  color: #800000;
+}
+
+.label-text {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.input-bordered, .select-bordered, .file-input-bordered {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+}
+
+.input-bordered:focus, .select-bordered:focus, .file-input-bordered:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+.btn-save {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.btn-cancel {
+  background-color: #800000;
+  color: #ffffff;
+}
+
+.btn-save:hover, .btn-cancel:hover {
+  opacity: 0.9;
+}
+
+.null-value {
+  font-style: italic;
+  color: #a0a0a0;
+  font-weight: 300;
+  font-size: 0.9em;
+}
+
+/* Style for empty table cells */
+.table td:empty::before {
+  content: 'null';
+  font-style: italic;
+  color: #a0a0a0;
+  font-weight: 300;
+  font-size: 0.9em;
+}
+
+/* Style for cells with only whitespace */
+.table td:only-child:empty::before {
+  content: 'null';
+  font-style: italic;
+  color: #a0a0a0;
+  font-weight: 300;
+  font-size: 0.9em;
+}
+
+/* Style for cells with the text "null" */
+.table td:not(:empty):not(:only-child) {
+  font-style: normal;
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+.table td:not(:empty):not(:only-child)[innerHTML="null"] {
+  font-style: italic;
+  color: #a0a0a0;
+  font-weight: 300;
+  font-size: 0.9em;
 }
