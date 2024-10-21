@@ -137,7 +137,7 @@ export class TrainingSeminarsComponent implements OnInit {
 
   onSubmit(): void {
     if (this.trainingForm.invalid) {
-      this.showToastNotification('Please fill in all required fields.', 'error');
+      this.showToastNotification('Please fill in all required fields.', 'warning');
       return;
     }
 
@@ -152,6 +152,13 @@ export class TrainingSeminarsComponent implements OnInit {
     }
 
     if (this.currentTrainingId) {
+      // Updating existing training
+      const originalTraining = this.trainingData.find(t => t.TrainingID === this.currentTrainingId);
+      if (originalTraining && this.isFormUnchanged(originalTraining)) {
+        this.showToastNotification('No changes to save.', 'warning');
+        return;
+      }
+
       this.trainingSeminarsService.updateTraining(this.currentTrainingId, formData).subscribe(
         (response) => {
           this.loadTrainings();
@@ -164,6 +171,12 @@ export class TrainingSeminarsComponent implements OnInit {
         }
       );
     } else {
+      // Adding new training
+      if (this.isFormEmpty()) {
+        this.showToastNotification('Please enter information before adding.', 'warning');
+        return;
+      }
+
       this.trainingSeminarsService.addTraining(formData).subscribe(
         (response) => {
           this.loadTrainings();
@@ -176,6 +189,15 @@ export class TrainingSeminarsComponent implements OnInit {
         }
       );
     }
+  }
+
+  isFormUnchanged(originalTraining: TrainingSeminar): boolean {
+    const formValue = this.trainingForm.value;
+    return Object.keys(formValue).every(key => formValue[key] === originalTraining[key as keyof TrainingSeminar]);
+  }
+
+  isFormEmpty(): boolean {
+    return Object.values(this.trainingForm.value).every(value => value === '' || value === null);
   }
 
   onFileChange(event: any): void {
