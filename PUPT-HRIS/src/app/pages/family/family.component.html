@@ -1,21 +1,66 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
   <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
     <h1 class="text-2xl font-bold">Family Background</h1>
   </div>
 
   <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="familyData" class="p-6 space-y-6">
-      <div class="p-6 bg-white rounded-lg shadow-lg space-y-4">
-        <p class="text-lg"><strong>Spouse Name:</strong> {{ familyData.SpouseFirstName }} {{ familyData.SpouseMiddleName }} {{ familyData.SpouseLastName }}</p>
-        <p class="text-lg"><strong>Spouse Occupation:</strong> {{ familyData.SpouseOccupation }}</p>
-        <p class="text-lg"><strong>Spouse Employer Name:</strong> {{ familyData.SpouseEmployerName }}</p>
-        <p class="text-lg"><strong>Spouse Business Address:</strong> {{ familyData.SpouseBusinessAddress }}</p>
-        <p class="text-lg"><strong>Spouse Telephone Number:</strong> {{ familyData.SpouseTelephoneNumber }}</p>
-        <p class="text-lg"><strong>Father's Name:</strong> {{ familyData.FatherFirstName }} {{ familyData.FatherMiddleName }} {{ familyData.FatherLastName }}</p>
-        <p class="text-lg"><strong>Mother's Name:</strong> {{ familyData.MotherFirstName }} {{ familyData.MotherMiddleName }} {{ familyData.MotherLastName }}</p>
+    <div *ngIf="familyData" class="p-6 space-y-8">
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-maroon">Spouse Information</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col border-b pb-2">
+            <span class="text-gray-600 font-medium text-sm">Spouse Name</span>
+            <span class="text-gray-900 font-semibold">
+              {{ (familyData.SpouseFirstName || familyData.SpouseMiddleName || familyData.SpouseLastName) ? 
+                 (familyData.SpouseFirstName + ' ' + familyData.SpouseMiddleName + ' ' + familyData.SpouseLastName).trim() : 
+                 'No Information Entered' }}
+            </span>
+          </div>
+          <div class="flex flex-col border-b pb-2">
+            <span class="text-gray-600 font-medium text-sm">Spouse Occupation</span>
+            <span class="text-gray-900 font-semibold">{{ familyData.SpouseOccupation || 'No Information Entered' }}</span>
+          </div>
+          <div class="flex flex-col border-b pb-2">
+            <span class="text-gray-600 font-medium text-sm">Spouse Employer Name</span>
+            <span class="text-gray-900 font-semibold">{{ familyData.SpouseEmployerName || 'No Information Entered' }}</span>
+          </div>
+          <div class="flex flex-col border-b pb-2">
+            <span class="text-gray-600 font-medium text-sm">Spouse Business Address</span>
+            <span class="text-gray-900 font-semibold">{{ familyData.SpouseBusinessAddress || 'No Information Entered' }}</span>
+          </div>
+          <div class="flex flex-col border-b pb-2">
+            <span class="text-gray-600 font-medium text-sm">Spouse Telephone Number</span>
+            <span class="text-gray-900 font-semibold">{{ familyData.SpouseTelephoneNumber || 'No Information Entered' }}</span>
+          </div>
+        </div>
       </div>
+      
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-maroon">Parents Information</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col border-b pb-2">
+            <span class="text-gray-600 font-medium text-sm">Father's Name</span>
+            <span class="text-gray-900 font-semibold">
+              {{ (familyData.FatherFirstName || familyData.FatherMiddleName || familyData.FatherLastName) ? 
+                 (familyData.FatherFirstName + ' ' + familyData.FatherMiddleName + ' ' + familyData.FatherLastName).trim() : 
+                 'No Information Entered' }}
+            </span>
+          </div>
+          <div class="flex flex-col border-b pb-2">
+            <span class="text-gray-600 font-medium text-sm">Mother's Name</span>
+            <span class="text-gray-900 font-semibold">
+              {{ (familyData.MotherFirstName || familyData.MotherMiddleName || familyData.MotherLastName) ? 
+                 (familyData.MotherFirstName + ' ' + familyData.MotherMiddleName + ' ' + familyData.MotherLastName).trim() : 
+                 'No Information Entered' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
       <div class="flex justify-end">
-        <button class="btn bg-black text-white" (click)="toggleForm()">Edit</button>
+        <button class="btn btn-edit hover:bg-gray-800 transition duration-300 ease-in-out" (click)="toggleForm()">Edit</button>
       </div>
     </div>
 
@@ -24,71 +69,84 @@
         <p class="text-lg">No family background information available.</p>
       </div>
       <div class="flex justify-end">
-        <button class="btn bg-black text-white" (click)="toggleForm()">Add Info</button>
+        <button class="btn btn-add-info bg-maroon text-white hover:bg-maroon-dark transition duration-300 ease-in-out" (click)="toggleForm()">Add Info</button>
       </div>
     </div>
   </ng-container>
 
   <ng-template #editForm>
-    <div class="p-6">
+    <div class="p-6 space-y-8">
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+        <p class="font-bold">Note: You are currently editing your Family Background.</p>
+      </div>
       <form [formGroup]="familyForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <div class="grid grid-cols-2 gap-6">
-          <div class="form-control w-full">
-            <label for="SpouseLastName" class="label-text font-bold text-lg">Spouse Last Name</label>
-            <input id="SpouseLastName" formControlName="SpouseLastName" class="input input-bordered w-full" placeholder="Enter your spouse's last name">
-          </div>
-          <div class="form-control w-full">
-            <label for="SpouseFirstName" class="label-text font-bold text-lg">Spouse First Name</label>
-            <input id="SpouseFirstName" formControlName="SpouseFirstName" class="input input-bordered w-full" placeholder="Enter your spouse's first name">
-          </div>
-          <div class="form-control w-full">
-            <label for="SpouseMiddleName" class="label-text font-bold text-lg">Spouse Middle Name</label>
-            <input id="SpouseMiddleName" formControlName="SpouseMiddleName" class="input input-bordered w-full" placeholder="Enter your spouse's middle name">
-          </div>
-          <div class="form-control w-full">
-            <label for="SpouseOccupation" class="label-text font-bold text-lg">Spouse Occupation</label>
-            <input id="SpouseOccupation" formControlName="SpouseOccupation" class="input input-bordered w-full" placeholder="Enter your spouse's occupation">
-          </div>
-          <div class="form-control w-full">
-            <label for="SpouseEmployerName" class="label-text font-bold text-lg">Spouse Employer Name</label>
-            <input id="SpouseEmployerName" formControlName="SpouseEmployerName" class="input input-bordered w-full" placeholder="Enter the name of your spouse's employer">
-          </div>
-          <div class="form-control w-full">
-            <label for="SpouseBusinessAddress" class="label-text font-bold text-lg">Spouse Business Address</label>
-            <input id="SpouseBusinessAddress" formControlName="SpouseBusinessAddress" class="input input-bordered w-full" placeholder="Enter your spouse's business address">
-          </div>
-          <div class="form-control w-full">
-            <label for="SpouseTelephoneNumber" class="label-text font-bold text-lg">Spouse Telephone Number</label>
-            <input id="SpouseTelephoneNumber" formControlName="SpouseTelephoneNumber" class="input input-bordered w-full" placeholder="Enter your spouse's telephone number">
-          </div>
-          <div class="form-control w-full">
-            <label for="FatherLastName" class="label-text font-bold text-lg">Father Last Name</label>
-            <input id="FatherLastName" formControlName="FatherLastName" class="input input-bordered w-full" placeholder="Enter your father's last name">
-          </div>
-          <div class="form-control w-full">
-            <label for="FatherFirstName" class="label-text font-bold text-lg">Father First Name</label>
-            <input id="FatherFirstName" formControlName="FatherFirstName" class="input input-bordered w-full" placeholder="Enter your father's first name">
-          </div>
-          <div class="form-control w-full">
-            <label for="FatherMiddleName" class="label-text font-bold text-lg">Father Middle Name</label>
-            <input id="FatherMiddleName" formControlName="FatherMiddleName" class="input input-bordered w-full" placeholder="Enter your father's middle name">
-          </div>
-          <div class="form-control w-full">
-            <label for="MotherLastName" class="label-text font-bold text-lg">Mother Last Name</label>
-            <input id="MotherLastName" formControlName="MotherLastName" class="input input-bordered w-full" placeholder="Enter your mother's last name">
-          </div>
-          <div class="form-control w-full">
-            <label for="MotherFirstName" class="label-text font-bold text-lg">Mother First Name</label>
-            <input id="MotherFirstName" formControlName="MotherFirstName" class="input input-bordered w-full" placeholder="Enter your mother's first name">
-          </div>
-          <div class="form-control w-full">
-            <label for="MotherMiddleName" class="label-text font-bold text-lg">Mother Middle Name</label>
-            <input id="MotherMiddleName" formControlName="MotherMiddleName" class="input input-bordered w-full" placeholder="Enter your mother's middle name">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-semibold mb-4 text-maroon">Spouse Information</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="form-control">
+              <label for="SpouseLastName" class="label-text">Spouse Last Name</label>
+              <input id="SpouseLastName" formControlName="SpouseLastName" class="input input-bordered w-full" placeholder="Enter your spouse's last name">
+            </div>
+            <div class="form-control">
+              <label for="SpouseFirstName" class="label-text">Spouse First Name</label>
+              <input id="SpouseFirstName" formControlName="SpouseFirstName" class="input input-bordered w-full" placeholder="Enter your spouse's first name">
+            </div>
+            <div class="form-control">
+              <label for="SpouseMiddleName" class="label-text">Spouse Middle Name</label>
+              <input id="SpouseMiddleName" formControlName="SpouseMiddleName" class="input input-bordered w-full" placeholder="Enter your spouse's middle name">
+            </div>
+            <div class="form-control">
+              <label for="SpouseOccupation" class="label-text">Spouse Occupation</label>
+              <input id="SpouseOccupation" formControlName="SpouseOccupation" class="input input-bordered w-full" placeholder="Enter your spouse's occupation">
+            </div>
+            <div class="form-control">
+              <label for="SpouseEmployerName" class="label-text">Spouse Employer Name</label>
+              <input id="SpouseEmployerName" formControlName="SpouseEmployerName" class="input input-bordered w-full" placeholder="Enter the name of your spouse's employer">
+            </div>
+            <div class="form-control">
+              <label for="SpouseBusinessAddress" class="label-text">Spouse Business Address</label>
+              <input id="SpouseBusinessAddress" formControlName="SpouseBusinessAddress" class="input input-bordered w-full" placeholder="Enter your spouse's business address">
+            </div>
+            <div class="form-control">
+              <label for="SpouseTelephoneNumber" class="label-text">Spouse Telephone Number</label>
+              <input id="SpouseTelephoneNumber" formControlName="SpouseTelephoneNumber" class="input input-bordered w-full" placeholder="Enter your spouse's telephone number">
+            </div>
           </div>
         </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-semibold mb-4 text-maroon">Parents Information</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="form-control">
+              <label for="FatherLastName" class="label-text">Father Last Name</label>
+              <input id="FatherLastName" formControlName="FatherLastName" class="input input-bordered w-full" placeholder="Enter your father's last name">
+            </div>
+            <div class="form-control">
+              <label for="FatherFirstName" class="label-text">Father First Name</label>
+              <input id="FatherFirstName" formControlName="FatherFirstName" class="input input-bordered w-full" placeholder="Enter your father's first name">
+            </div>
+            <div class="form-control">
+              <label for="FatherMiddleName" class="label-text">Father Middle Name</label>
+              <input id="FatherMiddleName" formControlName="FatherMiddleName" class="input input-bordered w-full" placeholder="Enter your father's middle name">
+            </div>
+            <div class="form-control">
+              <label for="MotherLastName" class="label-text">Mother Last Name</label>
+              <input id="MotherLastName" formControlName="MotherLastName" class="input input-bordered w-full" placeholder="Enter your mother's last name">
+            </div>
+            <div class="form-control">
+              <label for="MotherFirstName" class="label-text">Mother First Name</label>
+              <input id="MotherFirstName" formControlName="MotherFirstName" class="input input-bordered w-full" placeholder="Enter your mother's first name">
+            </div>
+            <div class="form-control">
+              <label for="MotherMiddleName" class="label-text">Mother Middle Name</label>
+              <input id="MotherMiddleName" formControlName="MotherMiddleName" class="input input-bordered w-full" placeholder="Enter your mother's middle name">
+            </div>
+          </div>
+        </div>
+        
         <div class="flex justify-end mt-6">
-          <button type="submit" class="btn bg-black text-white mr-4">{{ familyData ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn bg-maroon text-white" (click)="toggleForm()">Cancel</button>
+          <button type="submit" class="btn btn-save mr-4">{{ familyData ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-cancel" (click)="toggleForm()">Cancel</button>
         </div>
       </form>
     </div>

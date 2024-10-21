@@ -2,103 +2,136 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* component.css */
-body {
-    background-color: #f8fafc;
-  }
-  
-  .bg-maroon {
-    background-color: #800000;
-  }
-  
-  h2, h1 {
-    color: #ffffff;
-  }
-  
-  .grid {
-    display: grid;
-    gap: 1.5rem;
-  }
-  
-  .label-text {
-    font-weight: bold;
-  }
-  
-  .input,
-  .select {
-    border-radius: 0.375rem;
-  }
-  
-  /* Change the highlight color of the input field when focused */
-  .input:focus {
-    border-color: #3b82f6; /* Change this to your desired color */
-    outline: none; /* Remove default outline */
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
-  }
-  
-  .select:focus {
-    border-color: #3b82f6; /* Change this to your desired color */
-    outline: none; /* Remove default outline */
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
-  }
-  
-  .btn {
-    background-color: #000000;
-    border-color: #000000;
-    color: #ffffff;
-  }
-  
-  .btn:hover {
-    background-color: #444444;
-    border-color: #444444;
-  }
-  
-  .bg-base-200 {
-    background-color: #f3f4f6;
-  }
-  
-  .text-primary {
-    color: #3b82f6;
-  }
-  
-  .container {
-    padding: 0; /* Remove padding to ensure the header spans full width */
-  }
-  
-  .space-y-4 > * + * {
-    margin-top: 1rem;
-  }
-  
-  .space-y-6 > * + * {
-    margin-top: 1.5rem;
-  }
-  
-  .bg-white {
-    background-color: #ffffff;
-  }
-  
-  .rounded-lg {
-    border-radius: 0.375rem;
-  }
-  
-  .shadow {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  }
-  
-  .text-lg {
-    font-size: 1.125rem;
-  }
-  
-  .p-6 {
-    padding: 1.5rem;
-  }
+.bg-maroon {
+  background-color: #800000;
+}
 
-  .bg-maroon {
-    background-color: #800000;
-  }
+.text-maroon {
+  color: #800000;
+}
 
-  .bg-maroon:hover {
-    background-color: #a40d0d;
-  }
+.hover\:bg-maroon-dark:hover {
+  background-color: #600000;
+}
 
-  
+.btn {
+  @apply font-bold py-2 px-4 rounded;
+}
+
+.btn-save {
+  background-color: #000;
+  border-color: #000;
+  color: #fff;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-save:hover {
+  background-color: #222222;
+  transform: translateY(-1px);
+}
+
+.btn-cancel {
+  background-color: #800000;
+  border-color: #800000;
+  color: #fff;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #9f0303;
+  transform: translateY(-1px);
+}
+
+.btn-add-info {
+  @apply bg-maroon text-white;
+}
+
+.form-control {
+  margin-bottom: 1.5rem;
+}
+
+.label-text {
+  color: #000000;
+  font-weight: 500;
+}
+
+.input-bordered {
+  border: 1px solid #ddd;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  transition: border-color 0.3s ease;
+}
+
+.input-bordered:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.text-gray-600 {
+  color: #4B5563;
+}
+
+.text-gray-900 {
+  color: #111827;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #E5E7EB;
+}
+
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+
+.toast {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 9999;
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 0.375rem;
+  color: #ffffff;
+}
+
+.alert-success {
+  background-color: #10b981;
+}
+
+.alert-error {
+  background-color: #ef4444;
+}
+
+.alert-warning {
+  background-color: #f59e0b;
+}
+
+.btn-edit {
+  background-color: #000000;
+  border-color: #000000;
+  color: #ffffff;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-edit:hover {
+  background-color: #333333;
+  transform: translateY(-1px);
+}

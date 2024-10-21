@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ProfileImageService } from '../../services/profile-image.service';
 import { AuthService } from '../../services/auth.service';
 import { jwtDecode } from 'jwt-decode';
-import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -17,6 +16,9 @@ export class ProfileImageComponent implements OnInit {
   userID: number;
   errorMessage: string | null = null;
   isUpdatingImage: boolean = false;
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' = 'success';
 
   constructor(
     private profileImageService: ProfileImageService,
@@ -44,7 +46,7 @@ export class ProfileImageComponent implements OnInit {
       },
       (error) => {
         console.error('Error loading profile image:', error);
-        this.errorMessage = 'Profile image not found.';
+        this.showToastMessage('Error loading profile image', 'error');
       }
     );
   }
@@ -55,10 +57,12 @@ export class ProfileImageComponent implements OnInit {
       this.profileImageService.uploadProfileImage(this.userID, file).subscribe(
         (image) => {
           this.loadProfileImage();
+          this.isUpdatingImage = false;
+          this.showToastMessage('Profile image updated successfully', 'success');
         },
         (error) => {
           console.error('Error uploading profile image:', error);
-          this.errorMessage = 'Failed to upload profile image. Please try again.';
+          this.showToastMessage('Failed to upload profile image. Please try again.', 'error');
         }
       );
     }
@@ -71,5 +75,14 @@ export class ProfileImageComponent implements OnInit {
   cancelUpdateImage(): void {
     this.isUpdatingImage = false;
     this.errorMessage = null;
+  }
+
+  showToastMessage(message: string, type: 'success' | 'error'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000);
   }
 }

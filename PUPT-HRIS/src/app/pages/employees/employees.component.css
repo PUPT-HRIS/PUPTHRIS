@@ -13,33 +13,97 @@
   z-index: 40;
 }
 
-/* Modal box styling */
+/* Updated Modal Styles */
 .modal-box {
-  z-index: 50;
-  max-width: 75%;
-  max-height: 80vh;
-  margin: auto;
-  background-color: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  overflow-y: auto;
+  display: flex;
+  width: 90%;
+  height: 90vh;
+  max-width: none;
   padding: 0;
+}
+
+.modal-sidebar {
+  width: 250px;
+  background-color: #f3f4f6;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal-content {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
 }
 
 .modal-header {
   background-color: #800000;
   color: #fff;
-  padding: 15px;
-  border-radius: 0.5rem 0.5rem 0 0;
+  padding: 15px 20px;
+  font-size: 1.25rem;
+  font-weight: bold;
 }
 
 .modal-footer {
+  background-color: #ffffff;
+  padding: 15px 20px;
   text-align: right;
-  padding: 10px;
+}
+
+/* Updated Tab Styles */
+.tab-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.tab {
+  padding: 10px 15px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.tab:hover {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.tab-active {
+  background-color: #800000;
+  color: #fff;
+}
+
+/* Updated Table Styles */
+.info-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+.info-table th,
+.info-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.info-table th {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-box {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.tab-content {
+  animation: fadeIn 0.2s ease-out;
 }
 
 /* Tabs styling */
@@ -149,4 +213,20 @@
 .modal-action {
   margin-top: 20px;
   padding: 0 20px;
+}
+
+/* Modal footer button */
+.modal-footer .btn {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.modal-footer .btn:hover {
+  background-color: #333333;
+}
+
+/* Ensure sidebar buttons have black hover */
+.modal-sidebar .tab:hover {
+  background-color: #000000;
+  color: #ffffff;
 }

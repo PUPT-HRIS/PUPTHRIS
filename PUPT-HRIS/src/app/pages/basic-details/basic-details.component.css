@@ -17,6 +17,10 @@
   background-color: #800000;
 }
 
+.text-maroon {
+  color:#800000
+}
+
 .text-white {
   color: #ffffff;
 }
@@ -77,28 +81,28 @@
 }
 
 /* Buttons */
-.btn-save {
+.btn {
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.bg-black {
   background-color: #000;
-  border-color: #000;
-  color: #fff;
-  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.btn-save:hover {
-  background-color: #222222;
-  transform: translateY(-1px);
+.bg-black:hover {
+  background-color: #333;
 }
 
-.btn-cancel {
+.bg-maroon {
   background-color: #800000;
-  border-color: #800000;
-  color: #fff;
-  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.btn-cancel:hover {
+.bg-maroon:hover {
   background-color: #9f0303;
-  transform: translateY(-1px);
 }
 
 /* Add Info button */

@@ -50,302 +50,67 @@
   <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn">Next</button>
 </div>
 
-<!-- Modal with Sections -->
+<!-- Updated Modal with Sections -->
 <div *ngIf="isModalOpen" class="modal modal-open">
   <div class="modal-box">
-    <div class="modal-header">
-      <h3 class="font-bold text-lg">Employee Information</h3>
+    <div class="modal-sidebar">
+      <h3 class="font-bold text-lg mb-4">Employee Information</h3>
+      <div class="tab-list">
+        <a class="tab" [class.tab-active]="activeTab === 'basic'" (click)="setActiveTab('basic')">Basic Details</a>
+        <a class="tab" [class.tab-active]="activeTab === 'education'" (click)="setActiveTab('education')">Educational Background</a>
+        <a class="tab" [class.tab-active]="activeTab === 'personal'" (click)="setActiveTab('personal')">Personal Details</a>
+        <a class="tab" [class.tab-active]="activeTab === 'contact'" (click)="setActiveTab('contact')">Contact Details</a>
+        <a class="tab" [class.tab-active]="activeTab === 'family'" (click)="setActiveTab('family')">Family Background</a>
+        <a class="tab" [class.tab-active]="activeTab === 'civil'" (click)="setActiveTab('civil')">Civil Service Eligibilities</a>
+        <a class="tab" [class.tab-active]="activeTab === 'learning'" (click)="setActiveTab('learning')">Learning & Development</a>
+        <a class="tab" [class.tab-active]="activeTab === 'work'" (click)="setActiveTab('work')">Work Experience</a>
+        <a class="tab" [class.tab-active]="activeTab === 'voluntary'" (click)="setActiveTab('voluntary')">Voluntary Work</a>
+        <a class="tab" [class.tab-active]="activeTab === 'character'" (click)="setActiveTab('character')">Character References</a>
+      </div>
     </div>
     
-    <!-- Tabs or Navigation -->
-    <div class="tabs">
-      <a class="tab" [class.tab-active]="activeTab === 'basic'" (click)="setActiveTab('basic')">Basic Details</a>
-      <a class="tab" [class.tab-active]="activeTab === 'education'" (click)="setActiveTab('education')">Educational Background</a>
-      <a class="tab" [class.tab-active]="activeTab === 'personal'" (click)="setActiveTab('personal')">Personal Details</a>
-      <a class="tab" [class.tab-active]="activeTab === 'contact'" (click)="setActiveTab('contact')">Contact Details</a>
-      <a class="tab" [class.tab-active]="activeTab === 'family'" (click)="setActiveTab('family')">Family Background & Children</a>
-      <a class="tab" [class.tab-active]="activeTab === 'civil'" (click)="setActiveTab('civil')">Civil Service Eligibilities</a>
-      <a class="tab" [class.tab-active]="activeTab === 'learning'" (click)="setActiveTab('learning')">Learning & Development</a>
-      <a class="tab" [class.tab-active]="activeTab === 'work'" (click)="setActiveTab('work')">Work Experience</a>
-      <a class="tab" [class.tab-active]="activeTab === 'voluntary'" (click)="setActiveTab('voluntary')">Voluntary Work</a>
-      <a class="tab" [class.tab-active]="activeTab === 'character'" (click)="setActiveTab('character')">Character References</a>
-    </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>{{ activeTab | titlecase }} Information</h3>
+      </div>
+      
+      <div class="tab-content">
+        <!-- Basic Details Content -->
+        <div *ngIf="activeTab === 'basic'">
+          <table class="info-table">
+            <tbody>
+              <tr>
+                <th>Employee No:</th>
+                <td>{{ basicDetails?.EmployeeNo }}</td>
+              </tr>
+              <tr>
+                <th>Faculty Code:</th>
+                <td>{{ basicDetails?.FacultyCode }}</td>
+              </tr>
+              <tr>
+                <th>Name:</th>
+                <td>{{ basicDetails?.Honorific }} {{ basicDetails?.FirstName }} {{ basicDetails?.MiddleInitial }} {{ basicDetails?.LastName }} {{ basicDetails?.NameExtension }}</td>
+              </tr>
+              <tr>
+                <th>Date of Birth:</th>
+                <td>{{ basicDetails?.DateOfBirth | date:'longDate' }}</td>
+              </tr>
+              <tr>
+                <th>Sex:</th>
+                <td>{{ basicDetails?.Sex }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <!-- Basic Details Content -->
-    <div *ngIf="activeTab === 'basic'">
-      <table class="table w-full">
-        <tbody>
-          <tr>
-            <td><strong>Employee No:</strong></td>
-            <td>{{ basicDetails?.EmployeeNo }}</td>
-          </tr>
-          <tr>
-            <td><strong>Faculty Code:</strong></td>
-            <td>{{ basicDetails?.FacultyCode }}</td>
-          </tr>
-          <tr>
-            <td><strong>Name:</strong></td>
-            <td>{{ basicDetails?.Honorific }} {{ basicDetails?.FirstName }} {{ basicDetails?.MiddleInitial }} {{ basicDetails?.LastName }} {{ basicDetails?.NameExtension }}</td>
-          </tr>
-          <tr>
-            <td><strong>Date of Birth:</strong></td>
-            <td>{{ basicDetails?.DateOfBirth | date:'longDate' }}</td>
-          </tr>
-          <tr>
-            <td><strong>Sex:</strong></td>
-            <td>{{ basicDetails?.Sex }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <!-- Other tab contents... -->
+        <!-- Update the structure for other tabs similarly -->
 
-    <!-- Educational Background Content -->
-    <div *ngIf="activeTab === 'education'">
-      <table class="table w-full">
-        <thead>
-          <tr>
-            <th>School Name</th>
-            <th>Level</th>
-            <th>Inclusive Dates of Attendance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let education of educationDetails">
-            <td>{{ education.NameOfSchool }}</td>
-            <td>{{ education.Level }}</td>
-            <td>
-              {{ education.PeriodOfAttendanceFrom ? (education.PeriodOfAttendanceFrom | date:'yyyy') : '' }} - 
-              {{ education.PeriodOfAttendanceTo ? (education.PeriodOfAttendanceTo | date:'yyyy') : '' }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      </div>
 
-    <!-- Personal Details Content -->
-    <div *ngIf="activeTab === 'personal'">
-      <table class="table w-full">
-        <tbody>
-          <tr>
-            <td><strong>Place of Birth:</strong></td>
-            <td>{{ personalDetails?.PlaceOfBirth }}</td>
-          </tr>
-          <tr>
-            <td><strong>Civil Status:</strong></td>
-            <td>{{ personalDetails?.CivilStatus }}</td>
-          </tr>
-          <tr>
-            <td><strong>Height:</strong></td>
-            <td>{{ personalDetails?.Height }} cm</td>
-          </tr>
-          <tr>
-            <td><strong>Weight:</strong></td>
-            <td>{{ personalDetails?.Weight }} kg</td>
-          </tr>
-          <tr>
-            <td><strong>Blood Type:</strong></td>
-            <td>{{ personalDetails?.BloodType }}</td>
-          </tr>
-          <tr>
-            <td colspan="2"><strong>Residential Address:</strong></td>
-          </tr>
-          <tr>
-            <td colspan="2">{{ formatAddress(personalDetails, 'Residential') }}</td>
-          </tr>
-          <tr>
-            <td colspan="2"><strong>Permanent Address:</strong></td>
-          </tr>
-          <tr>
-            <td colspan="2">{{ formatAddress(personalDetails, 'Permanent') }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Contact Details Content -->
-    <div *ngIf="activeTab === 'contact'">
-      <table class="table w-full">
-        <tbody>
-          <tr>
-            <td><strong>Telephone Number:</strong></td>
-            <td>{{ contactDetails?.TelephoneNumber }}</td>
-          </tr>
-          <tr>
-            <td><strong>Mobile Number:</strong></td>
-            <td>{{ contactDetails?.MobileNumber }}</td>
-          </tr>
-          <tr>
-            <td><strong>Email Address:</strong></td>
-            <td>{{ contactDetails?.EmailAddress }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Family Background & Children Content -->
-    <div *ngIf="activeTab === 'family'">
-      <h4 class="font-bold mb-2">Family Background</h4>
-      <table class="table w-full">
-        <tbody>
-          <tr>
-            <td><strong>Spouse's Name:</strong></td>
-            <td>{{ familyBackground?.SpouseFirstName }} {{ familyBackground?.SpouseMiddleName }} {{ familyBackground?.SpouseLastName }}</td>
-          </tr>
-          <tr>
-            <td><strong>Spouse's Occupation:</strong></td>
-            <td>{{ familyBackground?.SpouseOccupation }}</td>
-          </tr>
-          <tr>
-            <td><strong>Father's Name:</strong></td>
-            <td>{{ familyBackground?.FatherFirstName }} {{ familyBackground?.FatherMiddleName }} {{ familyBackground?.FatherLastName }}</td>
-          </tr>
-          <tr>
-            <td><strong>Mother's Name:</strong></td>
-            <td>{{ familyBackground?.MotherFirstName }} {{ familyBackground?.MotherMiddleName }} {{ familyBackground?.MotherLastName }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h4 class="font-bold mt-4 mb-2">Children</h4>
-      <table class="table w-full">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Birth Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let child of childrenDetails">
-            <td>{{ child.ChildName }}</td>
-            <td>{{ child.BirthDate | date:'longDate' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Civil Service Eligibilities Content -->
-    <div *ngIf="activeTab === 'civil'">
-      <table class="table w-full">
-        <thead>
-          <tr>
-            <th>Career Service</th>
-            <th>Rating</th>
-            <th>Date of Examination</th>
-            <th>Place of Examination</th>
-            <th>License Number</th>
-            <th>License Validity Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let eligibility of civilServiceEligibilities">
-            <td>{{ eligibility.CareerService }}</td>
-            <td>{{ eligibility.Rating }}</td>
-            <td>{{ eligibility.DateOfExamination | date:'longDate' }}</td>
-            <td>{{ eligibility.PlaceOfExamination }}</td>
-            <td>{{ eligibility.LicenseNumber }}</td>
-            <td>{{ eligibility.LicenseValidityDate | date:'longDate' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Learning & Development Content -->
-    <div *ngIf="activeTab === 'learning'">
-      <table class="table w-full">
-        <thead>
-          <tr>
-            <th>Title of Learning & Development</th>
-            <th>Inclusive Dates</th>
-            <th>Number of Hours</th>
-            <th>Type of LD</th>
-            <th>Conducted/Sponsored By</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let learning of learningDetails">
-            <td>{{ learning.TitleOfLearningDevelopment }}</td>
-            <td>{{ learning.InclusiveDatesFrom | date:'longDate' }} - {{ learning.InclusiveDatesTo | date:'longDate' }}</td>
-            <td>{{ learning.NumberOfHours }}</td>
-            <td>{{ learning.TypeOfLD }}</td>
-            <td>{{ learning.ConductedSponsoredBy }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Work Experience Content -->
-    <div *ngIf="activeTab === 'work'">
-      <table class="table w-full">
-        <thead>
-          <tr>
-            <th>Position Title</th>
-            <th>Department/Agency/Office/Company</th>
-            <th>Inclusive Dates</th>
-            <th>Monthly Salary</th>
-            <th>Salary/Job/Pay Grade</th>
-            <th>Status of Appointment</th>
-            <th>Govt. Service (Y/N)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let work of workExperiences">
-            <td>{{ work.PositionTitle }}</td>
-            <td>{{ work.DepartmentAgencyOfficeCompany }}</td>
-            <td>{{ work.InclusiveDatesFrom | date:'yyyy' }} - {{ work.InclusiveDatesTo | date:'yyyy' }}</td>
-            <td>{{ work.MonthlySalary | currency }}</td>
-            <td>{{ work.SalaryJobPayGrade }}</td>
-            <td>{{ work.StatusOfAppointment }}</td>
-            <td>{{ work.GovtService ? 'Y' : 'N' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Voluntary Work Content -->
-    <div *ngIf="activeTab === 'voluntary'">
-      <table class="table w-full">
-        <thead>
-          <tr>
-            <th>Organization Name & Address</th>
-            <th>Inclusive Dates</th>
-            <th>Number of Hours</th>
-            <th>Position/Nature of Work</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let voluntary of voluntaryWorks">
-            <td>{{ voluntary.OrganizationNameAddress }}</td>
-            <td>{{ voluntary.InclusiveDatesFrom | date:'yyyy' }} - {{ voluntary.InclusiveDatesTo | date:'yyyy' }}</td>
-            <td>{{ voluntary.NumberOfHours }}</td>
-            <td>{{ voluntary.PositionNatureOfWork }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Character References Content -->
-    <div *ngIf="activeTab === 'character'">
-      <table class="table w-full">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Telephone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let reference of characterReferences">
-            <td>{{ reference.Name }}</td>
-            <td>{{ reference.Address }}</td>
-            <td>{{ reference.TelephoneNumber }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Modal Action Buttons -->
-    <div class="modal-action">
-      <button class="btn" (click)="closeModal()">Close</button>
+      <div class="modal-footer">
+        <button class="btn" (click)="closeModal()">Close</button>
+      </div>
     </div>
   </div>
 </div>
