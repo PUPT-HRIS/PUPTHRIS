@@ -1,48 +1,53 @@
-<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
-  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="container">
+  <div class="header">
     <h1 class="text-2xl font-bold">Achievement Awards</h1>
   </div>
 
-  <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="paginatedAchievementAwards.length > 0" class="p-6 space-y-6">
-      <div class="overflow-auto">
-        <div class="flex-1 mb-2">
-          <a class="text-lg font-normal">You are currently viewing the list/s of Achievement Awards.</a>
-        </div>
-        <table class="table table-zebra w-full border-separate border-spacing-0">
+  <div class="content">
+    <div class="actions">
+      <button class="btn btn-primary" (click)="addNewAchievementAward()">Add Achievement Award</button>
+      <label for="excelImport" class="btn btn-secondary">Import Excel Data</label>
+      <input type="file" id="excelImport" (change)="importExcelData($event)" accept=".xlsx, .xls" class="hidden">
+    </div>
+
+    <ng-container *ngIf="!isEditing; else editForm">
+      <div class="card" *ngIf="paginatedAchievementAwards.length > 0">
+        <table class="table">
           <thead>
-            <tr class="bg-maroon text-white">
-              <th class="p-4">#</th>
-              <th class="p-4">Nature of Achievement</th>
-              <th class="p-4">Classification</th>
-              <th class="p-4">Level</th>
-              <th class="p-4">Awarding Body</th>
-              <th class="p-4">Inclusive Dates</th>
-              <th class="p-4">Proof</th>
-              <th class="p-4 w-36">Actions</th>
+            <tr>
+              <th>#</th>
+              <th>Nature of Achievement</th>
+              <th>Classification</th>
+              <th>Level</th>
+              <th>Awarding Body</th>
+              <th>Inclusive Dates</th>
+              <th>Proof</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let award of paginatedAchievementAwards; let i = index">
-              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
-              <td class="p-4">{{ award.NatureOfAchievement }}</td>
-              <td class="p-4">{{ award.Classification }}</td>
-              <td class="p-4">{{ award.Level }}</td>
-              <td class="p-4">{{ award.AwardingBody }}</td>
-              <td class="p-4">{{ award.InclusiveDates }}</td>
-              <td class="p-4">
+              <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
+              <td [ngClass]="{'null-value': !award.NatureOfAchievement}">{{ award.NatureOfAchievement || 'null' }}</td>
+              <td [ngClass]="{'null-value': !award.Classification}">{{ award.Classification || 'null' }}</td>
+              <td [ngClass]="{'null-value': !award.Level}">{{ award.Level || 'null' }}</td>
+              <td [ngClass]="{'null-value': !award.AwardingBody}">{{ award.AwardingBody || 'null' }}</td>
+              <td [ngClass]="{'null-value': !award.InclusiveDates}">{{ award.InclusiveDates || 'null' }}</td>
+              <td>
                 <ng-container *ngIf="award.Proof; else noProof">
                   <button *ngIf="award.ProofType === 'file'" (click)="openProofModal(award.Proof, award.SupportingDocument)" class="btn btn-link">View File</button>
                   <a *ngIf="award.ProofType === 'link'" [href]="award.Proof" target="_blank" class="btn btn-link">View Link</a>
                 </ng-container>
                 <ng-template #noProof>
-                  <span>No Proof Uploaded</span>
+                  <span class="null-value">null</span>
                 </ng-template>
               </td>
-              <td class="p-4">
+              <td>
                 <div class="btn-container">
-                  <button (click)="editAchievementAward(award.AchievementID!)" class="btn btn-edit btn-sm">Edit</button>
-                  <button (click)="deleteAchievementAward(award.AchievementID!)" class="btn btn-delete btn-sm">Delete</button>
+                  <button (click)="editAchievementAward(award.AchievementID!)" class="btn btn-edit btn-sm">EDIT</button>
+                  <button (click)="deleteAchievementAward(award.AchievementID!)" class="btn btn-delete btn-sm">DELETE</button>
                 </div>
               </td>
             </tr>
@@ -50,125 +55,108 @@
         </table>
       </div>
 
-      <div class="mb-4">
-        <label for="excelImport" class="btn btn-primary">Import Excel Data</label>
-        <input type="file" id="excelImport" (change)="importExcelData($event)" accept=".xlsx, .xls" class="hidden">
-      </div>
-
-      <div class="mt-6">
-        <button class="btn btn-add-info text-white w-full" (click)="addNewAchievementAward()">Add Achievement Award</button>
-      </div>
-
-      <!-- Pagination Controls -->
-      <div class="pagination-controls mt-4">
-        <button class="btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
-        <button class="btn-pagination" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+      <div class="pagination-controls">
+        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
           {{ page }}
         </button>
-        <button class="btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+        <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
-    </div>
 
-    <div *ngIf="paginatedAchievementAwards.length === 0" class="p-6 space-y-6">
-      <div class="p-6 bg-white rounded-lg shadow-lg">
-        <p class="text-lg">No achievement awards information available.</p>
+      <div class="card empty-state" *ngIf="paginatedAchievementAwards.length === 0">
+        <p>No achievement awards information available.</p>
       </div>
-      <div class="flex justify-end">
-        <button class="btn btn-add-info w-full" (click)="addNewAchievementAward()">Add Achievement Award</button>
-      </div>
-    </div>
-  </ng-container>
+    </ng-container>
 
-  <ng-template #editForm>
-    <div class="p-6">
-      <form [formGroup]="achievementAwardForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="space-y-6">
-        <div class="grid grid-cols-2 gap-6">
-          <div class="form-control w-full">
-            <label for="NatureOfAchievement" class="label-text font-bold text-lg">Nature of Achievement</label>
-            <input id="NatureOfAchievement" formControlName="NatureOfAchievement" class="input input-bordered w-full" placeholder="Enter the nature of achievement">
-          </div>
-          <div class="form-control w-full">
-            <label for="Classification" class="label-text font-bold text-lg">Classification</label>
-            <div class="relative">
-              <select id="Classification" formControlName="Classification" class="input input-bordered w-full appearance-none pr-10">
-                <option value="" disabled selected>-- Select --</option>
-                <option value="Learning and Development Interventions">Learning and Development Interventions</option>
-                <option value="Training">Training</option>
-                <option value="Seminar">Seminar</option>
-                <option value="Conference">Conference</option>
-                <option value="Workshop">Workshop</option>
-                <option value="Short Course">Short Course</option>
-              </select>
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <i class="fas fa-chevron-down"></i>
-              </span>
-            </div>
-          </div>
-
-          <div class="form-control w-full">
-            <label for="Level" class="label-text font-bold text-lg">Level</label>
-            <div class="relative">
-              <select id="Level" formControlName="Level" class="input input-bordered w-full appearance-none pr-10">
-                <option value="" disabled selected>-- Select --</option>
-                <option value="Local">Local</option>
-                <option value="National">National</option>
-                <option value="International">International</option>
-              </select>
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <i class="fas fa-chevron-down"></i>
-              </span>
-            </div>
-          </div>
-
-          <div class="form-control w-full">
-            <label for="AwardingBody" class="label-text font-bold text-lg">Awarding Body</label>
-            <input id="AwardingBody" formControlName="AwardingBody" class="input input-bordered w-full" placeholder="Enter the awarding body">
-          </div>
-          <div class="form-control w-full">
-            <label for="Venue" class="label-text font-bold text-lg">Venue</label>
-            <input id="Venue" formControlName="Venue" class="input input-bordered w-full" placeholder="Enter the venue">
-          </div>
-          <div class="form-control w-full">
-            <label for="InclusiveDates" class="label-text font-bold text-lg">Inclusive Dates</label>
-            <input id="InclusiveDates" formControlName="InclusiveDates" class="input input-bordered w-full" placeholder="Enter the inclusive dates">
-          </div>
-          <div class="form-control w-full">
-            <label for="Remarks" class="label-text font-bold text-lg">Remarks</label>
-            <textarea id="Remarks" formControlName="Remarks" class="textarea textarea-bordered w-full" placeholder="Enter any remarks"></textarea>
-          </div>
-          <div class="form-control w-full">
-            <label for="SupportingDocument" class="label-text font-bold text-lg">Supporting Document</label>
-            <input id="SupportingDocument" formControlName="SupportingDocument" class="input input-bordered w-full" placeholder="Enter a description of the supporting document">
-          </div>
-          <div class="form-control w-full">
-            <label for="ProofType" class="label-text font-bold text-lg">Proof Type</label>
-            <div class="relative">
-              <select id="ProofType" formControlName="ProofType" class="input input-bordered w-full appearance-none pr-10">
-                <option value="file">File</option>
-                <option value="link">Link</option>
-              </select>
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <i class="fas fa-chevron-down"></i>
-              </span>
-            </div>
-          </div>
-          <div class="form-control w-full">
-            <label for="Proof" class="label-text font-bold text-lg">Proof</label>
-            <ng-container *ngIf="achievementAwardForm.get('ProofType')?.value === 'file'; else proofLink">
-              <input id="Proof" type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full">
-            </ng-container>
-            <ng-template #proofLink>
-              <input id="Proof" formControlName="Proof" class="input input-bordered w-full" placeholder="Enter proof link">
-            </ng-template>
-          </div>
+    <ng-template #editForm>
+      <div class="p-6 space-y-8">
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+          <p class="font-bold">Note: You are currently editing Achievement Award information.</p>
         </div>
-        <div class="flex justify-end mt-6">
-          <button type="submit" class="btn btn-save mr-4">{{ currentAchievementId ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </ng-template>
+        <form [formGroup]="achievementAwardForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+          <!-- Achievement Award Information -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4 text-maroon">Achievement Award Information</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-control">
+                <label for="NatureOfAchievement" class="label-text">Nature of Achievement <span class="text-red-500">*</span></label>
+                <input id="NatureOfAchievement" formControlName="NatureOfAchievement" class="input input-bordered w-full" placeholder="Enter the nature of achievement">
+              </div>
+              <div class="form-control">
+                <label for="Classification" class="label-text">Classification <span class="text-red-500">*</span></label>
+                <select id="Classification" formControlName="Classification" class="select select-bordered w-full">
+                  <option value="" disabled selected>-- Select --</option>
+                  <option value="Learning and Development Interventions">Learning and Development Interventions</option>
+                  <option value="Training">Training</option>
+                  <option value="Seminar">Seminar</option>
+                  <option value="Conference">Conference</option>
+                  <option value="Workshop">Workshop</option>
+                  <option value="Short Course">Short Course</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="Level" class="label-text">Level <span class="text-red-500">*</span></label>
+                <select id="Level" formControlName="Level" class="select select-bordered w-full">
+                  <option value="" disabled selected>-- Select --</option>
+                  <option value="Local">Local</option>
+                  <option value="National">National</option>
+                  <option value="International">International</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="AwardingBody" class="label-text">Awarding Body <span class="text-red-500">*</span></label>
+                <input id="AwardingBody" formControlName="AwardingBody" class="input input-bordered w-full" placeholder="Enter the awarding body">
+              </div>
+              <div class="form-control">
+                <label for="Venue" class="label-text">Venue</label>
+                <input id="Venue" formControlName="Venue" class="input input-bordered w-full" placeholder="Enter the venue">
+              </div>
+              <div class="form-control">
+                <label for="InclusiveDates" class="label-text">Inclusive Dates <span class="text-red-500">*</span></label>
+                <input id="InclusiveDates" formControlName="InclusiveDates" class="input input-bordered w-full" placeholder="Enter the inclusive dates">
+              </div>
+              <div class="form-control">
+                <label for="Remarks" class="label-text">Remarks</label>
+                <textarea id="Remarks" formControlName="Remarks" class="textarea textarea-bordered w-full" placeholder="Enter any remarks"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Supporting Documents -->
+          <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4 text-maroon">Supporting Documents</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-control">
+                <label for="SupportingDocument" class="label-text">Supporting Document</label>
+                <input id="SupportingDocument" formControlName="SupportingDocument" class="input input-bordered w-full" placeholder="Enter a description of the supporting document">
+              </div>
+              <div class="form-control">
+                <label for="ProofType" class="label-text">Proof Type <span class="text-red-500">*</span></label>
+                <select id="ProofType" formControlName="ProofType" class="select select-bordered w-full">
+                  <option value="file">File</option>
+                  <option value="link">Link</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="Proof" class="label-text">Proof <span class="text-red-500">*</span></label>
+                <ng-container *ngIf="achievementAwardForm.get('ProofType')?.value === 'file'; else proofLink">
+                  <input id="Proof" type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full">
+                </ng-container>
+                <ng-template #proofLink>
+                  <input id="Proof" formControlName="Proof" class="input input-bordered w-full" placeholder="Enter proof link">
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end mt-6">
+            <button type="submit" class="btn btn-save mr-4">{{ currentAchievementId ? 'Update' : 'Add' }}</button>
+            <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+  </div>
 </div>
 
 <!-- DaisyUI Modal for Viewing Proof -->

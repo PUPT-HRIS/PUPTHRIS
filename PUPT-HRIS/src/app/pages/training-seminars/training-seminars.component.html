@@ -1,52 +1,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
-  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+<div class="container">
+  <div class="header">
     <h1 class="text-2xl font-bold">Trainings and Seminars</h1>
   </div>
 
-  <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="paginatedTrainingData.length > 0" class="p-6 space-y-6">
-      <div class="overflow-auto">
-        <div class="flex-1 mb-2">
-          <a class="text-lg font-normal">You are currently viewing the list/s of Trainings and Seminars.</a>
-        </div>
-        <table class="table table-zebra w-full border-separate border-spacing-0">
+  <div class="content">
+    <div class="actions">
+      <button class="btn btn-primary" (click)="addNewTraining()">Add Training</button>
+      <label for="excelImport" class="btn btn-secondary">Import Excel Data</label>
+      <input type="file" id="excelImport" (change)="importExcelData($event)" accept=".xlsx, .xls" class="hidden">
+    </div>
+
+    <ng-container *ngIf="!isEditing; else editForm">
+      <div class="card" *ngIf="paginatedTrainingData.length > 0">
+        <table class="table">
           <thead>
-            <tr class="bg-maroon text-white">
-              <th class="p-4">#</th>
-              <th class="p-4">Title</th>
-              <th class="p-4">Classification</th>
-              <th class="p-4">Nature</th>
-              <th class="p-4">Date From</th>
-              <th class="p-4">Date To</th>
-              <th class="p-4">Organizer</th>
-              <th class="p-4">Proof</th>
-              <th class="p-4 w-36">Actions</th>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Classification</th>
+              <th>Nature</th>
+              <th>Date From</th>
+              <th>Date To</th>
+              <th>Organizer</th>
+              <th>Proof</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let training of paginatedTrainingData; let i = index">
-              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
-              <td class="p-4">{{ training.Title }}</td>
-              <td class="p-4">{{ training.Classification }}</td>
-              <td class="p-4">{{ training.Nature }}</td>
-              <td class="p-4">{{ training.DateFrom | date }}</td>
-              <td class="p-4">{{ training.DateTo | date }}</td>
-              <td class="p-4">{{ training.Organizer }}</td>
-              <td class="p-4">
+              <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
+              <td>{{ training.Title }}</td>
+              <td>{{ training.Classification }}</td>
+              <td>{{ training.Nature }}</td>
+              <td>{{ training.DateFrom | date }}</td>
+              <td>{{ training.DateTo | date }}</td>
+              <td>{{ training.Organizer }}</td>
+              <td>
                 <ng-container *ngIf="training.Proof; else noProof">
                   <button *ngIf="training.ProofType === 'file'" (click)="openProofModal(training.Proof, training.SupportingDocuments)" class="btn btn-link">View File</button>
                   <a *ngIf="training.ProofType === 'link'" [href]="training.Proof" target="_blank" class="btn btn-link">View Link</a>
                 </ng-container>
                 <ng-template #noProof>
-                  <span>No Proof Uploaded</span>
+                  <span>No Proof</span>
                 </ng-template>
               </td>
-              <td class="p-4">
+              <td>
                 <div class="btn-container">
-                  <button (click)="editTraining(training.TrainingID!)" class="btn btn-edit btn-sm">Edit</button>
-                  <button (click)="deleteTraining(training.TrainingID!)" class="btn btn-delete btn-sm">Delete</button>
+                  <button (click)="editTraining(training.TrainingID!)" class="btn btn-edit btn-sm">EDIT</button>
+                  <button (click)="deleteTraining(training.TrainingID!)" class="btn btn-delete btn-sm">DELETE</button>
                 </div>
               </td>
             </tr>
@@ -54,139 +57,138 @@
         </table>
       </div>
 
-      <div class="mb-4">
-        <label for="excelImport" class="btn btn-primary">Import Excel Data</label>
-        <input type="file" id="excelImport" (change)="importExcelData($event)" accept=".xlsx, .xls" class="hidden">
-      </div>
-
-      <div class="mt-6">
-        <button class="btn btn-add-info text-white w-full" (click)="addNewTraining()">Add Training</button>
-      </div>
-
-      <!-- Pagination Controls -->
-      <div class="pagination-controls mt-4">
-        <button class="btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
-        <button class="btn-pagination" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+      <div class="pagination-controls">
+        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
           {{ page }}
         </button>
-        <button class="btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+        <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
-    </div>
 
-    <div *ngIf="paginatedTrainingData.length === 0" class="p-6 space-y-6">
-      <div class="p-6 bg-white rounded-lg shadow-lg">
-        <p class="text-lg">No training or seminar information available.</p>
+      <div class="card empty-state" *ngIf="paginatedTrainingData.length === 0">
+        <p>No training or seminar information available.</p>
       </div>
-      <div class="flex justify-end">
-        <button class="btn btn-add-info w-full" (click)="addNewTraining()">Add Training</button>
-      </div>
-    </div>
-  </ng-container>
+    </ng-container>
 
-  <ng-template #editForm>
-    <div class="p-6">
-      <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="space-y-6">
-        <div class="grid grid-cols-2 gap-6">
-          <div class="form-control w-full">
-            <label for="Title" class="label-text font-bold text-lg">Title</label>
-            <input id="Title" formControlName="Title" class="input input-bordered w-full" placeholder="Enter the title of the training">
-          </div>
-          <div class="form-control w-full">
-            <label for="Classification" class="label-text font-bold text-lg">Classification</label>
-            <div class="relative">
-              <select id="Classification" formControlName="Classification" class="input input-bordered w-full appearance-none pr-10">
-                <option value="" disabled selected>-- Select --</option>
-                <option value="Learning and Development Interventions">Learning and Development Interventions</option>
-                <option value="Training">Training</option>
-                <option value="Seminar">Seminar</option>
-                <option value="Conference">Conference</option>
-                <option value="Workshop">Workshop</option>
-                <option value="Short Course">Short Course</option>
-              </select>
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <i class="fas fa-chevron-down"></i>
-              </span>
-            </div>
-          </div>
-          <div class="form-control w-full">
-            <label for="Nature" class="label-text font-bold text-lg">Nature</label>
-            <input id="Nature" formControlName="Nature" class="input input-bordered w-full" placeholder="Enter the nature of the training">
-          </div>
-          <div class="form-control w-full">
-            <label for="Budget" class="label-text font-bold text-lg">Budget</label>
-            <input id="Budget" type="number" formControlName="Budget" class="input input-bordered w-full" placeholder="Enter the budget">
-          </div>
-          <div class="form-control w-full">
-            <label for="SourceOfFund" class="label-text font-bold text-lg">Source of Fund</label>
-            <input id="SourceOfFund" formControlName="SourceOfFund" class="input input-bordered w-full" placeholder="Enter the source of fund">
-          </div>
-          <div class="form-control w-full">
-            <label for="Organizer" class="label-text font-bold text-lg">Organizer</label>
-            <input id="Organizer" formControlName="Organizer" class="input input-bordered w-full" placeholder="Enter the name of the organizer">
-          </div>
-          <div class="form-control w-full">
-            <label for="Level" class="label-text font-bold text-lg">Level</label>
-            <div class="relative">
-              <select id="Level" formControlName="Level" class="input input-bordered w-full appearance-none pr-10">
-                <option value="" disabled selected>-- Select --</option>
-                <option value="Local">Local</option>
-                <option value="National">National</option>
-                <option value="International">International</option>
-              </select>
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <i class="fas fa-chevron-down"></i>
-              </span>
-            </div>
-          </div>
-          <div class="form-control w-full">
-            <label for="Venue" class="label-text font-bold text-lg">Venue</label>
-            <input id="Venue" formControlName="Venue" class="input input-bordered w-full" placeholder="Enter the venue">
-          </div>
-          <div class="form-control w-full">
-            <label for="DateFrom" class="label-text font-bold text-lg">Date From</label>
-            <input id="DateFrom" type="date" formControlName="DateFrom" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="DateTo" class="label-text font-bold text-lg">Date To</label>
-            <input id="DateTo" type="date" formControlName="DateTo" class="input input-bordered w-full">
-          </div>
-          <div class="form-control w-full">
-            <label for="NumberOfHours" class="label-text font-bold text-lg">Number of Hours</label>
-            <input id="NumberOfHours" type="number" formControlName="NumberOfHours" class="input input-bordered w-full" placeholder="Enter the number of hours">
-          </div>
-          <div class="form-control w-full">
-            <label for="SupportingDocuments" class="label-text font-bold text-lg">Supporting Documents</label>
-            <input id="SupportingDocuments" formControlName="SupportingDocuments" class="input input-bordered w-full" placeholder="Enter a description of the supporting document">
-          </div>
-          <div class="form-control w-full">
-            <label for="ProofType" class="label-text font-bold text-lg">Proof Type</label>
-            <div class="relative">
-              <select id="ProofType" formControlName="ProofType" class="input input-bordered w-full appearance-none pr-10">
-                <option value="file">File</option>
-                <option value="link">Link</option>
-              </select>
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <i class="fas fa-chevron-down"></i>
-              </span>
-            </div>
-          </div>
-          <div class="form-control w-full">
-            <label for="Proof" class="label-text font-bold text-lg">Proof</label>
-            <ng-container *ngIf="trainingForm.get('ProofType')?.value === 'file'; else proofLink">
-              <input id="Proof" type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full">
-            </ng-container>
-            <ng-template #proofLink>
-              <input id="Proof" formControlName="Proof" class="input input-bordered w-full" placeholder="Enter proof link">
-            </ng-template>
-          </div>
+    <ng-template #editForm>
+      <div class="p-6 space-y-8">
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+          <p class="font-bold">Note: You are currently editing Training and Seminar information.</p>
         </div>
-        <div class="flex justify-end mt-6">
-          <button type="submit" class="btn btn-save mr-4">{{ currentTrainingId ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </ng-template>
+        <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+          <!-- Training Information -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4 text-maroon">Training Information</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-control">
+                <label for="Title" class="label-text">Title <span class="text-red-500">*</span></label>
+                <input id="Title" formControlName="Title" class="input input-bordered w-full" placeholder="Enter the title of the training">
+              </div>
+              <div class="form-control">
+                <label for="Classification" class="label-text">Classification <span class="text-red-500">*</span></label>
+                <select id="Classification" formControlName="Classification" class="select select-bordered w-full">
+                  <option value="" disabled selected>-- Select --</option>
+                  <option value="Learning and Development Interventions">Learning and Development Interventions</option>
+                  <option value="Training">Training</option>
+                  <option value="Seminar">Seminar</option>
+                  <option value="Conference">Conference</option>
+                  <option value="Workshop">Workshop</option>
+                  <option value="Short Course">Short Course</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="Nature" class="label-text">Nature</label>
+                <input id="Nature" formControlName="Nature" class="input input-bordered w-full" placeholder="Enter the nature of the training">
+              </div>
+              <div class="form-control">
+                <label for="DateFrom" class="label-text">Date From <span class="text-red-500">*</span></label>
+                <input id="DateFrom" type="date" formControlName="DateFrom" class="input input-bordered w-full">
+              </div>
+              <div class="form-control">
+                <label for="DateTo" class="label-text">Date To <span class="text-red-500">*</span></label>
+                <input id="DateTo" type="date" formControlName="DateTo" class="input input-bordered w-full">
+              </div>
+              <div class="form-control">
+                <label for="NumberOfHours" class="label-text">Number of Hours</label>
+                <input id="NumberOfHours" type="number" formControlName="NumberOfHours" class="input input-bordered w-full" placeholder="Enter the number of hours">
+              </div>
+            </div>
+          </div>
+
+          <!-- Organizer and Venue Information -->
+          <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4 text-maroon">Organizer and Venue</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-control">
+                <label for="Organizer" class="label-text">Organizer</label>
+                <input id="Organizer" formControlName="Organizer" class="input input-bordered w-full" placeholder="Enter the name of the organizer">
+              </div>
+              <div class="form-control">
+                <label for="Venue" class="label-text">Venue</label>
+                <input id="Venue" formControlName="Venue" class="input input-bordered w-full" placeholder="Enter the venue">
+              </div>
+              <div class="form-control">
+                <label for="Level" class="label-text">Level</label>
+                <select id="Level" formControlName="Level" class="select select-bordered w-full">
+                  <option value="" disabled selected>-- Select --</option>
+                  <option value="Local">Local</option>
+                  <option value="National">National</option>
+                  <option value="International">International</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Budget Information -->
+          <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4 text-maroon">Budget Information</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-control">
+                <label for="Budget" class="label-text">Budget</label>
+                <input id="Budget" type="number" formControlName="Budget" class="input input-bordered w-full" placeholder="Enter the budget">
+              </div>
+              <div class="form-control">
+                <label for="SourceOfFund" class="label-text">Source of Fund</label>
+                <input id="SourceOfFund" formControlName="SourceOfFund" class="input input-bordered w-full" placeholder="Enter the source of fund">
+              </div>
+            </div>
+          </div>
+
+          <!-- Supporting Documents -->
+          <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4 text-maroon">Supporting Documents</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-control">
+                <label for="SupportingDocuments" class="label-text">Supporting Documents</label>
+                <input id="SupportingDocuments" formControlName="SupportingDocuments" class="input input-bordered w-full" placeholder="Enter a description of the supporting document">
+              </div>
+              <div class="form-control">
+                <label for="ProofType" class="label-text">Proof Type</label>
+                <select id="ProofType" formControlName="ProofType" class="select select-bordered w-full">
+                  <option value="file">File</option>
+                  <option value="link">Link</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="Proof" class="label-text">Proof</label>
+                <ng-container *ngIf="trainingForm.get('ProofType')?.value === 'file'; else proofLink">
+                  <input id="Proof" type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full">
+                </ng-container>
+                <ng-template #proofLink>
+                  <input id="Proof" formControlName="Proof" class="input input-bordered w-full" placeholder="Enter proof link">
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end mt-6">
+            <button type="submit" class="btn btn-save mr-4">{{ currentTrainingId ? 'Update' : 'Add' }}</button>
+            <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+  </div>
 </div>
 
 <!-- DaisyUI Modal for Viewing Proof -->
