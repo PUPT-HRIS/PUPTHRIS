@@ -42,9 +42,14 @@ export class CoordinatorService {
       .pipe(catchError(this.handleError));
   }
 
-  getAllDepartmentsWithCoordinators(): Observable<Department[]> {
-    return this.http.get<Department[]>(`${this.apiUrl}/departments-with-coordinators`, { headers: this.getHeaders() }).pipe(
-      tap(departments => console.log('Departments received in service:', departments)),
+  getAllDepartmentsWithCoordinators(campusId?: number): Observable<Department[]> {
+    let url = `${this.apiUrl}/departments-with-coordinators`;
+    if (campusId) {
+      url += `?campusId=${campusId}`;
+    }
+    console.log('Requesting URL:', url);
+    return this.http.get<Department[]>(url, { headers: this.getHeaders() }).pipe(
+      tap(departments => console.log('Raw response from backend:', JSON.stringify(departments, null, 2))),
       catchError(this.handleError)
     );
   }

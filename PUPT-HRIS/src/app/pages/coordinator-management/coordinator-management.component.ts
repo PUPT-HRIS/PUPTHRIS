@@ -52,11 +52,24 @@ export class CoordinatorManagementComponent implements OnInit, OnDestroy {
   }
 
   loadDepartments(): void {
-    this.coordinatorService.getAllDepartmentsWithCoordinators().subscribe({
+    if (this.campusId === null) {
+      console.error('Campus ID is null');
+      return;
+    }
+    console.log('Loading departments for campus ID:', this.campusId);
+    this.coordinatorService.getAllDepartmentsWithCoordinators(this.campusId).subscribe({
       next: (departments) => {
-        console.log('Fetched departments in component:', departments);
+        console.log('Received departments:', JSON.stringify(departments, null, 2));
         this.departments = departments;
-        this.loadCoordinatorDepartments();
+        console.log('Departments after assignment:', JSON.stringify(this.departments, null, 2));
+        
+        // Check if any department has a coordinator assigned
+        const hasCoordinators = this.departments.some(dept => dept.Coordinator !== null);
+        console.log('Has coordinators assigned:', hasCoordinators);
+        
+        if (!hasCoordinators) {
+          console.log('No coordinators assigned to any department');
+        }
       },
       error: (error) => {
         console.error('Error fetching departments:', error);

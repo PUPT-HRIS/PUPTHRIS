@@ -20,15 +20,16 @@ User.belongsTo(Department, { foreignKey: 'DepartmentID', as: 'Department' });
 // Coordinator associations
 Department.belongsTo(Coordinator, { 
     foreignKey: 'CoordinatorID', 
-    as: 'Coordinator',
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE'
+    as: 'Coordinator'
+});
+
+Coordinator.hasOne(Department, {
+    foreignKey: 'CoordinatorID',
+    as: 'Department'
 });
 
 Coordinator.belongsTo(User, { foreignKey: 'UserID' });
-Coordinator.belongsTo(Department, { foreignKey: 'DepartmentID' });
-User.hasMany(Coordinator, { foreignKey: 'UserID' });
-Department.hasMany(Coordinator, { foreignKey: 'DepartmentID' });
+User.hasOne(Coordinator, { foreignKey: 'UserID' });
 
 // Civil Service Eligibility associations
 User.hasMany(CivilServiceEligibility, { foreignKey: 'userID' });
