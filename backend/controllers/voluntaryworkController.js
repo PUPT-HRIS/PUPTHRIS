@@ -33,7 +33,7 @@ exports.updateVoluntaryWork = async (req, res) => {
 
 exports.getVoluntaryWork = async (req, res) => {
   try {
-    const voluntaryWorkId = req.params.id;
+    const voluntaryWorkId = parseInt(req.params.id);
     const voluntaryWork = await VoluntaryWork.findOne({ where: { VoluntaryWorkID: voluntaryWorkId, userID: req.user.userId } });
     if (voluntaryWork) {
       res.status(200).json(voluntaryWork);
@@ -48,7 +48,7 @@ exports.getVoluntaryWork = async (req, res) => {
 
 exports.getVoluntaryWorks = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = parseInt(req.params.userId);
     const voluntaryWorks = await VoluntaryWork.findAll({ where: { userID: userId } });
     res.status(200).json(voluntaryWorks);
   } catch (error) {
