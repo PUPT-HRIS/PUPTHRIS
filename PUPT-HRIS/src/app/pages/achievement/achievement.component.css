@@ -91,7 +91,11 @@ body {
 }
 
 .table tr:nth-child(even) {
-  background-color: #f8f8f8;
+  background-color: #f0f0f0; /* Darker shade of gray for even rows */
+}
+
+.table tr:hover {
+  background-color: #e6e6e6; /* Light gray for hover effect */
 }
 
 .btn-edit,
