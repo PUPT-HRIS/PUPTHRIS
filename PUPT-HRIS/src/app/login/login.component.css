@@ -78,3 +78,105 @@
     flex-direction: row;
   }
 }
+
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel img {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+}
+
+.carousel-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.carousel-button:hover:not(.disabled) {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-button:focus {
+  outline: none;
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: white;
+}
+
+/* New styles */
+.carousel-container {
+  aspect-ratio: 1 / 1; /* This will make the container square */
+  max-width: 500px; /* Adjust this value to match the form container width */
+  margin: 0 auto;
+  height: 100%; /* Make it full height */
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel {
+  position: relative;
+  width: 100%;
+  flex-grow: 1; /* Allow it to grow and fill available space */
+  overflow: hidden;
+}
+
+.carousel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .flex-1 {
+    flex: 0 0 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .carousel-container {
+    aspect-ratio: 16 / 9; /* Change to a more suitable aspect ratio for smaller screens */
+  }
+}

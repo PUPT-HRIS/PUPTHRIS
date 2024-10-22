@@ -7,28 +7,75 @@
 
   <!-- Display Mode -->
   <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="basicDetails" class="p-6 space-y-8">
-      <div class="p-6 bg-white rounded-lg shadow-lg">
-        <app-profile-image></app-profile-image>
-        <div class="grid grid-cols-2 gap-x-12 gap-y-4 my-6">
-          <p class="text-lg"><strong>Last Name:</strong> {{ basicDetails.LastName }}</p>
-          <p class="text-lg"><strong>First Name:</strong> {{ basicDetails.FirstName }}</p>
-          <p class="text-lg"><strong>Middle Name:</strong> {{ basicDetails.MiddleInitial }}</p>
-          <p class="text-lg"><strong>Employee Number:</strong> {{ basicDetails.EmployeeNo }}</p>
-          <p class="text-lg"><strong>Faculty Code:</strong> {{ basicDetails.FacultyCode }}</p>
-          <p class="text-lg"><strong>Honorific:</strong> {{ basicDetails.Honorific }}</p>
-          <p class="text-lg"><strong>Date of Birth:</strong> {{ basicDetails.DateOfBirth | date }}</p>
-          <p class="text-lg"><strong>Sex:</strong> {{ basicDetails.Sex }}</p>
-          <p class="text-lg"><strong>Name Extension:</strong> {{ basicDetails.NameExtension }}</p>
+    <div *ngIf="basicDetails" class="p-6">
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex">
+          <!-- Profile Image Section -->
+          <div class="w-1/4 pr-6 border-r border-gray-200">
+            <app-profile-image class="h-full"></app-profile-image>
+          </div>
+          
+          <!-- Basic Information Section -->
+          <div class="w-3/4 pl-6">
+            <h2 class="text-xl font-semibold text-maroon mb-2">Basic Information</h2>
+            <hr class="border-t border-gray-300 mb-4">
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Personal Information -->
+              <div class="col-span-2">
+                <h3 class="text-lg font-medium text-maroon mb-2">Personal Information</h3>
+              </div>
+              <div class="flex flex-col pb-2 border-b border-gray-200">
+                <span class="text-gray-600 font-medium text-sm">Last Name</span>
+                <span class="text-gray-900 font-semibold">{{ basicDetails.LastName || 'No Information Entered' }}</span>
+              </div>
+              <div class="flex flex-col pb-2 border-b border-gray-200">
+                <span class="text-gray-600 font-medium text-sm">First Name</span>
+                <span class="text-gray-900 font-semibold">{{ basicDetails.FirstName || 'No Information Entered' }}</span>
+              </div>
+              <div class="flex flex-col pb-2 border-b border-gray-200">
+                <span class="text-gray-600 font-medium text-sm">Middle Name</span>
+                <span class="text-gray-900 font-semibold">{{ basicDetails.MiddleInitial || 'No Information Entered' }}</span>
+              </div>
+              <div class="flex flex-col pb-2 border-b border-gray-200">
+                <span class="text-gray-600 font-medium text-sm">Name Extension</span>
+                <span class="text-gray-900 font-semibold">{{ basicDetails.NameExtension || 'No Information Entered' }}</span>
+              </div>
+              <div class="flex flex-col pb-2 border-b border-gray-200">
+                <span class="text-gray-600 font-medium text-sm">Date of Birth</span>
+                <span class="text-gray-900 font-semibold">{{ (basicDetails.DateOfBirth | date) || 'No Information Entered' }}</span>
+              </div>
+              <div class="flex flex-col pb-2 border-b border-gray-200">
+                <span class="text-gray-600 font-medium text-sm">Sex</span>
+                <span class="text-gray-900 font-semibold">{{ basicDetails.Sex || 'No Information Entered' }}</span>
+              </div>
+
+              <!-- Employment Information -->
+              <div class="col-span-2 mt-4">
+                <h3 class="text-lg font-medium text-maroon mb-2">Employment Information</h3>
+              </div>
+              <div class="flex flex-col pb-2 border-b border-gray-200">
+                <span class="text-gray-600 font-medium text-sm">Employee Number</span>
+                <span class="text-gray-900 font-semibold">{{ basicDetails.EmployeeNo || 'No Information Entered' }}</span>
+              </div>
+              <div class="flex flex-col pb-2 border-b border-gray-200">
+                <span class="text-gray-600 font-medium text-sm">Faculty Code</span>
+                <span class="text-gray-900 font-semibold">{{ basicDetails.FacultyCode || 'No Information Entered' }}</span>
+              </div>
+              <div class="flex flex-col pb-2 border-b border-gray-200">
+                <span class="text-gray-600 font-medium text-sm">Honorific</span>
+                <span class="text-gray-900 font-semibold">{{ basicDetails.Honorific || 'N/A' }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="flex justify-end">
-        <button class="btn bg-black text-white" (click)="edit()">Edit</button>
+      <div class="flex justify-end mt-6">
+        <button class="btn bg-black text-white hover:bg-gray-800" (click)="edit()">Edit</button>
       </div>
     </div>
 
     <div *ngIf="!basicDetails" class="p-6 space-y-6">
-      <div class="p-6 bg-white rounded-lg shadow-lg">
+      <div class="bg-white rounded-lg shadow-md p-6">
         <p class="text-lg">No basic details available.</p>
       </div>
       <div class="flex justify-end">
@@ -40,140 +87,164 @@
   <!-- Edit Mode -->
   <ng-template #editForm>
     <div class="p-6">
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
+        <p class="font-bold">Note: You are currently editing your Basic Details.</p>
+      </div>
       <form [formGroup]="basicDetailsForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <p class="text-sm text-gray-600 mb-4">Note: Fields marked with an asterisk (*) are required.</p>
           
-          <!-- Last Name (Required) -->
-          <div class="form-control">
-            <label class="label-text">Last Name <span class="text-red-500">*</span></label>
-            <input 
-              formControlName="LastName" 
-              class="input input-bordered" 
-              [ngClass]="{'border-red-500': basicDetailsForm.get('LastName')?.invalid && basicDetailsForm.get('LastName')?.touched}" 
-              type="text" 
-              placeholder="Last name of the employee."
-            >
-            <!-- Validation Message -->
-            <div *ngIf="basicDetailsForm.get('LastName')?.invalid && basicDetailsForm.get('LastName')?.touched" class="text-red-500 text-sm">
-              Last Name is required.
+          <!-- Personal Information -->
+          <h3 class="text-xl font-semibold text-maroon mb-4">Personal Information</h3>
+          <div class="grid grid-cols-2 gap-6">
+            <!-- Last Name (Required) -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Last Name <span class="text-red-500">*</span></span>
+              </label>
+              <input 
+                formControlName="LastName" 
+                class="input input-bordered w-full" 
+                [ngClass]="{'input-error': basicDetailsForm.get('LastName')?.invalid && basicDetailsForm.get('LastName')?.touched}" 
+                type="text" 
+                placeholder="Last name of the employee"
+              >
+              <label class="label" *ngIf="basicDetailsForm.get('LastName')?.invalid && basicDetailsForm.get('LastName')?.touched">
+                <span class="label-text-alt text-error">Last Name is required</span>
+              </label>
+            </div>
+
+            <!-- First Name (Required) -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">First Name <span class="text-red-500">*</span></span>
+              </label>
+              <input 
+                formControlName="FirstName" 
+                class="input input-bordered w-full" 
+                [ngClass]="{'input-error': basicDetailsForm.get('FirstName')?.invalid && basicDetailsForm.get('FirstName')?.touched}" 
+                type="text" 
+                placeholder="Complete given name of the employee"
+              >
+              <label class="label" *ngIf="basicDetailsForm.get('FirstName')?.invalid && basicDetailsForm.get('FirstName')?.touched">
+                <span class="label-text-alt text-error">First Name is required</span>
+              </label>
+            </div>
+
+            <!-- Middle Initial (Optional) -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Middle Name</span>
+              </label>
+              <input 
+                formControlName="MiddleInitial" 
+                class="input input-bordered w-full" 
+                type="text" 
+                placeholder="Middle initial"
+              >
+            </div>
+
+            <!-- Name Extension (Optional) -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Name Extension</span>
+              </label>
+              <input 
+                formControlName="NameExtension" 
+                class="input input-bordered w-full" 
+                type="text" 
+                placeholder="(e.g., Jr., Sr., III)"
+              >
+            </div>
+
+            <!-- Date of Birth (Required) -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Date of Birth <span class="text-red-500">*</span></span>
+              </label>
+              <input 
+                formControlName="DateOfBirth" 
+                class="input input-bordered w-full" 
+                [ngClass]="{'input-error': basicDetailsForm.get('DateOfBirth')?.invalid && basicDetailsForm.get('DateOfBirth')?.touched}" 
+                type="date" 
+              >
+              <label class="label" *ngIf="basicDetailsForm.get('DateOfBirth')?.invalid && basicDetailsForm.get('DateOfBirth')?.touched">
+                <span class="label-text-alt text-error">Date of Birth is required</span>
+              </label>
+            </div>
+
+            <!-- Sex (Required) -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Sex <span class="text-red-500">*</span></span>
+              </label>
+              <select 
+                formControlName="Sex" 
+                class="select select-bordered w-full" 
+                [ngClass]="{'select-error': basicDetailsForm.get('Sex')?.invalid && basicDetailsForm.get('Sex')?.touched}"
+              >
+                <option value="">Select your Sex</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              <label class="label" *ngIf="basicDetailsForm.get('Sex')?.invalid && basicDetailsForm.get('Sex')?.touched">
+                <span class="label-text-alt text-error">Sex is required</span>
+              </label>
             </div>
           </div>
 
-          <!-- First Name (Required) -->
-          <div class="form-control">
-            <label class="label-text">First Name <span class="text-red-500">*</span></label>
-            <input 
-              formControlName="FirstName" 
-              class="input input-bordered" 
-              [ngClass]="{'border-red-500': basicDetailsForm.get('FirstName')?.invalid && basicDetailsForm.get('FirstName')?.touched}" 
-              type="text" 
-              placeholder="Complete given name of the employee."
-            >
-            <!-- Validation Message -->
-            <div *ngIf="basicDetailsForm.get('FirstName')?.invalid && basicDetailsForm.get('FirstName')?.touched" class="text-red-500 text-sm">
-              First Name is required.
+          <!-- Employment Information -->
+          <h3 class="text-xl font-semibold text-maroon mb-4 mt-8">Employment Information</h3>
+          <div class="grid grid-cols-2 gap-6">
+            <!-- Employee Number (Required) -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Employee Number <span class="text-red-500">*</span></span>
+              </label>
+              <input 
+                formControlName="EmployeeNo" 
+                class="input input-bordered w-full" 
+                [ngClass]="{'input-error': basicDetailsForm.get('EmployeeNo')?.invalid && basicDetailsForm.get('EmployeeNo')?.touched}" 
+                type="text" 
+                placeholder="Can be seen at the back of PUP ID"
+              >
+              <label class="label" *ngIf="basicDetailsForm.get('EmployeeNo')?.invalid && basicDetailsForm.get('EmployeeNo')?.touched">
+                <span class="label-text-alt text-error">Employee Number is required</span>
+              </label>
             </div>
-          </div>
 
-          <!-- Middle Initial (Optional) -->
-          <div class="form-control">
-            <label class="label-text">Middle Name</label>
-            <input 
-              formControlName="MiddleInitial" 
-              class="input input-bordered" 
-              type="text" 
-              placeholder="Middle initial."
-            >
-          </div>
-
-          <!-- Employee Number (Required) -->
-          <div class="form-control">
-            <label class="label-text">Employee Number <span class="text-red-500">*</span></label>
-            <input 
-              formControlName="EmployeeNo" 
-              class="input input-bordered" 
-              [ngClass]="{'border-red-500': basicDetailsForm.get('EmployeeNo')?.invalid && basicDetailsForm.get('EmployeeNo')?.touched}" 
-              type="text" 
-              placeholder="Can be seen at the back of PUP ID."
-            >
-            <!-- Validation Message -->
-            <div *ngIf="basicDetailsForm.get('EmployeeNo')?.invalid && basicDetailsForm.get('EmployeeNo')?.touched" class="text-red-500 text-sm">
-              Employee Number is required.
+            <!-- Faculty Code (Optional) -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Faculty Code</span>
+              </label>
+              <input 
+                formControlName="FacultyCode" 
+                class="input input-bordered w-full" 
+                type="text" 
+                placeholder="Your Faculty Code from your SIS Account"
+              >
             </div>
-          </div>
 
-          <!-- Faculty Code (Optional) -->
-          <div class="form-control">
-            <label class="label-text">Faculty Code</label>
-            <input 
-              formControlName="FacultyCode" 
-              class="input input-bordered" 
-              type="text" 
-              placeholder="Your Faculty Code from your SIS Account."
-            >
-          </div>
-
-          <!-- Honorific (Optional) -->
-          <div class="form-control">
-            <label class="label-text">Honorific</label>
-            <input 
-              formControlName="Honorific" 
-              class="input input-bordered" 
-              type="text" 
-              placeholder="Preferred and appropriate honorific (e.g., Mr., Ms., Dr.)."
-            >
-          </div>
-
-          <!-- Date of Birth (Required) -->
-          <div class="form-control">
-            <label class="label-text">Date of Birth <span class="text-red-500">*</span></label>
-            <input 
-              formControlName="DateOfBirth" 
-              class="input input-bordered" 
-              [ngClass]="{'border-red-500': basicDetailsForm.get('DateOfBirth')?.invalid && basicDetailsForm.get('DateOfBirth')?.touched}" 
-              type="date" 
-              placeholder="Your date of birth."
-            >
-            <!-- Validation Message -->
-            <div *ngIf="basicDetailsForm.get('DateOfBirth')?.invalid && basicDetailsForm.get('DateOfBirth')?.touched" class="text-red-500 text-sm">
-              Date of Birth is required.
+            <!-- Honorific (Optional) -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Honorific</span>
+              </label>
+              <input 
+                formControlName="Honorific" 
+                class="input input-bordered w-full" 
+                type="text" 
+                placeholder="Preferred and appropriate honorific (e.g., Mr., Ms., Dr.)"
+              >
             </div>
-          </div>
-
-          <!-- Sex (Required) -->
-          <div class="form-control">
-            <label class="label-text">Sex <span class="text-red-500">*</span></label>
-            <select 
-              formControlName="Sex" 
-              class="select select-bordered" 
-              [ngClass]="{'border-red-500': basicDetailsForm.get('Sex')?.invalid && basicDetailsForm.get('Sex')?.touched}"
-            >
-              <option value="">Select your Sex</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-            <!-- Validation Message -->
-            <div *ngIf="basicDetailsForm.get('Sex')?.invalid && basicDetailsForm.get('Sex')?.touched" class="text-red-500 text-sm">
-              Sex is required.
-            </div>
-          </div>
-
-          <!-- Name Extension (Optional) -->
-          <div class="form-control">
-            <label class="label-text">Name Extension</label>
-            <input 
-              formControlName="NameExtension" 
-              class="input input-bordered" 
-              type="text" 
-              placeholder="(e.g., Jr., Sr., III)."
-            >
           </div>
         </div>
 
         <!-- Action Buttons -->
         <div class="flex justify-end mt-6">
-          <button type="submit" class="btn btn-save mr-4">Save</button>
-          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
+          <button type="submit" class="btn bg-black text-white hover:bg-gray-800 mr-4">Save</button>
+          <button type="button" class="btn bg-maroon text-white hover:bg-red-900" (click)="cancelEdit()">Cancel</button>
         </div>        
       </form>
     </div>

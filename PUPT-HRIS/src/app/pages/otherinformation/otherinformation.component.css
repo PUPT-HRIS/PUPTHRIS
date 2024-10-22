@@ -67,53 +67,28 @@
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
   }
   
-  /* Buttons */
-  .btn-save, .btn-add {
-    background-color: #000; /* Black background */
-    border-color: #000; /* Black border */
-    color: #fff; /* White text */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  /* Updated button styles */
+  .btn-save, .btn-add, .btn-sm {
+    background-color: #000;
+    border-color: #000;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
-  .btn-save:hover, .btn-add:hover {
-    background-color: #222222; /* Slightly lighter black on hover */
-    transform: translateY(-1px); /* Slight lift effect */
+  .btn-save:hover, .btn-add:hover, .btn-sm:hover {
+    background-color: #333;
+    transform: translateY(-1px);
   }
   
-  .btn-cancel {
-    background-color: #800000; /* Maroon background */
-    border-color: #800000; /* Maroon border */
-    color: #fff; /* White text */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  /* Specific style for delete button */
+  .btn-sm.bg-maroon {
+    background-color: #800000;
+    border-color: #800000;
   }
   
-  .btn-cancel:hover {
-    background-color: #9f0303; /* Slightly lighter maroon on hover */
-    transform: translateY(-1px); /* Slight lift effect */
+  .btn-sm.bg-maroon:hover {
+    background-color: #9f0303;
   }
-  
-  /* Add Info button */
-  .btn-add {
-    background-color: #000; /* Black background */
-    border-color: #000; /* Black border */
-    color: #fff; /* White text */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
-  }
-  
-  .btn-add:hover {
-    background-color: #333; /* Slightly lighter black on hover */
-    transform: translateY(-1px); /* Slight lift effect */
-  }
-  
-  .btn-cancel {
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
-  }
-  
-  .btn-add:hover {
-    background-color: #333; /* Slightly lighter black on hover */
-    transform: translateY(-1px); /* Slight lift effect */
-  }
-  
   
   /* Flex container for buttons */
   .flex-end {
@@ -136,4 +111,19 @@
       grid-template-columns: 1fr; /* Stack columns on small screens */
     }
   }
-  
+
+  /* Textarea styling */
+  .textarea-bordered {
+    border: 1px solid #ddd;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    transition: border-color 0.3s ease;
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 100px; /* Set a minimum height */
+  }
+
+  .textarea-bordered:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  }

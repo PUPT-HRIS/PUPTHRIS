@@ -7,90 +7,113 @@
 
   <div class="p-6 space-y-6">
     <!-- Special Skills Section -->
-    <div class="p-6 bg-white rounded-lg shadow-lg">
-      <div class="flex justify-between items-center">
-        <h2 class="text-xl font-bold">Special Skills</h2>
-        <button *ngIf="!isEditingSkill" class="btn btn-add bg-black text-white" (click)="isEditingSkill = true">Add Skill</button>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Special Skills</h2>
+        <button class="btn btn-add bg-black text-white" (click)="isEditingSkill = true">Add Skill</button>
       </div>
-      <ng-container *ngIf="isEditingSkill; else displaySkills">
-        <form [formGroup]="specialSkillsForm" (ngSubmit)="onSubmitSkill()" class="space-y-6 mt-4">
-          <div class="form-control w-full">
-            <label for="Skill" class="label-text font-bold">Skill</label>
-            <input id="Skill" formControlName="Skill" type="text" class="input input-bordered w-full" placeholder="Describe your special skill (e.g., Web Development, Graphic Design)">
-          </div>
-          <div class="flex justify-end mt-6">
-            <button type="submit" class="btn bg-black btn-add text-white mr-4">{{ currentSkillId ? 'Update Skill' : 'Add Skill' }}</button>
-            <button type="button" class="btn bg-maroon btn-cancel text-white" (click)="isEditingSkill = false">Cancel</button>
-          </div>
-        </form>
-      </ng-container>
-      <ng-template #displaySkills>
-        <div *ngFor="let skill of specialSkillsData; let i = index" class="p-4 border rounded-lg my-2">
-          <p>{{ i + 1 }}. {{ skill.Skill }}</p>
-          <div class="flex justify-end space-x-2 mt-2">
-            <button class="btn btn-primary btn-sm" (click)="editSpecialSkill(skill.SpecialSkillsID)">Edit</button>
-            <button class="btn btn-error btn-sm" (click)="deleteSpecialSkill(skill.SpecialSkillsID)">Delete</button>
+      <div *ngIf="specialSkillsData.length > 0; else noSkills">
+        <div *ngFor="let skill of specialSkillsData; let i = index" class="flex justify-between items-center py-2 border-b">
+          <span>{{ i + 1 }}. {{ skill.Skill.trim() || 'No entered information' }}</span>
+          <div>
+            <button class="btn btn-sm bg-black text-white mr-2" (click)="editSpecialSkill(skill.SpecialSkillsID)">Edit</button>
+            <button class="btn btn-sm bg-maroon text-white" (click)="deleteSpecialSkill(skill.SpecialSkillsID)">Delete</button>
           </div>
         </div>
+      </div>
+      <ng-template #noSkills>
+        <p class="text-gray-500 italic">Add your skills</p>
       </ng-template>
     </div>
 
     <!-- Non-Academic Distinctions Section -->
-    <div class="p-6 bg-white rounded-lg shadow-lg">
-      <div class="flex justify-between items-center">
-        <h2 class="text-xl font-bold">Non-Academic Distinctions</h2>
-        <button *ngIf="!isEditingDistinction" class="btn btn-add bg-black text-white" (click)="isEditingDistinction = true">Add Distinction</button>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Non-Academic Distinctions</h2>
+        <button class="btn btn-add bg-black text-white" (click)="isEditingDistinction = true">Add Distinction</button>
       </div>
-      <ng-container *ngIf="isEditingDistinction; else displayDistinctions">
-        <form [formGroup]="nonAcademicForm" (ngSubmit)="onSubmitDistinction()" class="space-y-6 mt-4">
-          <div class="form-control w-full">
-            <label for="Distinction" class="label-text font-bold">Distinction</label>
-            <input id="Distinction" formControlName="Distinction" type="text" class="input input-bordered w-full" placeholder="List your non-academic distinction (e.g., Leadership Award)">
-          </div>
-          <div class="flex justify-end mt-6">
-            <button type="submit" class="btn bg-black btn-add text-white mr-4">{{ currentDistinctionId ? 'Update Distinction' : 'Add Distinction' }}</button>
-            <button type="button" class="btn bg-maroon btn-cancel text-white" (click)="isEditingDistinction = false">Cancel</button>
-          </div>
-        </form>
-      </ng-container>
-      <ng-template #displayDistinctions>
-        <div *ngFor="let distinction of nonAcademicData; let i = index" class="p-4 border rounded-lg my-2">
-          <p>{{ i + 1 }}. {{ distinction.Distinction }}</p>
-          <div class="flex justify-end space-x-2 mt-2">
-            <button class="btn btn-primary btn-sm" (click)="editDistinction(distinction.NonAcademicID)">Edit</button>
-            <button class="btn btn-error btn-sm" (click)="deleteDistinction(distinction.NonAcademicID)">Delete</button>
+      <div *ngIf="nonAcademicData.length > 0; else noDistinctions">
+        <div *ngFor="let distinction of nonAcademicData; let i = index" class="flex justify-between items-center py-2 border-b">
+          <span>{{ i + 1 }}. {{ distinction.Distinction.trim() || 'No entered information' }}</span>
+          <div>
+            <button class="btn btn-sm bg-black text-white mr-2" (click)="editDistinction(distinction.NonAcademicID)">Edit</button>
+            <button class="btn btn-sm bg-maroon text-white" (click)="deleteDistinction(distinction.NonAcademicID)">Delete</button>
           </div>
         </div>
+      </div>
+      <ng-template #noDistinctions>
+        <p class="text-gray-500 italic">Add your distinctions</p>
       </ng-template>
     </div>
 
     <!-- Memberships Section -->
-    <div class="p-6 bg-white rounded-lg shadow-lg">
-      <div class="flex justify-between items-center">
-        <h2 class="text-xl font-bold">Memberships</h2>
-        <button *ngIf="!isEditingMembership" class="btn btn-add bg-black text-white" (click)="isEditingMembership = true">Add Membership</button>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Memberships</h2>
+        <button class="btn btn-add bg-black text-white" (click)="isEditingMembership = true">Add Membership</button>
       </div>
-      <ng-container *ngIf="isEditingMembership; else displayMemberships">
-        <form [formGroup]="membershipForm" (ngSubmit)="onSubmitMembership()" class="space-y-6 mt-4">
-          <div class="form-control w-full">
-            <label for="Association" class="label-text font-bold">Association</label>
-            <input id="Association" formControlName="Association" type="text" class="input input-bordered w-full" placeholder="Enter the name of the association or organization">
-          </div>
-          <div class="flex justify-end mt-6">
-            <button type="submit" class="btn bg-black btn-add text-white mr-4">{{ currentMembershipId ? 'Update Membership' : 'Add Membership' }}</button>
-            <button type="button" class="btn bg-maroon btn-cancel text-white" (click)="isEditingMembership = false">Cancel</button>
-          </div>
-        </form>
-      </ng-container>
-      <ng-template #displayMemberships>
-        <div *ngFor="let membership of membershipData; let i = index" class="p-4 border rounded-lg my-2">
-          <p>{{ i + 1 }}. {{ membership.Association }}</p>
-          <div class="flex justify-end space-x-2 mt-2">
-            <button class="btn btn-primary btn-sm" (click)="editMembership(membership.MembershipID)">Edit</button>
-            <button class="btn btn-error btn-sm" (click)="deleteMembership(membership.MembershipID)">Delete</button>
+      <div *ngIf="membershipData.length > 0; else noMemberships">
+        <div *ngFor="let membership of membershipData; let i = index" class="flex justify-between items-center py-2 border-b">
+          <span>{{ i + 1 }}. {{ membership.Association.trim() || 'No entered information' }}</span>
+          <div>
+            <button class="btn btn-sm bg-black text-white mr-2" (click)="editMembership(membership.MembershipID)">Edit</button>
+            <button class="btn btn-sm bg-maroon text-white" (click)="deleteMembership(membership.MembershipID)">Delete</button>
           </div>
         </div>
+      </div>
+      <ng-template #noMemberships>
+        <p class="text-gray-500 italic">Add your memberships</p>
       </ng-template>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Forms (hidden by default) -->
+<div *ngIf="isEditingSkill || isEditingDistinction || isEditingMembership" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+  <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
+    <!-- Special Skills Form -->
+    <div *ngIf="isEditingSkill">
+      <h3 class="text-xl font-semibold mb-4">{{ currentSkillId ? 'Edit' : 'Add' }} Special Skill</h3>
+      <form [formGroup]="specialSkillsForm" (ngSubmit)="onSubmitSkill()" class="space-y-4">
+        <div class="form-control w-full">
+          <label for="Skill" class="label-text font-bold">Skill</label>
+          <textarea id="Skill" formControlName="Skill" class="textarea textarea-bordered w-full h-24" placeholder="Describe your special skill"></textarea>
+        </div>
+        <div class="flex justify-end space-x-2">
+          <button type="submit" class="btn btn-save bg-black text-white">{{ currentSkillId ? 'Update' : 'Add' }} Skill</button>
+          <button type="button" class="btn btn-cancel bg-maroon text-white" (click)="isEditingSkill = false">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Non-Academic Distinctions Form -->
+    <div *ngIf="isEditingDistinction">
+      <h3 class="text-xl font-semibold mb-4">{{ currentDistinctionId ? 'Edit' : 'Add' }} Non-Academic Distinction</h3>
+      <form [formGroup]="nonAcademicForm" (ngSubmit)="onSubmitDistinction()" class="space-y-4">
+        <div class="form-control w-full">
+          <label for="Distinction" class="label-text font-bold">Distinction</label>
+          <textarea id="Distinction" formControlName="Distinction" class="textarea textarea-bordered w-full h-24" placeholder="Enter your non-academic distinction"></textarea>
+        </div>
+        <div class="flex justify-end space-x-2">
+          <button type="submit" class="btn btn-save bg-black text-white">{{ currentDistinctionId ? 'Update' : 'Add' }} Distinction</button>
+          <button type="button" class="btn btn-cancel bg-maroon text-white" (click)="isEditingDistinction = false">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Memberships Form -->
+    <div *ngIf="isEditingMembership">
+      <h3 class="text-xl font-semibold mb-4">{{ currentMembershipId ? 'Edit' : 'Add' }} Membership</h3>
+      <form [formGroup]="membershipForm" (ngSubmit)="onSubmitMembership()" class="space-y-4">
+        <div class="form-control w-full">
+          <label for="Association" class="label-text font-bold">Association</label>
+          <textarea id="Association" formControlName="Association" class="textarea textarea-bordered w-full h-24" placeholder="Enter the name of the association or organization"></textarea>
+        </div>
+        <div class="flex justify-end space-x-2">
+          <button type="submit" class="btn btn-save bg-black text-white">{{ currentMembershipId ? 'Update' : 'Add' }} Membership</button>
+          <button type="button" class="btn btn-cancel bg-maroon text-white" (click)="isEditingMembership = false">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

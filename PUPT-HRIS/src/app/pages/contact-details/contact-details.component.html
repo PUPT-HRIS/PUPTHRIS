@@ -8,38 +8,52 @@
   <ng-container *ngIf="!isEditing; else editForm">
     <!-- Display Section -->
     <div *ngIf="contactDetails" class="p-6 space-y-8">
-      <div class="p-6 bg-white rounded-lg shadow-lg">
-        <div class="grid grid-cols-2 gap-x-12 gap-y-4">
-          <p class="text-lg"><strong>Telephone Number:</strong> {{ contactDetails.TelephoneNumber }}</p>
-          <p class="text-lg"><strong>Mobile Number:</strong> {{ contactDetails.MobileNumber }}</p>
-          <p class="text-lg"><strong>Email Address:</strong> {{ contactDetails.EmailAddress }}</p>
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-maroon">Contact Information</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col border-b pb-2">
+            <span class="text-gray-600 font-medium text-sm">Telephone Number</span>
+            <span class="text-gray-900 font-semibold">{{ contactDetails.TelephoneNumber || 'No Information Entered' }}</span>
+          </div>
+          <div class="flex flex-col border-b pb-2">
+            <span class="text-gray-600 font-medium text-sm">Mobile Number</span>
+            <span class="text-gray-900 font-semibold">{{ contactDetails.MobileNumber || 'No Information Entered' }}</span>
+          </div>
+          <div class="flex flex-col border-b pb-2">
+            <span class="text-gray-600 font-medium text-sm">Email Address</span>
+            <span class="text-gray-900 font-semibold">{{ contactDetails.EmailAddress || 'No Information Entered' }}</span>
+          </div>
         </div>
       </div>
       <div class="flex justify-end">
-        <button class="btn bg-black text-white" (click)="edit()">Edit</button>
+        <button class="btn btn-save" (click)="edit()">Edit</button>
       </div>
     </div>
 
     <!-- Add Info Section -->
     <div *ngIf="!contactDetails" class="p-6 space-y-6">
-      <div class="p-6 bg-white rounded-lg shadow-lg">
+      <div class="bg-white rounded-lg shadow-md p-6">
         <p class="text-lg">No contact details available.</p>
       </div>
       <div class="flex justify-end">
-        <button class="btn btn-add-info bg-black text-white" (click)="edit()">Add Info</button>
+        <button class="btn btn-save" (click)="edit()">Add Info</button>
       </div>
     </div>
   </ng-container>
 
   <ng-template #editForm>
-    <div class="p-6">
-      <form [formGroup]="contactDetailsForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="p-6 space-y-8">
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+        <p class="font-bold">Note: You are currently editing your Personal Details.</p>
+      </div>
+      <form [formGroup]="contactDetailsForm" (ngSubmit)="onSubmit()" class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-maroon">Edit Contact Information</h2>
         <div class="grid grid-cols-2 gap-6">
           <div class="form-control">
             <label class="label-text">Telephone Number</label>
             <input 
               formControlName="TelephoneNumber" 
-              class="input input-bordered" 
+              class="input input-bordered w-full" 
               type="text" 
               placeholder="Enter your landline telephone number">
           </div>
@@ -48,12 +62,12 @@
             <label class="label-text">Mobile Number <span class="text-red-500">*</span></label>
             <input 
               formControlName="MobileNumber" 
-              class="input input-bordered" 
+              class="input input-bordered w-full" 
               type="text" 
               placeholder="Enter your mobile phone number" 
               [ngClass]="{'border-red-500': contactDetailsForm.get('MobileNumber')?.invalid && submitted}"
               required>
-            <div *ngIf="contactDetailsForm.get('MobileNumber')?.invalid && submitted" class="text-red-500 text-sm">
+            <div *ngIf="contactDetailsForm.get('MobileNumber')?.invalid && submitted" class="text-red-500 text-sm mt-1">
               Mobile Number is required.
             </div>
           </div>
@@ -62,12 +76,12 @@
             <label class="label-text">Email Address <span class="text-red-500">*</span></label>
             <input 
               formControlName="EmailAddress" 
-              class="input input-bordered" 
+              class="input input-bordered w-full" 
               type="email" 
               placeholder="Enter your email address (e.g., name@example.com)" 
               [ngClass]="{'border-red-500': contactDetailsForm.get('EmailAddress')?.invalid && submitted}"
               required>
-            <div *ngIf="contactDetailsForm.get('EmailAddress')?.invalid && submitted" class="text-red-500 text-sm">
+            <div *ngIf="contactDetailsForm.get('EmailAddress')?.invalid && submitted" class="text-red-500 text-sm mt-1">
               <div *ngIf="contactDetailsForm.get('EmailAddress')?.errors?.['required']">Email Address is required.</div>
               <div *ngIf="contactDetailsForm.get('EmailAddress')?.errors?.['email']">Please enter a valid email address.</div>
             </div>

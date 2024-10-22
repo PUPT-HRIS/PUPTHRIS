@@ -1,29 +1,28 @@
-<div class="profile-image-container">
-  <div class="profile-header">
-    <h3>Profile Image</h3>
+<div class="profile-image-container h-full flex flex-col">
+  <h3 class="profile-header">Profile Image</h3>
+
+  <div class="profile-img-wrapper flex-grow flex items-center justify-center">
+    <img [src]="profileImageUrl || 'assets/default-profile.png'" alt="Profile Image" class="profile-img" />
   </div>
 
-  <ng-container *ngIf="profileImageUrl; else noImage">
-    <div class="profile-img-wrapper">
-      <img [src]="profileImageUrl" alt="Profile Image" class="profile-img" />
-    </div>
-    <div class="mt-4">
-      <button (click)="startUpdatingImage()" class="btn btn-save">Update Image</button>
-    </div>
-  </ng-container>
+  <div class="profile-actions mt-auto">
+    <ng-container *ngIf="!isUpdatingImage; else updateButtons">
+      <button (click)="startUpdatingImage()" class="btn btn-update">Update Image</button>
+    </ng-container>
 
-  <ng-template #noImage>
-    <p>No profile image found.</p>
-    <div class="file-upload mt-4">
-      <label for="profileImageUpload" class="btn btn-primary">Upload New Image</label>
-      <input type="file" id="profileImageUpload" (change)="onFileSelected($event)" hidden>
-    </div>
-  </ng-template>
+    <ng-template #updateButtons>
+      <div class="update-buttons">
+        <label for="profileImageUpload" class="btn btn-upload">Upload New Image</label>
+        <input type="file" id="profileImageUpload" (change)="onFileSelected($event)" hidden>
+        <button class="btn btn-cancel" (click)="cancelUpdateImage()">Cancel</button>
+      </div>
+    </ng-template>
 
-  <div class="file-upload mt-4" *ngIf="isUpdatingImage">
-    <label for="profileImageUpload" class="btn btn-primary">Upload New Image</label>
-    <input type="file" id="profileImageUpload" (change)="onFileSelected($event)" hidden>
-
-    <button type="button" class="btn btn-danger" (click)="cancelUpdateImage()">Cancel</button>
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
   </div>
+</div>
+
+<!-- Toast Notification -->
+<div *ngIf="showToast" class="toast" [ngClass]="{'toast-success': toastType === 'success', 'toast-error': toastType === 'error'}">
+  {{ toastMessage }}
 </div>
