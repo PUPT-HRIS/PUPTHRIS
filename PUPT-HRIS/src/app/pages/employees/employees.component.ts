@@ -237,8 +237,11 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   fetchCivilServiceEligibilities(userId: number): void {
-    this.civilServiceService.getCivilServiceEligibilities().subscribe(
-      (details) => (this.civilServiceEligibilities = details),
+    this.civilServiceService.getCivilServiceEligibilities(userId).subscribe(
+      (details) => {
+        console.log('Fetched civil service eligibilities:', details);
+        this.civilServiceEligibilities = details;
+      },
       (error) => {
         console.error('Error fetching civil service eligibilities', error);
         this.civilServiceEligibilities = null;

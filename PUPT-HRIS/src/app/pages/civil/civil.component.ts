@@ -59,7 +59,7 @@ export class CivilComponent implements OnInit {
   }
 
   loadCivilServiceEligibilities(): void {
-    this.civilServiceService.getCivilServiceEligibilities().subscribe(
+    this.civilServiceService.getCivilServiceEligibilities(this.userId).subscribe(
       (data: CivilServiceEligibility[]) => {
         this.civilServiceData = data;
         this.totalPages = Math.ceil(this.civilServiceData.length / this.itemsPerPage);
