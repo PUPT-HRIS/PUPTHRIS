@@ -1,182 +1,133 @@
 * {
   font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
 }
 
-/* Container styling */
-.form-container {
-  background-color: #f9f9f9; /* Light background for contrast */
-  border-radius: 0.5rem; /* Rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  padding: 2rem;
-  max-width: 800px; /* Limit width */
-  margin: 2rem auto; /* Center horizontally with margin */
+body {
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
 }
 
-/* Heading */
-.bg-maroon {
-  background-color: #800000; /* Maroon background */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.text-white {
-  color: #ffffff; /* White text */
+.header {
+  background-color: #800000;
+  color: white;
+  padding: 20px;
+  border-radius: 8px 8px 0 0;
 }
 
-/* Form controls */
-.form-control {
-  margin-bottom: 1.5rem; /* Space between fields */
+.header h1 {
+  margin: 0;
+  font-size: 24px;
 }
 
-/* Label text */
-.label-text {
-  color: #555; /* Slightly darker text for labels */
-  font-weight: 500; /* Medium weight for labels */
+.content {
+  background-color: white;
+  border-radius: 0 0 8px 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Input fields */
-.input-bordered {
-  border: 1px solid #ddd; /* Light border */
-  border-radius: 0.375rem; /* Slightly rounded corners */
-  padding: 0.75rem; /* Padding for better spacing */
-  transition: border-color 0.3s ease; /* Smooth border color transition */
+.actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.input-bordered:focus {
-  border-color: #3b82f6; /* Focus border color */
-  outline: none; /* Remove default outline */
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
-}
-
-/* Select fields */
-.select-bordered {
-  border: 1px solid #ddd; /* Light border */
-  border-radius: 0.375rem; /* Slightly rounded corners */
-  padding: 0.75rem; /* Padding for better spacing */
-  transition: border-color 0.3s ease; /* Smooth border color transition */
-}
-
-.select-bordered:focus {
-  border-color: #3b82f6; /* Focus border color */
-  outline: none; /* Remove default outline */
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
-}
-
-/* Buttons */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-transform: uppercase;
+  padding: 10px 20px;
   border: none;
-  border-radius: 0.375rem;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #000000;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #800000;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table th {
+  background-color: #800000;
+  color: white;
+  font-weight: 600;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 6px 12px;
+  font-size: 14px;
 }
 
 .btn-edit {
-  background-color: #3b82f6; /* Blue background */
-  color: #ffffff; /* White text */
-}
-
-.btn-edit:hover {
-  background-color: #2563eb; /* Darker blue on hover */
-  transform: translateY(-1px); /* Slight lift effect */
+  background-color: #3498db;
+  color: white;
+  margin-right: 5px;
 }
 
 .btn-delete {
-  background-color: #ef4444; /* Red background */
-  color: #ffffff; /* White text */
+  background-color: #e74c3c;
+  color: white;
 }
 
-.btn-delete:hover {
-  background-color: #dc2626; /* Darker red on hover */
-  transform: translateY(-1px); /* Slight lift effect */
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
 }
 
-.btn-save {
-  background-color: #000; /* Black background */
-  border-color: #000; /* Black border */
-  color: #fff; /* White text */
-}
-
-.btn-save:hover {
-  background-color: #222222; /* Slightly lighter black on hover */
-  transform: translateY(-1px); /* Slight lift effect */
-}
-
-.btn-cancel {
-  background-color: #800000; /* Red background */
-  border-color: #800000; /* Red border */
-  color: #fff; /* White text */
-}
-
-.btn-cancel:hover {
-  background-color: #9f0303; /* Slightly lighter red on hover */
-  transform: translateY(-1px); /* Slight lift effect */
-}
-
-/* Add Info button */
-.btn-add-info {
-  background-color: #000; /* Black background */
-  border-color: #000; /* Black border */
-  color: #fff; /* White text */
-  width: 100%; /* Full width */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
-}
-
-.btn-add-info:hover {
-  background-color: #333; /* Slightly lighter black on hover */
-  transform: translateY(-1px); /* Slight lift effect */
-}
-
-/* Flex container for buttons */
-.flex-end {
+.form-actions {
   display: flex;
-  justify-content: flex-end; /* Align buttons to the right */
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
 }
 
-/* Grid layout for display fields */
-.grid {
-  display: grid;
-  gap: 1rem; /* Space between grid items */
+.hidden {
+  display: none;
 }
 
-.grid-cols-2 {
-  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-}
-
-@media (max-width: 768px) {
-  .grid-cols-2 {
-    grid-template-columns: 1fr; /* Stack columns on small screens */
-  }
-}
-
-/* Zebra striping for table rows */
-.table tbody tr:nth-child(odd) {
-  background-color: #ececec; /* Light gray background for odd rows */
-}
-
-.table tbody tr:nth-child(even) {
-  background-color: #ffffff; /* White background for even rows */
-}
-
-/* Consistent button size and spacing */
-.btn-container {
-  display: flex;
-  gap: 0.5rem; /* Space between buttons */
-}
-
-.btn-container .btn {
-  flex: 1; /* Make both buttons the same width */
-}
-
-.btn-sm {
-  padding: 0.375rem 0.75rem; /* Adjusted padding for smaller buttons */
-}
-
-/* Pagination Controls */
 .pagination-controls {
   display: flex;
   justify-content: center;
@@ -195,7 +146,7 @@
 }
 
 .pagination-controls button.active {
-  background-color: black; /* Active page is black */
+  background-color: black;
   color: white;
 }
 
@@ -208,51 +159,88 @@
   background-color: #a00000;
 }
 
-/* Modal styling */
-.modal-open .modal-box {
-  opacity: 1;
-  visibility: visible;
+.bg-yellow-100 {
+  background-color: #fef3c7;
 }
 
-.modal-box {
-  position: relative;
-  max-width: 500px;
-  margin: auto;
-  padding: 1rem;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+.border-yellow-500 {
+  border-color: #f59e0b;
 }
 
-.modal-body {
-  padding: 1rem 0;
+.text-yellow-700 {
+  color: #b45309;
 }
 
-.toast {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  z-index: 50;
+.text-maroon {
+  color: #800000;
 }
 
-.toast .alert {
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.label-text {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  display: block;
 }
 
-.toast .alert-success {
-  background-color: #4caf50;
-  color: white;
+.input-bordered, .select-bordered, .file-input-bordered {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
 }
 
-.toast .alert-error {
-  background-color: #f44336;
-  color: white;
+.input-bordered:focus, .select-bordered:focus, .file-input-bordered:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
 }
 
-.toast .alert-warning {
-  background-color: #ff9800;
-  color: white;
+.btn-save {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.btn-cancel {
+  background-color: #800000;
+  color: #ffffff;
+}
+
+.btn-save:hover, .btn-cancel:hover {
+  opacity: 0.9;
+}
+
+.null-value {
+  font-style: italic;
+  color: #a0a0a0;
+  font-weight: 300;
+  font-size: 0.9em;
+}
+
+.table td:empty::before {
+  content: 'null';
+  font-style: italic;
+  color: #a0a0a0;
+  font-weight: 300;
+  font-size: 0.9em;
+}
+
+.table td:only-child:empty::before {
+  content: 'null';
+  font-style: italic;
+  color: #a0a0a0;
+  font-weight: 300;
+  font-size: 0.9em;
+}
+
+.table td:not(:empty):not(:only-child) {
+  font-style: normal;
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+.table td:not(:empty):not(:only-child)[innerHTML="null"] {
+  font-style: italic;
+  color: #a0a0a0;
+  font-weight: 300;
+  font-size: 0.9em;
 }

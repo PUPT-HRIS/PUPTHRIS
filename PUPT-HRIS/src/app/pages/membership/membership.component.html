@@ -1,59 +1,55 @@
-<div class="container bg-base-200 rounded-lg shadow-lg p-0 mx-auto max-w-6xl mb-10">
-  <div class="bg-maroon text-white p-4 rounded-t-lg w-full">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="container">
+  <div class="header">
     <h1 class="text-2xl font-bold">Officership and Memberships</h1>
   </div>
 
-  <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="paginatedMemberships.length > 0" class="p-6 space-y-6">
-      <div class="overflow-auto">
-        <div class="flex-1 mb-2">
-          <a class="text-lg font-normal">You are currently viewing the list/s of Officerships/Memberships.</a>
-        </div>
+  <div class="content">
+    <div class="actions">
+      <button class="btn btn-primary" (click)="addNewMembership()">Add Officership/Membership</button>
+      <label for="excelImport" class="btn btn-secondary">Import Excel Data</label>
+      <input type="file" id="excelImport" (change)="importExcelData($event)" accept=".xlsx, .xls" class="hidden">
+    </div>
 
-        <div class="mb-4">
-          <label for="excelImport" class="btn btn-primary">Import Excel Data</label>
-          <input type="file" id="excelImport" (change)="importExcelData($event)" accept=".xlsx, .xls" class="hidden">
-        </div>
-
-        <table class="table table-zebra w-full border-separate border-spacing-0">
+    <ng-container *ngIf="!isEditing; else editForm">
+      <div class="card" *ngIf="paginatedMemberships.length > 0">
+        <table class="table">
           <thead>
-            <tr class="bg-maroon text-white">
-              <th class="p-4">#</th>
-              <th class="p-4">Organization Name & Address</th>
-              <th class="p-4">Position</th>
-              <th class="p-4">Level</th>
-              <th class="p-4">Classification</th>
-              <th class="p-4">Inclusive Dates</th>
-              <th class="p-4">Proof</th>
-              <th class="p-4 w-36">Actions</th>
+            <tr>
+              <th>#</th>
+              <th>Organization Name</th>
+              <th>Position</th>
+              <th>Level</th>
+              <th>Classification</th>
+              <th>Inclusive Dates From</th>
+              <th>Inclusive Dates To</th>
+              <th>Proof</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let membership of paginatedMemberships; let i = index">
-              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
-              <td class="p-4">
-                {{ membership.OrganizationName }}<br>
-                {{ membership.OrganizationAddress }}
-              </td>
-              <td class="p-4">{{ membership.Position }}</td>
-              <td class="p-4">{{ membership.Level }}</td>
-              <td class="p-4">{{ membership.Classification }}</td>
-              <td class="p-4">
-                {{ membership.InclusiveDatesFrom | date }} - {{ membership.InclusiveDatesTo | date }}
-              </td>
-              <td class="p-4">
+              <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
+              <td>{{ membership.OrganizationName }}</td>
+              <td>{{ membership.Position }}</td>
+              <td>{{ membership.Level }}</td>
+              <td>{{ membership.Classification }}</td>
+              <td>{{ membership.InclusiveDatesFrom | date }}</td>
+              <td>{{ membership.InclusiveDatesTo | date }}</td>
+              <td>
                 <ng-container *ngIf="membership.Proof; else noProof">
                   <button *ngIf="membership.ProofType === 'file'" (click)="openProofModal(membership.Proof, membership.SupportingDocument)" class="btn btn-link">View File</button>
                   <a *ngIf="membership.ProofType === 'link'" [href]="membership.Proof" target="_blank" class="btn btn-link">View Link</a>
                 </ng-container>
                 <ng-template #noProof>
-                  <span>No Proof Uploaded</span>
+                  <span>No Proof</span>
                 </ng-template>
               </td>
-              <td class="p-4">
+              <td>
                 <div class="btn-container">
-                  <button (click)="editMembership(membership.OfficershipMembershipID!)" class="btn btn-edit btn-sm">Edit</button>
-                  <button (click)="deleteMembership(membership.OfficershipMembershipID!)" class="btn btn-delete btn-sm">Delete</button>
+                  <button (click)="editMembership(membership.OfficershipMembershipID!)" class="btn btn-edit btn-sm">EDIT</button>
+                  <button (click)="deleteMembership(membership.OfficershipMembershipID!)" class="btn btn-delete btn-sm">DELETE</button>
                 </div>
               </td>
             </tr>
@@ -61,103 +57,100 @@
         </table>
       </div>
 
-      <div class="pagination-controls mt-4">
-        <button class="btn-pagination" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
-        <button class="btn-pagination" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
+      <div class="pagination-controls">
+        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
           {{ page }}
         </button>
-        <button class="btn-pagination" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+        <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
       </div>
 
-      <div class="mt-6">
-        <button class="btn btn-add text-white w-full" (click)="addNewMembership()">Add Officership/Membership</button>
+      <div class="card empty-state" *ngIf="paginatedMemberships.length === 0">
+        <p>No officership or membership information available.</p>
       </div>
-    </div>
+    </ng-container>
 
-    <div *ngIf="paginatedMemberships.length === 0" class="p-6 space-y-6">
-      <div class="p-6 bg-white rounded-lg shadow-lg">
-        <p class="text-lg">No officership or membership information available.</p>
-      </div>
-      <div class="flex justify-end">
-        <button class="btn btn-add text-white w-full" (click)="addNewMembership()">Add Officership/Membership</button>
-      </div>
-    </div>
-  </ng-container>
-
-  <ng-template #editForm>
-    <div class="p-6">
-      <form [formGroup]="membershipForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <div class="grid grid-cols-2 gap-6">
-          <div class="form-control w-full">
-            <label for="OrganizationName" class="label-text font-bold text-lg">Organization Name</label>
-            <input id="OrganizationName" formControlName="OrganizationName" class="input input-bordered w-full" placeholder="Enter the organization name">
-          </div>
-          <div class="form-control w-full">
-            <label for="OrganizationAddress" class="label-text font-bold text-lg">Organization Address</label>
-            <input id="OrganizationAddress" formControlName="OrganizationAddress" class="input input-bordered w-full" placeholder="Enter the organization address">
-          </div>
-          <div class="form-control w-full">
-            <label for="Position" class="label-text font-bold text-lg">Position</label>
-            <input id="Position" formControlName="Position" class="input input-bordered w-full" placeholder="Enter the position">
-          </div>
-          <div class="form-control w-full">
-            <label for="Level" class="label-text font-bold text-lg">Level</label>
-            <select id="Level" formControlName="Level" class="select select-bordered w-full">
-              <option value="Local">Local</option>
-              <option value="National">National</option>
-              <option value="International">International</option>
-            </select>
-          </div>
-          <div class="form-control w-full">
-            <label for="Classification" class="label-text font-bold text-lg">Classification</label>
-            <select id="Classification" formControlName="Classification" class="select select-bordered w-full">
-              <option value="Learning and Development Interventions">Learning and Development Interventions</option>
-              <option value="Training Programs">Training Programs</option>
-              <option value="Seminars">Seminars</option>
-              <option value="Conferences">Conferences</option>
-              <option value="Others">Others</option>
-            </select>
-          </div>
-          <div class="form-control w-full">
-            <label for="InclusiveDatesFrom" class="label-text font-bold text-lg">Inclusive Dates From</label>
-            <input id="InclusiveDatesFrom" formControlName="InclusiveDatesFrom" class="input input-bordered w-full" type="date">
-          </div>
-          <div class="form-control w-full">
-            <label for="InclusiveDatesTo" class="label-text font-bold text-lg">Inclusive Dates To</label>
-            <input id="InclusiveDatesTo" formControlName="InclusiveDatesTo" class="input input-bordered w-full" type="date">
-          </div>
-          <div class="form-control w-full">
-            <label for="Remarks" class="label-text font-bold text-lg">Remarks</label>
-            <textarea id="Remarks" formControlName="Remarks" class="textarea textarea-bordered w-full" placeholder="Enter remarks"></textarea>
-          </div>
-          <div class="form-control w-full">
-            <label for="SupportingDocument" class="label-text font-bold text-lg">Supporting Document</label>
-            <input id="SupportingDocument" formControlName="SupportingDocument" class="input input-bordered w-full" placeholder="Enter a description of the supporting document">
-          </div>
-          <div class="form-control w-full">
-            <label for="ProofType" class="label-text font-bold text-lg">Proof Type</label>
-            <select id="ProofType" formControlName="ProofType" class="select select-bordered w-full">
-              <option value="file">File</option>
-              <option value="link">Link</option>
-            </select>
-          </div>
-          <div class="form-control w-full">
-            <label for="Proof" class="label-text font-bold text-lg">Proof</label>
-            <ng-container *ngIf="membershipForm.get('ProofType')?.value === 'file'; else proofLink">
-              <input id="Proof" type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full">
-            </ng-container>
-            <ng-template #proofLink>
-              <input id="Proof" formControlName="Proof" class="input input-bordered w-full" placeholder="Enter proof link">
-            </ng-template>
-          </div>
+    <ng-template #editForm>
+      <div class="p-6 space-y-8">
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+          <p class="font-bold">Note: You are currently editing Officership/Membership information.</p>
         </div>
-        <div class="flex justify-end mt-6">
-          <button type="submit" class="btn btn-save mr-4">{{ currentMembershipId ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </ng-template>
+        <form [formGroup]="membershipForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+          <!-- Membership Information -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4 text-maroon">Membership Information</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-control">
+                <label for="OrganizationName" class="label-text">Organization Name <span class="text-red-500">*</span></label>
+                <input id="OrganizationName" formControlName="OrganizationName" class="input input-bordered w-full" placeholder="Enter the organization name">
+              </div>
+              <div class="form-control">
+                <label for="Position" class="label-text">Position <span class="text-red-500">*</span></label>
+                <input id="Position" formControlName="Position" class="input input-bordered w-full" placeholder="Enter the position">
+              </div>
+              <div class="form-control">
+                <label for="Level" class="label-text">Level</label>
+                <select id="Level" formControlName="Level" class="select select-bordered w-full">
+                  <option value="" disabled selected>-- Select --</option>
+                  <option value="Local">Local</option>
+                  <option value="National">National</option>
+                  <option value="International">International</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="Classification" class="label-text">Classification <span class="text-red-500">*</span></label>
+                <select id="Classification" formControlName="Classification" class="select select-bordered w-full">
+                  <option value="" disabled selected>-- Select --</option>
+                  <option value="Professional">Professional</option>
+                  <option value="Non-Professional">Non-Professional</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="InclusiveDatesFrom" class="label-text">Inclusive Dates From <span class="text-red-500">*</span></label>
+                <input id="InclusiveDatesFrom" type="date" formControlName="InclusiveDatesFrom" class="input input-bordered w-full">
+              </div>
+              <div class="form-control">
+                <label for="InclusiveDatesTo" class="label-text">Inclusive Dates To <span class="text-red-500">*</span></label>
+                <input id="InclusiveDatesTo" type="date" formControlName="InclusiveDatesTo" class="input input-bordered w-full">
+              </div>
+            </div>
+          </div>
+
+          <!-- Supporting Documents -->
+          <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4 text-maroon">Supporting Documents</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-control">
+                <label for="SupportingDocument" class="label-text">Supporting Documents</label>
+                <input id="SupportingDocument" formControlName="SupportingDocument" class="input input-bordered w-full" placeholder="Enter a description of the supporting document">
+              </div>
+              <div class="form-control">
+                <label for="ProofType" class="label-text">Proof Type</label>
+                <select id="ProofType" formControlName="ProofType" class="select select-bordered w-full">
+                  <option value="file">File</option>
+                  <option value="link">Link</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="Proof" class="label-text">Proof</label>
+                <ng-container *ngIf="membershipForm.get('ProofType')?.value === 'file'; else proofLink">
+                  <input id="Proof" type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full">
+                </ng-container>
+                <ng-template #proofLink>
+                  <input id="Proof" formControlName="Proof" class="input input-bordered w-full" placeholder="Enter proof link">
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end mt-6">
+            <button type="submit" class="btn btn-save mr-4">{{ currentMembershipId ? 'Update' : 'Add' }}</button>
+            <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+  </div>
 </div>
 
 <!-- Modal for Viewing Proof -->
@@ -165,7 +158,9 @@
   <div class="modal-box">
     <h3 class="font-bold text-lg">Proof Document</h3>
     <div class="modal-body">
-      <p class="py-4"><strong>Description:</strong> {{ selectedSupportingDocument || 'No description available' }}</p>
+      <p class="py-4">
+        <strong>Description:</strong> {{ selectedSupportingDocument || 'No description available' }}
+      </p>
       <ng-container *ngIf="selectedProofType === 'file'; else linkProof">
         <ng-container *ngIf="isImage(selectedProofUrl || ''); else pdfTemplate">
           <img [src]="selectedProofUrl || ''" alt="Proof Image" class="img-fluid" (error)="onImageError()" />
