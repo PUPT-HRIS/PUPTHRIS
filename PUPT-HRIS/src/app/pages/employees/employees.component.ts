@@ -170,8 +170,12 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   fetchBasicDetails(userId: number): void {
+    console.log('Fetching basic details for user ID:', userId);
     this.basicDetailsService.getBasicDetails(userId).subscribe(
-      (details) => (this.basicDetails = details),
+      (details) => {
+        console.log('Received basic details:', details);
+        this.basicDetails = details;
+      },
       (error) => {
         console.error('Error fetching basic details', error);
         this.basicDetails = null;
@@ -309,7 +313,9 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   setActiveTab(tab: string): void {
+    console.log('Setting active tab to:', tab);
     this.activeTab = tab;
+    console.log('Current tab data:', (this as any)[tab + 'Details']);
   }
 
   closeModal(): void {
