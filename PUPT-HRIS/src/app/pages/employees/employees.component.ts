@@ -250,8 +250,12 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   fetchLearningDevelopments(userId: number): void {
+    console.log('Component: Fetching learning developments for user ID:', userId);
     this.learningService.getLearningDevelopments(userId).subscribe(
-      (details) => (this.learningDetails = details),
+      (details) => {
+        console.log('Fetched learning developments:', details);
+        this.learningDetails = details;
+      },
       (error) => {
         console.error('Error fetching learning developments', error);
         this.learningDetails = null;
