@@ -10,7 +10,7 @@ body {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -306,6 +306,13 @@ body {
 }
 
 .table td:not(:empty):not(:only-child)[innerHTML="null"] {
+  font-style: italic;
+  color: #a0a0a0;
+  font-weight: 300;
+  font-size: 0.9em;
+}
+
+.no-info {
   font-style: italic;
   color: #a0a0a0;
   font-weight: 300;
