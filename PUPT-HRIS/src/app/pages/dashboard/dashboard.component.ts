@@ -156,6 +156,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private campusSubscription: Subscription;
 
+  public isAdminView: boolean = false; // Set default to false
+
   constructor(
     private dashboardService: DashboardService,
     private cdr: ChangeDetectorRef,
@@ -169,14 +171,20 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     const roles = this.authService.getUserRoles();
 
     if (roles.length > 0) {
-      this.userRole = roles.includes('admin') ? 'admin' : roles.includes('superadmin') ? 'superadmin' : 'user';
+      this.userRole = roles.includes('admin') ? 'admin' : 
+                      roles.includes('superadmin') ? 'superadmin' : 
+                      roles.includes('faculty') ? 'faculty' : 
+                      roles.includes('staff') ? 'staff' : 'user';
     }
 
     this.campusSubscription = this.campusContextService.getCampusId().subscribe(campusId => {
       if (campusId !== null && (this.userRole === 'admin' || this.userRole === 'superadmin')) {
         this.loadAdminDashboardData(campusId);
-      } else if (this.userRole === 'user') {
         this.loadUserDashboardData();
+        this.isAdminView = true; // Set to true for admin/superadmin
+      } else {
+        this.loadUserDashboardData();
+        this.isAdminView = false; // Ensure it's false for other roles
       }
     });
   }
@@ -278,5 +286,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleEmploymentTypeView(): void {
     this.isFullTimeView = !this.isFullTimeView;
+  }
+
+  toggleDashboardView(): void {
+    this.isAdminView = !this.isAdminView;
   }
 }
