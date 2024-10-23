@@ -10,7 +10,8 @@ body {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
+  width: 95%;
   margin: 0 auto;
   padding: 20px;
 }
@@ -28,7 +29,7 @@ body {
 }
 
 .content {
-  background-color: white;
+  background-color: #f0f0f0;
   border-radius: 0 0 8px 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -77,11 +78,28 @@ body {
   border-spacing: 0;
 }
 
-.table th,
-.table td {
-  padding: 12px;
+/* Update the table cell styles */
+.table th, .table td {
+  padding: 16px; /* Increase padding (previously 12px) */
   text-align: left;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Add some vertical spacing between rows */
+.table tr {
+  margin-bottom: 8px; /* Add space between rows */
+}
+
+/* Adjust the last column (Actions) to accommodate buttons */
+.table td:last-child {
+  padding: 12px 16px; /* Slightly less vertical padding for the actions column */
+  white-space: nowrap;
+}
+
+/* Optional: If you want to add some horizontal space between columns */
+.table th:not(:last-child),
+.table td:not(:last-child) {
+  padding-right: 24px; /* Add more space to the right of each cell except the last one */
 }
 
 .table th {
@@ -100,8 +118,11 @@ body {
 
 .btn-edit,
 .btn-delete {
-  padding: 6px 12px;
-  font-size: 14px;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 .btn-edit {
@@ -247,4 +268,40 @@ body {
   color: #a0a0a0;
   font-weight: 300;
   font-size: 0.9em;
+}
+
+.no-info {
+  font-weight: 300;
+  font-style: italic;
+  color: #888888;
+}
+
+/* Add these styles to your existing CSS */
+.btn-sm {
+  width: 70px; /* Set a fixed width for both buttons */
+  padding: 0.25rem 0; /* Adjust padding to make buttons more compact */
+  font-size: 0.75rem; /* Slightly reduce font size */
+}
+
+.btn-edit, .btn-delete {
+  margin-right: 0.25rem; /* Add a small margin between buttons */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-edit {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+/* You may need to adjust the table cell padding to accommodate the buttons */
+.table td:last-child {
+  padding: 0.5rem 0.75rem; /* Adjust as needed */
+  white-space: nowrap; /* Prevent button wrapping */
 }
