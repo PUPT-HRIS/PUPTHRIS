@@ -21,6 +21,7 @@ const CharacterReference = require('../models/characterReferenceModel');
 const AdditionalQuestions = require('../models/additionalQuestionModel');
 
 exports.generatePDS = async (req, res) => {
+    console.log('PDS generation started');
     let tempExcelFilePath = null;
     let testPdfPath = null;
     try {
@@ -76,6 +77,8 @@ exports.generatePDS = async (req, res) => {
             ...familyBackground.get({ plain: true }),
         };
 
+        console.log('User details fetched');
+        
         tempExcelFilePath = await fillExcelTemplate(userDetails, 
             childrenDetails, 
             educationDetails, 
@@ -89,12 +92,16 @@ exports.generatePDS = async (req, res) => {
             characterReferences,
             additionalQuestions
         );
+        console.log('Excel template filled');
+        console.log('Starting Excel to PDF conversion');
+        
         const pdfBuffer = await convertExcelToPDF(tempExcelFilePath);
+        console.log('PDF conversion completed');
         console.log('Original PDF Buffer size:', pdfBuffer.length);
-
+        
         const finalPdfBuffer = await removeSecondPageFromPDF(pdfBuffer);
-        console.log('Final PDF Buffer size:', finalPdfBuffer.length);
-
+        console.log('Second page removed from PDF');
+        
         testPdfPath = path.join(__dirname, '../temp/test.pdf');
         await fs.writeFile(testPdfPath, finalPdfBuffer);
         console.log('PDF saved to test.pdf for manual verification');
@@ -220,8 +227,10 @@ exports.generatePDSForUser = async (req, res) => {
 };
 
 async function convertExcelToPDF(excelFilePath) {
+    console.log('Starting Excel to PDF conversion');
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile(excelFilePath);
+    console.log('Excel file read successfully');
 
     const worksheet = workbook.getWorksheet(1);
 
@@ -247,11 +256,17 @@ async function convertExcelToPDF(excelFilePath) {
     await workbook.xlsx.writeFile(updatedFilePath);
 
     const buffer = await fs.readFile(updatedFilePath);
+    console.log('Calling libre.convert');
     return new Promise((resolve, reject) => {
         libre.convert(buffer, '.pdf', undefined, (err, pdfBuffer) => {
             if (err) {
+                console.error('LibreOffice conversion error:', err);
+                console.error('Error details:', err.message);
+                console.error('Error stack:', err.stack);
                 return reject(err);
             }
+            console.log('LibreOffice conversion successful');
+            console.log('PDF buffer size:', pdfBuffer.length);
             resolve(pdfBuffer);
         });
     });

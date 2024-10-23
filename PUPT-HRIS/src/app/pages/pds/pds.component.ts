@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { User } from '../../model/user.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CampusContextService } from '../../services/campus-context.service';
+import { timeout, catchError, retry } from 'rxjs/operators';
 
 @Component({
   selector: 'app-pds',
@@ -34,6 +35,11 @@ export class PdsComponent implements OnInit {
   toastType: 'success' | 'error' | 'warning' = 'error';
 
   pdfUrl: SafeResourceUrl | null = null;
+  showPdfViewer: boolean = false;
+
+  currentPdfBlob: Blob | null = null;
+
+  missingDetailsMessage: string | null = null;
 
   constructor(
     private pdsService: PdsService, 
@@ -109,8 +115,10 @@ export class PdsComponent implements OnInit {
       this.isLoading = true;
       this.pdsService.downloadPDS().subscribe(
         (pdfBlob: Blob) => {
+          this.currentPdfBlob = pdfBlob;
           const pdfUrl = URL.createObjectURL(pdfBlob);
           this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfUrl);
+          this.showPdfViewer = true;
           this.isLoading = false;
         },
         (error) => {
@@ -122,49 +130,49 @@ export class PdsComponent implements OnInit {
     }
   }
 
-  downloadPds(): void {
+  viewUserPds(userId: number): void {
     this.isLoading = true;
-    this.pdsService.downloadPDS().subscribe(
-      (pdfBlob: Blob) => {
-        const url = window.URL.createObjectURL(pdfBlob);
-        const a = document.createElement('a');
-        document.body.appendChild(a);
-        a.setAttribute('style', 'display: none');
-        a.href = url;
-        a.download = `PDS_${this.userId}.pdf`;
-        a.click();
-        window.URL.revokeObjectURL(url);
+    this.missingDetailsMessage = null; // Reset the message
+    this.pdsService.downloadPDSForUser(userId).subscribe(
+      (response: Blob | { message: string }) => {
         this.isLoading = false;
+        if (response instanceof Blob) {
+          this.currentPdfBlob = response;
+          const pdfUrl = URL.createObjectURL(response);
+          this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfUrl);
+          this.showPdfViewer = true;
+        } else {
+          this.missingDetailsMessage = response.message;
+          this.showPdfViewer = true;
+          this.pdfUrl = null;
+        }
       },
       (error) => {
-        console.error('Error downloading PDS', error);
+        console.error('Error generating PDS for user', error);
         this.isLoading = false;
-        this.showToastNotification('Failed to download PDS. Please try again.', 'error');
+        this.showToastNotification('Failed to generate PDS. Please try again.', 'error');
       }
     );
   }
 
-  downloadUserPds(userId: number): void {
-    console.log('Requesting PDS for user ID:', userId);
-    this.isLoading = true;
-    this.pdsService.downloadPDSForUser(userId).subscribe(
-      (pdfBlob: Blob) => {
-        const url = window.URL.createObjectURL(pdfBlob);
-        const a = document.createElement('a');
-        document.body.appendChild(a);
-        a.setAttribute('style', 'display: none');
-        a.href = url;
-        a.download = `PDS_${userId}.pdf`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error downloading PDS for user', error);
-        this.isLoading = false;
-        this.showToastNotification('Failed to download PDS. Please try again.', 'error');
-      }
-    );
+  downloadCurrentPdf(): void {
+    if (this.currentPdfBlob) {
+      const url = window.URL.createObjectURL(this.currentPdfBlob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.setAttribute('style', 'display: none');
+      a.href = url;
+      a.download = 'PDS.pdf';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    }
+  }
+
+  closePdfViewer(): void {
+    this.showPdfViewer = false;
+    this.pdfUrl = null;
+    this.currentPdfBlob = null;
   }
 
   getRoleName(roles: any[]): string {
