@@ -7,7 +7,7 @@
 
   <div class="content">
     <div class="actions">
-      <button class="btn btn-primary" (click)="addNewTraining()">Add Training</button>
+      <button class="btn btn-primary" (click)="addNewTraining()">Add Training and Seminar</button>
       <label for="excelImport" class="btn btn-secondary">Import Excel Data</label>
       <input type="file" id="excelImport" (change)="importExcelData($event)" accept=".xlsx, .xls" class="hidden">
     </div>
@@ -32,22 +32,22 @@
             <tr *ngFor="let training of paginatedTrainingData; let i = index">
               <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
               <td>
-                <ng-container *ngIf="training.Title; else noInfo">{{ training.Title }}</ng-container>
+                <ng-container *ngIf="formatValue(training.Title); else noInfo">{{ formatValue(training.Title) }}</ng-container>
               </td>
               <td>
-                <ng-container *ngIf="training.Classification; else noInfo">{{ training.Classification }}</ng-container>
+                <ng-container *ngIf="formatValue(training.Classification); else noInfo">{{ formatValue(training.Classification) }}</ng-container>
               </td>
               <td>
-                <ng-container *ngIf="training.Nature; else noInfo">{{ training.Nature }}</ng-container>
+                <ng-container *ngIf="formatValue(training.Nature); else noInfo">{{ formatValue(training.Nature) }}</ng-container>
               </td>
               <td>
-                <ng-container *ngIf="training.DateFrom; else noInfo">{{ training.DateFrom | date }}</ng-container>
+                <ng-container *ngIf="formatValue(training.DateFrom); else noInfo">{{ formatValue(training.DateFrom) | date }}</ng-container>
               </td>
               <td>
-                <ng-container *ngIf="training.DateTo; else noInfo">{{ training.DateTo | date }}</ng-container>
+                <ng-container *ngIf="formatValue(training.DateTo); else noInfo">{{ formatValue(training.DateTo) | date }}</ng-container>
               </td>
               <td>
-                <ng-container *ngIf="training.Organizer; else noInfo">{{ training.Organizer }}</ng-container>
+                <ng-container *ngIf="formatValue(training.Organizer); else noInfo">{{ formatValue(training.Organizer) }}</ng-container>
               </td>
               <td>
                 <ng-container *ngIf="training.Proof; else noInfo">

@@ -105,34 +105,37 @@ body {
 }
 
 .btn-edit, .btn-delete {
-  padding: 3px 8px;  /* Reduced padding */
+  padding: 5px 10px;  /* Increased padding for better clickability */
   margin-right: 5px;
   border: none;
   border-radius: 4px;
-  font-size: 11px;  /* Slightly smaller font size */
+  font-size: 12px;  /* Slightly larger font size for better readability */
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  line-height: 1.2;  /* Reduced line height */
+  line-height: 1.2;
+  width: 60px;  /* Set a fixed width for both buttons */
+  text-align: center;
+  display: inline-block;
 }
 
 .btn-edit {
-  background-color: #007bff;
+  background-color: #007bff;  /* Blue color for edit button */
   color: white;
 }
 
 .btn-delete {
-  background-color: #dc3545;
+  background-color: #dc3545;  /* Red color for delete button */
   color: white;
 }
 
 .btn-edit:hover {
-  background-color: #0056b3;
+  background-color: #0056b3;  /* Darker blue on hover */
 }
 
 .btn-delete:hover {
-  background-color: #c82333;
+  background-color: #c82333;  /* Darker red on hover */
 }
 
 .pagination {
@@ -317,4 +320,11 @@ body {
   color: #a0a0a0;
   font-weight: 300;
   font-size: 0.9em;
+}
+
+/* If you want to ensure the buttons are on the same line */
+.btn-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
