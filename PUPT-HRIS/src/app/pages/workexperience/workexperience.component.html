@@ -6,53 +6,57 @@
   </div>
 
   <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="workExperienceData.length > 0" class="p-6 space-y-6">
-      <div class="overflow-x-auto px-10">
-        <div class="flex-1 mb-2">
-          <a class="text-lg font-normal">You are currently viewing the list/s of Work Experience/s.</a>
-        </div>
-        <table class="table table-zebra w-full border-separate border-spacing-0">
-          <thead>
-            <tr class="bg-maroon text-white">
-              <th class="p-4">#</th>
-              <th class="p-4">Inclusive Dates From</th>
-              <th class="p-4">Inclusive Dates To</th>
-              <th class="p-4">Position Title</th>
-              <th class="p-4">Department/Agency/Office/Company</th>
-              <th class="p-4">Monthly Salary</th>
-              <th class="p-4">Salary/Job/Pay Grade</th>
-              <th class="p-4">Status of Appointment</th>
-              <th class="p-4">Govt Service</th>
-              <th class="p-4 w-36">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let experience of paginatedWorkExperienceData; let i = index" class="hover:bg-gray-100">
-              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
-              <td class="p-4">{{ experience.InclusiveDatesFrom | date }}</td>
-              <td class="p-4">{{ experience.InclusiveDatesTo | date }}</td>
-              <td class="p-4">{{ experience.PositionTitle }}</td>
-              <td class="p-4">{{ experience.DepartmentAgencyOfficeCompany }}</td>
-              <td class="p-4">{{ experience.MonthlySalary }}</td>
-              <td class="p-4">{{ experience.SalaryJobPayGrade }}</td>
-              <td class="p-4">{{ experience.StatusOfAppointment }}</td>
-              <td class="p-4">{{ experience.GovtService ? 'Yes' : 'No' }}</td>
-              <td class="p-4">
-                <div class="btn-container">
-                  <button (click)="editExperience(experience.WorkExperienceID!)" class="btn btn-sm btn-edit">Edit</button>
-                  <button (click)="deleteExperience(experience.WorkExperienceID!)" class="btn btn-sm btn-delete">Delete</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="mt-4 px-10">
-        <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewExperience()">Add Info</button>
+    <!-- Display mode -->
+    <div *ngIf="workExperienceData.length > 0" class="p-6">
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Inclusive Dates</th>
+            <th>Position Title</th>
+            <th>Department/Agency/Office/Company</th>
+            <th>Monthly Salary</th>
+            <th>Salary/Job/Pay Grade</th>
+            <th>Status of Appointment</th>
+            <th>Govt Service</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let experience of paginatedWorkExperienceData; let i = index">
+            <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
+            <td>{{ experience.InclusiveDatesFrom | date:'mediumDate' }} - {{ experience.InclusiveDatesTo | date:'mediumDate' }}</td>
+            <td>
+              <ng-container *ngIf="experience.PositionTitle; else noInfo">{{ experience.PositionTitle }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="experience.DepartmentAgencyOfficeCompany; else noInfo">{{ experience.DepartmentAgencyOfficeCompany }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="experience.MonthlySalary; else noInfo">{{ experience.MonthlySalary | currency:'PHP':'symbol':'1.2-2' }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="experience.SalaryJobPayGrade; else noInfo">{{ experience.SalaryJobPayGrade }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="experience.StatusOfAppointment; else noInfo">{{ experience.StatusOfAppointment }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="experience.GovtService !== null; else noInfo">{{ experience.GovtService ? 'Yes' : 'No' }}</ng-container>
+            </td>
+            <td>
+              <button class="btn btn-edit btn-sm" (click)="editExperience(experience.WorkExperienceID!)">EDIT</button>
+              <button class="btn btn-delete btn-sm" (click)="deleteExperience(experience.WorkExperienceID!)">DELETE</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="flex justify-end mt-4">
+        <button class="btn btn-add-info bg-maroon text-white hover:bg-maroon-dark transition duration-300 ease-in-out" (click)="addNewExperience()">Add Work Experience</button>
       </div>
 
       <!-- Pagination -->
-      <div class="pagination-controls">
+      <div class="pagination-controls mt-4">
         <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
         <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
           {{ page }}
@@ -65,54 +69,58 @@
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <p class="text-lg">No work experience information available.</p>
       </div>
-      <div class="mt-4">
-        <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewExperience()">Add Info</button>
+      <div class="flex justify-end">
+        <button class="btn btn-add-info bg-maroon text-white hover:bg-maroon-dark transition duration-300 ease-in-out" (click)="addNewExperience()">Add Work Experience</button>
       </div>
     </div>
   </ng-container>
 
   <ng-template #editForm>
-    <div class="p-6">
-      <form [formGroup]="workExperienceForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <div class="grid grid-cols-2 gap-6">
-          <div class="form-control w-full">
-            <label for="InclusiveDatesFrom" class="label-text font-bold text-lg">Inclusive Dates From</label>
-            <input id="InclusiveDatesFrom" formControlName="InclusiveDatesFrom" class="input input-bordered w-full" type="date">
+    <div class="p-6 space-y-8">
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+        <p class="font-bold">Note: You are currently editing your Work Experience Details.</p>
+      </div>
+      <form [formGroup]="workExperienceForm" (ngSubmit)="onSubmit()" class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-maroon">{{ currentExperienceId ? 'Edit' : 'Add' }} Work Experience</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="form-control">
+            <label class="label-text">Inclusive Dates From <span class="text-red-500">*</span></label>
+            <input formControlName="InclusiveDatesFrom" class="input input-bordered w-full" type="date">
           </div>
-          <div class="form-control w-full">
-            <label for="InclusiveDatesTo" class="label-text font-bold text-lg">Inclusive Dates To</label>
-            <input id="InclusiveDatesTo" formControlName="InclusiveDatesTo" class="input input-bordered w-full" type="date">
+          <div class="form-control">
+            <label class="label-text">Inclusive Dates To <span class="text-red-500">*</span></label>
+            <input formControlName="InclusiveDatesTo" class="input input-bordered w-full" type="date">
           </div>
-          <div class="form-control w-full">
-            <label for="PositionTitle" class="label-text font-bold text-lg">Position Title</label>
-            <input id="PositionTitle" formControlName="PositionTitle" class="input input-bordered w-full" placeholder="Enter your position title (e.g., Software Engineer)">
+          <div class="form-control">
+            <label class="label-text">Position Title <span class="text-red-500">*</span></label>
+            <input formControlName="PositionTitle" class="input input-bordered w-full" type="text" placeholder="Enter position title">
           </div>
-          <div class="form-control w-full">
-            <label for="DepartmentAgencyOfficeCompany" class="label-text font-bold text-lg">Department/Agency/Office/Company</label>
-            <input id="DepartmentAgencyOfficeCompany" formControlName="DepartmentAgencyOfficeCompany" class="input input-bordered w-full" placeholder="Enter the department, agency, or company name">
+          <div class="form-control">
+            <label class="label-text">Department/Agency/Office/Company <span class="text-red-500">*</span></label>
+            <input formControlName="DepartmentAgencyOfficeCompany" class="input input-bordered w-full" type="text" placeholder="Enter department/agency/office/company">
           </div>
-          <div class="form-control w-full">
-            <label for="MonthlySalary" class="label-text font-bold text-lg">Monthly Salary</label>
-            <input id="MonthlySalary" formControlName="MonthlySalary" class="input input-bordered w-full" type="number" placeholder="Enter your monthly salary in PHP">
+          <div class="form-control">
+            <label class="label-text">Monthly Salary <span class="text-red-500">*</span></label>
+            <input formControlName="MonthlySalary" class="input input-bordered w-full" type="number" placeholder="Enter monthly salary">
           </div>
-          <div class="form-control w-full">
-            <label for="SalaryJobPayGrade" class="label-text font-bold text-lg">Salary/Job/Pay Grade</label>
-            <input id="SalaryJobPayGrade" formControlName="SalaryJobPayGrade" class="input input-bordered w-full" placeholder="Enter your salary grade or job level">
+          <div class="form-control">
+            <label class="label-text">Salary/Job/Pay Grade</label>
+            <input formControlName="SalaryJobPayGrade" class="input input-bordered w-full" type="text" placeholder="Enter salary/job/pay grade">
           </div>
-          <div class="form-control w-full">
-            <label for="StatusOfAppointment" class="label-text font-bold text-lg">Status of Appointment</label>
-            <input id="StatusOfAppointment" formControlName="StatusOfAppointment" class="input input-bordered w-full" placeholder="Enter the status of your appointment (e.g., Permanent, Contractual)">
+          <div class="form-control">
+            <label class="label-text">Status of Appointment <span class="text-red-500">*</span></label>
+            <input formControlName="StatusOfAppointment" class="input input-bordered w-full" type="text" placeholder="Enter status of appointment">
           </div>
-          <div class="form-control w-full">
-            <label for="GovtService" class="label-text font-bold text-lg">Government Service</label>
-            <select id="GovtService" formControlName="GovtService" class="select select-bordered w-full">
+          <div class="form-control">
+            <label class="label-text">Government Service <span class="text-red-500">*</span></label>
+            <select formControlName="GovtService" class="select select-bordered w-full">
               <option [ngValue]="true">Yes</option>
               <option [ngValue]="false">No</option>
             </select>
           </div>
         </div>
         <div class="flex justify-end mt-6">
-          <button type="submit" class="btn btn-save mr-4">{{ currentExperienceId ? 'Update' : 'Add' }}</button>
+          <button type="submit" class="btn btn-save mr-4">{{ currentExperienceId ? 'Update' : 'Save' }}</button>
           <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
         </div>
       </form>
@@ -132,3 +140,7 @@
     <span>{{ toastMessage }}</span>
   </div>
 </div>
+
+<ng-template #noInfo>
+  <span class="no-info">No information entered</span>
+</ng-template>
