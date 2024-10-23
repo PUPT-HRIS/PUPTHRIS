@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/add', authenticateJWT, workexperienceController.addWorkExperience);
 router.patch('/update/:id', authenticateJWT, workexperienceController.updateWorkExperience);
-router.get('/user/:id', authenticateJWT, workexperienceController.getWorkExperiencesByUser);
+router.get('/user/:userId', authenticateJWT, workexperienceController.getWorkExperiencesByUser);
 router.delete('/delete/:id', authenticateJWT, workexperienceController.deleteWorkExperience);
 
 module.exports = router;

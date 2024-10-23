@@ -17,8 +17,8 @@ export class DashboardService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  getDashboardData(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/dashboard-data`, { headers: this.getHeaders() }).pipe(
+  getDashboardData(campusId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/dashboard-data`, { params: { campusId: campusId.toString() }, headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }

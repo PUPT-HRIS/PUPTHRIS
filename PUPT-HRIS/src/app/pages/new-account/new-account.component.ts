@@ -237,11 +237,8 @@ export class NewAccountComponent implements OnInit {
       this.userService.addUser(formData).subscribe({
         next: response => {
           this.showToast('success', 'Account created successfully');
-          // Delay the form reset to allow the toast to display
-          setTimeout(() => {
-            this.newAccountForm.reset();
-            this.newAccountForm.markAsPristine();
-          }, 100); // Adjust the delay as needed
+          // Reset the form
+          this.resetForm();
         },
         error: error => {
           console.log("Backend error details:", error);
@@ -249,6 +246,20 @@ export class NewAccountComponent implements OnInit {
         }
       });
     }
+  }
+
+  // Add this new method to reset the form
+  resetForm(): void {
+    this.newAccountForm.reset();
+    this.newAccountForm.patchValue({
+      EmploymentType: '',
+      Roles: [],
+      DepartmentID: { value: '', disabled: true },
+      CollegeCampusID: { value: '', disabled: true }
+    });
+    this.showCollegeCampus = false;
+    this.departments = [];
+    this.loadDepartments();
   }
 
   getCurrentUserCollegeCampus(): void {

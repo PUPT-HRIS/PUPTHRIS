@@ -48,7 +48,7 @@ exports.getWorkExperience = async (req, res) => {
 
 exports.getWorkExperiencesByUser = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = parseInt(req.params.userId);
     const workExperiences = await WorkExperience.findAll({ where: { userID: userId } });
     if (workExperiences) {
       res.status(200).json(workExperiences);
