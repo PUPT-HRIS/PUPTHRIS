@@ -116,21 +116,20 @@ export class NewAccountComponent implements OnInit {
         next: departments => {
           console.log('Fetched departments:', departments);
           this.departments = departments;
-          // Clear the selected department
           this.newAccountForm.get('DepartmentID')?.setValue('');
           if (departments.length === 0) {
             console.log('No departments found for this campus');
-            this.showToast('error', 'No departments found for this campus');
+            // Remove the toast notification from here
           }
         },
         error: error => {
           console.error('Error fetching departments', error);
-          this.showToast('error', 'Failed to load departments');
+          // Remove the toast notification from here as well
         }
       });
     } else {
-      console.error('No college campus ID available');
-      this.showToast('error', 'Unable to load departments: No campus ID');
+      console.log('No college campus ID available, skipping department load');
+      this.departments = [];
     }
   }
 
@@ -237,7 +236,6 @@ export class NewAccountComponent implements OnInit {
       this.userService.addUser(formData).subscribe({
         next: response => {
           this.showToast('success', 'Account created successfully');
-          // Reset the form
           this.resetForm();
         },
         error: error => {
@@ -260,6 +258,17 @@ export class NewAccountComponent implements OnInit {
     this.showCollegeCampus = false;
     this.departments = [];
     this.loadDepartments();
+  
+    // Reset the checked state of role checkboxes
+    this.roles.forEach(role => {
+      const checkbox = document.querySelector(`input[type="checkbox"][value="${role.RoleID}"]`) as HTMLInputElement;
+      if (checkbox) {
+        checkbox.checked = false;
+      }
+    });
+
+    // Re-initialize form state based on roles
+    this.handleRoleSelection([]);
   }
 
   getCurrentUserCollegeCampus(): void {
@@ -303,7 +312,6 @@ export class NewAccountComponent implements OnInit {
         this.newAccountForm.get('DepartmentID')?.setValue('');
         if (departments.length === 0) {
           console.log('No departments found for this campus');
-          this.showToast('error', 'No departments found for this campus');
         }
       },
       error: error => {
