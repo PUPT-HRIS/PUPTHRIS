@@ -61,10 +61,15 @@ async function fillExcelTemplate(userDetails,
     const worksheet4 = workbook.getWorksheet(4);
 
 
-    await fillWorksheet2(workbook, userDetails, civilServiceEligibilities, workExperiences);
-    console.log("Voluntary Works before passing to fillWorksheet3:", JSON.stringify(voluntaryWork, null, 2));
-    await fillWorksheet3(workbook, voluntaryWork, learningDevelopments, specialSkills, nonAcademics, memberships);
-    await fillWorksheet4(workbook, characterReferences, additionalQuestions);
+    try {
+        await fillWorksheet2(workbook, userDetails, civilServiceEligibilities, workExperiences);
+        console.log("Voluntary Works before passing to fillWorksheet3:", JSON.stringify(voluntaryWork, null, 2));
+        await fillWorksheet3(workbook, voluntaryWork, learningDevelopments, specialSkills, nonAcademics, memberships);
+        await fillWorksheet4(workbook, characterReferences, additionalQuestions);
+    } catch (error) {
+        console.error('Error in fillExcelTemplate:', error);
+        throw error; // Re-throw the error so it can be caught by the calling function
+    }
 
     // Fill basic details (left-aligned for these fields)
     worksheet.getCell('D10').value = ' ' + userDetails.LastName;  // Surname

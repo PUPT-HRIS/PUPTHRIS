@@ -1,4 +1,5 @@
 const CollegeCampus = require('../models/collegeCampusModel');
+const Department = require('../models/departmentModel');
 
 // Get all college campuses
 exports.getAllCollegeCampuses = async (req, res) => {
@@ -63,5 +64,22 @@ exports.deleteCollegeCampus = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: 'Error deleting college campus', error: error.message });
+  }
+};
+
+// Add this method to the existing controller
+exports.getCampusDepartments = async (req, res) => {
+  try {
+    const campusId = req.params.id;
+    const campus = await CollegeCampus.findByPk(campusId, {
+      include: [{ model: Department, as: 'Departments' }]
+    });
+    if (campus) {
+      res.json(campus.Departments);
+    } else {
+      res.status(404).json({ message: 'College campus not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching campus departments', error: error.message });
   }
 };

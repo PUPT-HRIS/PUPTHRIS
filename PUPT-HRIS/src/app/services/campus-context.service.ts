@@ -60,4 +60,39 @@ export class CampusContextService {
     localStorage.removeItem(this.CAMPUS_ID_KEY);
     this.campusIdSubject.next(null);
   }
+
+  updateCampus(id: number): void {
+    console.log('Updating campus in CampusContextService:', id);
+    this.setCampusId(id);
+    this.campusIdSubject.next(id);
+  }
+
+  // New method to get the user's default campus
+  getUserDefaultCampus(): Observable<number | null> {
+    const decodedToken = this.authService.getDecodedToken();
+    if (decodedToken && decodedToken.userId) {
+      return new Observable(observer => {
+        this.userService.getCurrentUserCampus(decodedToken.userId).subscribe(
+          campus => {
+            if (campus && campus.CollegeCampusID) {
+              observer.next(campus.CollegeCampusID);
+              observer.complete();
+            } else {
+              observer.next(null);
+              observer.complete();
+            }
+          },
+          error => {
+            console.error('Error fetching user default campus:', error);
+            observer.error(error);
+          }
+        );
+      });
+    } else {
+      return new Observable(observer => {
+        observer.next(null);
+        observer.complete();
+      });
+    }
+  }
 }

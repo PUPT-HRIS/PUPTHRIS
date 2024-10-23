@@ -1,10 +1,12 @@
-import { Component, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
 import { DashboardService } from '../../services/dashboard.service';
 import { DepartmentCount } from '../../model/departmentCount.model';
-import { AuthService } from '../../services/auth.service'; 
+import { AuthService } from '../../services/auth.service';
+import { CampusContextService } from '../../services/campus-context.service';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 interface TrainingSeminar {
   title: string;
@@ -24,7 +26,7 @@ interface Employee {
   standalone: true,
   imports: [NgChartsModule, CommonModule]
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
@@ -152,30 +154,53 @@ export class DashboardComponent implements AfterViewInit {
     ]
   };
 
-  constructor(
-    private dashboardService: DashboardService, 
-    private cdr: ChangeDetectorRef,
-    private authService: AuthService
-  ){}
+  private campusSubscription: Subscription;
 
-  ngAfterViewInit(): void {
+  public isAdminView: boolean = false; // Set default to false
+
+  constructor(
+    private dashboardService: DashboardService,
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService,
+    private campusContextService: CampusContextService
+  ) {
+    this.campusSubscription = new Subscription();
+  }
+
+  ngOnInit(): void {
     const roles = this.authService.getUserRoles();
 
     if (roles.length > 0) {
-      this.userRole = roles.includes('admin') ? 'admin' : roles.includes('superadmin') ? 'superadmin' : 'user';
+      this.userRole = roles.includes('admin') ? 'admin' : 
+                      roles.includes('superadmin') ? 'superadmin' : 
+                      roles.includes('faculty') ? 'faculty' : 
+                      roles.includes('staff') ? 'staff' : 'user';
     }
 
-    if (this.userRole === 'admin' || this.userRole === 'superadmin') {
-      this.loadAdminDashboardData();
-    } else {
-      this.loadUserDashboardData();
-    }
+    this.campusSubscription = this.campusContextService.getCampusId().subscribe(campusId => {
+      if (campusId !== null && (this.userRole === 'admin' || this.userRole === 'superadmin')) {
+        this.loadAdminDashboardData(campusId);
+        this.loadUserDashboardData();
+        this.isAdminView = true; // Set to true for admin/superadmin
+      } else {
+        this.loadUserDashboardData();
+        this.isAdminView = false; // Ensure it's false for other roles
+      }
+    });
+  }
 
+  ngAfterViewInit(): void {
     this.updateEmploymentTypeChart();
   }
 
-  loadAdminDashboardData(): void {
-    this.dashboardService.getDashboardData().subscribe(data => {
+  ngOnDestroy(): void {
+    if (this.campusSubscription) {
+      this.campusSubscription.unsubscribe();
+    }
+  }
+
+  loadAdminDashboardData(campusId: number): void {
+    this.dashboardService.getDashboardData(campusId).subscribe(data => {
       console.log('Dashboard Data:', data);
   
       this.totalFemale = data.totalFemale;
@@ -261,5 +286,9 @@ export class DashboardComponent implements AfterViewInit {
 
   toggleEmploymentTypeView(): void {
     this.isFullTimeView = !this.isFullTimeView;
+  }
+
+  toggleDashboardView(): void {
+    this.isAdminView = !this.isAdminView;
   }
 }

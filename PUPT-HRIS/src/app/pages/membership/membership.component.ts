@@ -183,7 +183,20 @@ export class OfficershipMembershipComponent implements OnInit {
     if (confirm('Are you sure you want to delete this record?')) {
       this.membershipService.deleteMembership(id).subscribe(
         (response) => {
+          // Remove the deleted item from the main array
           this.memberships = this.memberships.filter(membership => membership.OfficershipMembershipID !== id);
+          
+          // Recalculate total pages
+          this.totalPages = Math.ceil(this.memberships.length / this.itemsPerPage);
+          
+          // Adjust current page if necessary
+          if (this.currentPage > this.totalPages) {
+            this.currentPage = this.totalPages || 1;
+          }
+          
+          // Update paginated data
+          this.updatePaginatedData();
+          
           this.showToastNotification('Officership/Membership deleted successfully.', 'success');
         },
         (error) => {

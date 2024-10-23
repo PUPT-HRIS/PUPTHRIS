@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { LearningDevelopment } from '../model/learning-development.model';
 import { environment } from '../../environments/environment';
-
+import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -19,8 +19,10 @@ export class LearningService {
   }
 
   getLearningDevelopments(userId: number): Observable<LearningDevelopment[]> {
+    console.log('Service: Fetching learning developments for user ID:', userId);
     return this.http.get<LearningDevelopment[]>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() })
       .pipe(
+        tap(response => console.log('Raw response from server:', response)),
         catchError(this.handleError)
       );
   }

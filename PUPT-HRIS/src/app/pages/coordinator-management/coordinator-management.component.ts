@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CoordinatorService } from '../../services/coordinator.service';
 import { UserManagementService } from '../../services/user-management.service';
 import { Department, Coordinator } from '../../model/coodinatorModel';
 import { User } from '../../model/user.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CampusContextService } from '../../services/campus-context.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-coordinator-management',
@@ -13,7 +15,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule]
 })
-export class CoordinatorManagementComponent implements OnInit {
+export class CoordinatorManagementComponent implements OnInit, OnDestroy {
   departments: Department[] = [];
   facultyUsers: User[] = [];
   showToast: boolean = false;
@@ -21,21 +23,43 @@ export class CoordinatorManagementComponent implements OnInit {
   toastType: 'success' | 'error' | 'warning' = 'success';
   showAssignModal: boolean = false;
   selectedDepartment: Department | null = null;
+  campusId: number | null = null;
+  private campusSubscription: Subscription | undefined;
 
   constructor(
     private coordinatorService: CoordinatorService,
-    private userManagementService: UserManagementService
+    private userManagementService: UserManagementService,
+    private campusContextService: CampusContextService
   ) {}
 
   ngOnInit(): void {
-    this.loadDepartments();
-    this.loadActiveFacultyUsers();
+    this.campusSubscription = this.campusContextService.getCampusId().subscribe(
+      id => {
+        console.log('Received campus ID:', id);
+        if (id !== null) {
+          this.campusId = id;
+          this.loadDepartments();
+          this.loadActiveFacultyUsers();
+        }
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.campusSubscription) {
+      this.campusSubscription.unsubscribe();
+    }
   }
 
   loadDepartments(): void {
-    this.coordinatorService.getAllDepartmentsWithCoordinators().subscribe({
+    if (this.campusId === null) {
+      console.error('Campus ID is null');
+      return;
+    }
+    console.log('Loading departments for campus ID:', this.campusId);
+    this.coordinatorService.getAllDepartmentsWithCoordinators(this.campusId).subscribe({
       next: (departments) => {
-        console.log('Fetched departments in component:', departments);
+        console.log('Received departments:', JSON.stringify(departments, null, 2));
         this.departments = departments;
       },
       error: (error) => {
@@ -45,27 +69,12 @@ export class CoordinatorManagementComponent implements OnInit {
     });
   }
   
-  loadCoordinatorDepartments(): void {
-    this.departments.forEach(department => {
-      console.log('Processing department:', department);
-      if (department.Coordinator?.UserID) {  // Change this line
-        this.userManagementService.getUserDetails(department.Coordinator.UserID).subscribe({
-          next: (user) => {
-            console.log('Fetched user details:', user);
-            if (department.Coordinator) {
-              department.Coordinator.User = user;
-            }
-          },
-          error: (error) => {
-            console.error(`Error fetching user details for coordinator of department ${department.DepartmentID}:`, error);
-          }
-        });
-      }
-    });
-  }
-
   loadActiveFacultyUsers(): void {
-    this.userManagementService.getAllUsers().subscribe({
+    if (this.campusId === null) {
+      console.error('Campus ID is null');
+      return;
+    }
+    this.userManagementService.getAllUsers(this.campusId).subscribe({
       next: (users) => {
         this.facultyUsers = users.filter(user => 
           user.Roles.some(role => role.RoleName.toLowerCase() === 'faculty') && user.isActive
@@ -90,8 +99,12 @@ export class CoordinatorManagementComponent implements OnInit {
 
   assignCoordinator(department: Department, userId: number): void {
     this.coordinatorService.assignCoordinator(department.DepartmentID, userId).subscribe({
-      next: (coordinator: Coordinator) => {
-        department.Coordinator = coordinator;
+      next: (response) => {
+        console.log('Coordinator assigned:', response);
+        if (response.department && response.department.Coordinator) {
+          department.Coordinator = response.department.Coordinator;
+          department.CoordinatorID = response.department.CoordinatorID;
+        }
         this.showToastNotification('Coordinator assigned successfully', 'success');
         this.closeAssignModal();
         this.loadDepartments(); // Reload departments to reflect changes
@@ -111,8 +124,8 @@ export class CoordinatorManagementComponent implements OnInit {
     this.coordinatorService.removeCoordinator(department.DepartmentID).subscribe({
       next: () => {
         department.Coordinator = null;
+        department.CoordinatorID = null;
         this.showToastNotification('Coordinator removed successfully', 'success');
-        this.loadDepartments(); // Reload departments to reflect changes
       },
       error: (error) => {
         console.error('Error removing coordinator:', error);

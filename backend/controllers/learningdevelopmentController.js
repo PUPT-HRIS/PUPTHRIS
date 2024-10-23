@@ -33,15 +33,13 @@ exports.updateLearningDevelopment = async (req, res) => {
 
 exports.getLearningDevelopments = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = parseInt(req.params.userId);
+    console.log('Backend: Fetching learning developments for user ID:', userId);
     const learningDevelopments = await LearningDevelopment.findAll({ where: { UserID: userId } });
-    if (learningDevelopments) {
-      res.status(200).json(learningDevelopments);
-    } else {
-      res.status(404).send('Learning Development records not found');
-    }
+    console.log('Backend: Found learning developments:', learningDevelopments);
+    res.status(200).json(learningDevelopments);
   } catch (error) {
-    console.error('Error getting learning developments:', error);
+    console.error('Backend Error:', error);
     res.status(500).send('Internal Server Error');
   }
 };

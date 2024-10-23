@@ -36,7 +36,10 @@ exports.updateCivilServiceEligibility = async (req, res) => {
 
 exports.getCivilServiceEligibilitiesByEmployee = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = parseInt(req.params.userId);
+    if (userId !== req.user.userId) {
+      return res.status(403).send('Unauthorized access');
+    }
     const civilServiceEligibilities = await CivilServiceEligibility.findAll({ where: { userID: userId } });
     if (civilServiceEligibilities.length > 0) {
       res.status(200).json(civilServiceEligibilities);

@@ -170,8 +170,12 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   fetchBasicDetails(userId: number): void {
+    console.log('Fetching basic details for user ID:', userId);
     this.basicDetailsService.getBasicDetails(userId).subscribe(
-      (details) => (this.basicDetails = details),
+      (details) => {
+        console.log('Received basic details:', details);
+        this.basicDetails = details;
+      },
       (error) => {
         console.error('Error fetching basic details', error);
         this.basicDetails = null;
@@ -233,8 +237,11 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   fetchCivilServiceEligibilities(userId: number): void {
-    this.civilServiceService.getCivilServiceEligibilities().subscribe(
-      (details) => (this.civilServiceEligibilities = details),
+    this.civilServiceService.getCivilServiceEligibilities(userId).subscribe(
+      (details) => {
+        console.log('Fetched civil service eligibilities:', details);
+        this.civilServiceEligibilities = details;
+      },
       (error) => {
         console.error('Error fetching civil service eligibilities', error);
         this.civilServiceEligibilities = null;
@@ -243,8 +250,12 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   fetchLearningDevelopments(userId: number): void {
+    console.log('Component: Fetching learning developments for user ID:', userId);
     this.learningService.getLearningDevelopments(userId).subscribe(
-      (details) => (this.learningDetails = details),
+      (details) => {
+        console.log('Fetched learning developments:', details);
+        this.learningDetails = details;
+      },
       (error) => {
         console.error('Error fetching learning developments', error);
         this.learningDetails = null;
@@ -309,7 +320,9 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   setActiveTab(tab: string): void {
+    console.log('Setting active tab to:', tab);
     this.activeTab = tab;
+    console.log('Current tab data:', (this as any)[tab + 'Details']);
   }
 
   closeModal(): void {

@@ -1,9 +1,10 @@
 const Department = require('../models/departmentModel');
+const CollegeCampus = require('../models/collegeCampusModel');
 
 exports.addDepartment = async (req, res) => {
   try {
-    const { DepartmentName, Description } = req.body;
-    const newDepartment = await Department.create({ DepartmentName, Description });
+    const { DepartmentName, Description, CollegeCampusID } = req.body;
+    const newDepartment = await Department.create({ DepartmentName, Description, CollegeCampusID });
     res.status(201).json(newDepartment);
   } catch (error) {
     console.error('Error adding department:', error);
@@ -13,7 +14,18 @@ exports.addDepartment = async (req, res) => {
 
 exports.getDepartments = async (req, res) => {
   try {
-    const departments = await Department.findAll();
+    const { campusId } = req.query;
+    let departments;
+    if (campusId) {
+      departments = await Department.findAll({
+        where: { CollegeCampusID: campusId },
+        include: [{ model: CollegeCampus, as: 'CollegeCampus' }]
+      });
+    } else {
+      departments = await Department.findAll({
+        include: [{ model: CollegeCampus, as: 'CollegeCampus' }]
+      });
+    }
     res.status(200).json(departments);
   } catch (error) {
     console.error('Error fetching departments:', error);
@@ -24,7 +36,7 @@ exports.getDepartments = async (req, res) => {
 exports.updateDepartment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { DepartmentName, Description } = req.body;
+    const { DepartmentName, Description, CollegeCampusID } = req.body;
     const department = await Department.findByPk(id);
 
     if (!department) {
@@ -33,6 +45,7 @@ exports.updateDepartment = async (req, res) => {
 
     department.DepartmentName = DepartmentName;
     department.Description = Description;
+    department.CollegeCampusID = CollegeCampusID;
     await department.save();
 
     res.status(200).json(department);

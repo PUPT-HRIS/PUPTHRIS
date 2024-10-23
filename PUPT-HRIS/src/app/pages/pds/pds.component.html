@@ -5,18 +5,15 @@
   </div>
 
   <div class="p-6 space-y-6">
-    <p class="text-lg font-normal">View or download your PDS form:</p>
+    <p class="text-lg font-normal">View your PDS form:</p>
     <div class="flex space-x-4">
       <button class="btn btn-black" (click)="viewPds()" [disabled]="isLoading">
         <span *ngIf="!isLoading">View PDS</span>
         <span *ngIf="isLoading" class="loading loading-spinner loading-sm"></span>
       </button>
-      <button class="btn btn-black" (click)="downloadPds()" [disabled]="isLoading">
-        <span *ngIf="!isLoading">Download PDS</span>
-        <span *ngIf="isLoading" class="loading loading-spinner loading-sm"></span>
-      </button>
     </div>
 
+    <!-- Add this section to display the PDF inline -->
     <div *ngIf="pdfUrl" class="mt-4">
       <iframe [src]="pdfUrl" width="100%" height="600px" frameborder="0"></iframe>
     </div>
@@ -29,7 +26,7 @@
 
     <div *ngIf="canManageEmployees" class="p-6 space-y-6">
       <div *ngIf="paginatedUsers.length > 0" class="overflow-x-auto px-10">
-        <p class="text-lg font-normal">View or download PDS of other users:</p>
+        <p class="text-lg font-normal">View PDS of other users:</p>
         <table class="table table-zebra w-full border-separate border-spacing-0">
           <thead>
             <tr class="bg-maroon text-white">
@@ -51,8 +48,8 @@
               </td>
               <td class="p-4">{{ user.Department?.DepartmentName }}</td>
               <td class="p-4 flex justify-center space-x-2">
-                <button class="btn btn-sm" (click)="downloadUserPds(user.UserID)" [disabled]="isLoading">
-                  <span *ngIf="!isLoading">Download PDS</span>
+                <button class="btn btn-sm" (click)="viewUserPds(user.UserID)" [disabled]="isLoading">
+                  <span *ngIf="!isLoading">View PDS</span>
                   <span *ngIf="isLoading" class="loading loading-spinner loading-xs"></span>
                 </button>
               </td>
@@ -74,6 +71,33 @@
         <div class="p-6 bg-white rounded-lg shadow-lg">
           <p class="text-lg">No users found.</p>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Full-screen PDF viewer overlay -->
+<div *ngIf="showPdfViewer" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+  <div class="bg-white w-11/12 h-5/6 rounded-lg shadow-lg flex flex-col">
+    <div class="flex justify-between items-center p-4 bg-maroon text-white rounded-t-lg">
+      <h2 class="text-xl font-bold">Personal Data Sheet</h2>
+      <div class="flex space-x-4">
+        <button *ngIf="!missingDetailsMessage" (click)="downloadCurrentPdf()" class="text-white hover:text-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+        </button>
+        <button (click)="closePdfViewer()" class="text-white hover:text-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="flex-grow">
+      <iframe *ngIf="pdfUrl" [src]="pdfUrl" class="w-full h-full" frameborder="0"></iframe>
+      <div *ngIf="missingDetailsMessage" class="w-full h-full flex items-center justify-center">
+        <p class="text-xl text-gray-700">{{ missingDetailsMessage }}</p>
       </div>
     </div>
   </div>

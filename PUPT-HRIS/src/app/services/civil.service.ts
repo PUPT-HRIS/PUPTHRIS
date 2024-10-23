@@ -18,8 +18,8 @@ export class CivilServiceService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  getCivilServiceEligibilities(): Observable<CivilServiceEligibility[]> {
-    return this.http.get<CivilServiceEligibility[]>(`${this.apiUrl}/employee`, { headers: this.getHeaders() })
+  getCivilServiceEligibilities(userId: number): Observable<CivilServiceEligibility[]> {
+    return this.http.get<CivilServiceEligibility[]>(`${this.apiUrl}/employee/${userId}`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );

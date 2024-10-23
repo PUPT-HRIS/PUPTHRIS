@@ -73,8 +73,8 @@
       <div class="modal-header">
         <h3>{{ activeTab | titlecase }} Information</h3>
       </div>
-      
-      <div class="tab-content">
+
+      <div class="modal-body">
         <!-- Basic Details Content -->
         <div *ngIf="activeTab === 'basic'">
           <table class="info-table">
@@ -103,9 +103,248 @@
           </table>
         </div>
 
-        <!-- Other tab contents... -->
-        <!-- Update the structure for other tabs similarly -->
+        <!-- Educational Background Content -->
+        <div *ngIf="activeTab === 'education'">
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th>School Name</th>
+                <th>Level</th>
+                <th>Inclusive Dates of Attendance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let education of educationDetails">
+                <td>{{ education.NameOfSchool }}</td>
+                <td>{{ education.Level }}</td>
+                <td>
+                  {{ education.PeriodOfAttendanceFrom ? (education.PeriodOfAttendanceFrom | date:'yyyy') : '' }} - 
+                  {{ education.PeriodOfAttendanceTo ? (education.PeriodOfAttendanceTo | date:'yyyy') : '' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
+        <!-- Personal Details Content -->
+        <div *ngIf="activeTab === 'personal'">
+          <table class="table w-full">
+            <tbody>
+              <tr>
+                <td><strong>Place of Birth:</strong></td>
+                <td>{{ personalDetails?.PlaceOfBirth }}</td>
+              </tr>
+              <tr>
+                <td><strong>Civil Status:</strong></td>
+                <td>{{ personalDetails?.CivilStatus }}</td>
+              </tr>
+              <tr>
+                <td><strong>Height:</strong></td>
+                <td>{{ personalDetails?.Height }} cm</td>
+              </tr>
+              <tr>
+                <td><strong>Weight:</strong></td>
+                <td>{{ personalDetails?.Weight }} kg</td>
+              </tr>
+              <tr>
+                <td><strong>Blood Type:</strong></td>
+                <td>{{ personalDetails?.BloodType }}</td>
+              </tr>
+              <tr>
+                <td colspan="2"><strong>Residential Address:</strong></td>
+              </tr>
+              <tr>
+                <td colspan="2">{{ formatAddress(personalDetails, 'Residential') }}</td>
+              </tr>
+              <tr>
+                <td colspan="2"><strong>Permanent Address:</strong></td>
+              </tr>
+              <tr>
+                <td colspan="2">{{ formatAddress(personalDetails, 'Permanent') }}</td>
+              </tr>
+            </tbody>
+          </table><!-- ... personal details table ... -->
+        </div>
+
+        <!-- Contact Details Content -->
+        <div *ngIf="activeTab === 'contact'">
+          <table class="table w-full">
+            <tbody>
+              <tr>
+                <td><strong>Telephone Number:</strong></td>
+                <td>{{ contactDetails?.TelephoneNumber }}</td>
+              </tr>
+              <tr>
+                <td><strong>Mobile Number:</strong></td>
+                <td>{{ contactDetails?.MobileNumber }}</td>
+              </tr>
+              <tr>
+                <td><strong>Email Address:</strong></td>
+                <td>{{ contactDetails?.EmailAddress }}</td>
+              </tr>
+            </tbody>
+          </table><!-- ... contact details table ... -->
+        </div>
+
+        <!-- Family Background & Children Content -->
+        <div *ngIf="activeTab === 'family'">
+          <table class="table w-full">
+            <tbody>
+              <tr>
+                <td><strong>Spouse's Name:</strong></td>
+                <td>{{ familyBackground?.SpouseFirstName }} {{ familyBackground?.SpouseMiddleName }} {{ familyBackground?.SpouseLastName }}</td>
+              </tr>
+              <tr>
+                <td><strong>Spouse's Occupation:</strong></td>
+                <td>{{ familyBackground?.SpouseOccupation }}</td>
+              </tr>
+              <tr>
+                <td><strong>Father's Name:</strong></td>
+                <td>{{ familyBackground?.FatherFirstName }} {{ familyBackground?.FatherMiddleName }} {{ familyBackground?.FatherLastName }}</td>
+              </tr>
+              <tr>
+                <td><strong>Mother's Name:</strong></td>
+                <td>{{ familyBackground?.MotherFirstName }} {{ familyBackground?.MotherMiddleName }} {{ familyBackground?.MotherLastName }}</td>
+              </tr>
+            </tbody>
+          </table>
+    
+          <h4 class="font-bold mt-4 mb-2">Children</h4>
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Birth Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let child of childrenDetails">
+                <td>{{ child.ChildName }}</td>
+                <td>{{ child.BirthDate | date:'longDate' }}</td>
+              </tr>
+            </tbody>
+          </table><!-- ... family background and children tables ... -->
+        </div>
+
+        <!-- Civil Service Eligibilities Content -->
+        <div *ngIf="activeTab === 'civil'">
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th>Career Service</th>
+                <th>Rating</th>
+                <th>Date of Examination</th>
+                <th>Place of Examination</th>
+                <th>License Number</th>
+                <th>License Validity Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let eligibility of civilServiceEligibilities">
+                <td>{{ eligibility.CareerService }}</td>
+                <td>{{ eligibility.Rating }}</td>
+                <td>{{ eligibility.DateOfExamination | date:'longDate' }}</td>
+                <td>{{ eligibility.PlaceOfExamination }}</td>
+                <td>{{ eligibility.LicenseNumber }}</td>
+                <td>{{ eligibility.LicenseValidityDate | date:'longDate' }}</td>
+              </tr>
+            </tbody>
+          </table><!-- ... civil service eligibilities table ... -->
+        </div>
+
+        <!-- Learning & Development Content -->
+        <div *ngIf="activeTab === 'learning'">
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th>Title of Learning & Development</th>
+                <th>Inclusive Dates</th>
+                <th>Number of Hours</th>
+                <th>Type of LD</th>
+                <th>Conducted/Sponsored By</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let learning of learningDetails">
+                <td>{{ learning.TitleOfLearningDevelopment }}</td>
+                <td>{{ learning.InclusiveDatesFrom | date:'longDate' }} - {{ learning.InclusiveDatesTo | date:'longDate' }}</td>
+                <td>{{ learning.NumberOfHours }}</td>
+                <td>{{ learning.TypeOfLD }}</td>
+                <td>{{ learning.ConductedSponsoredBy }}</td>
+              </tr>
+            </tbody>
+          </table><!-- ... learning and development table ... -->
+        </div>
+
+        <!-- Work Experience Content -->
+        <div *ngIf="activeTab === 'work'">
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th>Position Title</th>
+                <th>Department/Agency/Office/Company</th>
+                <th>Inclusive Dates</th>
+                <th>Monthly Salary</th>
+                <th>Salary/Job/Pay Grade</th>
+                <th>Status of Appointment</th>
+                <th>Govt. Service (Y/N)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let work of workExperiences">
+                <td>{{ work.PositionTitle }}</td>
+                <td>{{ work.DepartmentAgencyOfficeCompany }}</td>
+                <td>{{ work.InclusiveDatesFrom | date:'yyyy' }} - {{ work.InclusiveDatesTo | date:'yyyy' }}</td>
+                <td>{{ work.MonthlySalary | currency }}</td>
+                <td>{{ work.SalaryJobPayGrade }}</td>
+                <td>{{ work.StatusOfAppointment }}</td>
+                <td>{{ work.GovtService ? 'Y' : 'N' }}</td>
+              </tr>
+            </tbody>
+          </table><!-- ... work experience table ... -->
+        </div>
+
+        <!-- Voluntary Work Content -->
+        <div *ngIf="activeTab === 'voluntary'">
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th>Organization Name & Address</th>
+                <th>Inclusive Dates</th>
+                <th>Number of Hours</th>
+                <th>Position/Nature of Work</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let voluntary of voluntaryWorks">
+                <td>{{ voluntary.OrganizationNameAddress }}</td>
+                <td>{{ voluntary.InclusiveDatesFrom | date:'yyyy' }} - {{ voluntary.InclusiveDatesTo | date:'yyyy' }}</td>
+                <td>{{ voluntary.NumberOfHours }}</td>
+                <td>{{ voluntary.PositionNatureOfWork }}</td>
+              </tr>
+            </tbody>
+          </table><!-- ... voluntary work table ... -->
+        </div>
+
+        <!-- Character References Content -->
+        <div *ngIf="activeTab === 'character'">
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Telephone Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reference of characterReferences">
+                <td>{{ reference.Name }}</td>
+                <td>{{ reference.Address }}</td>
+                <td>{{ reference.TelephoneNumber }}</td>
+              </tr>
+            </tbody>
+          </table><!-- ... character references table ... -->
+        </div>
       </div>
 
       <div class="modal-footer">

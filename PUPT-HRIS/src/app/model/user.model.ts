@@ -14,5 +14,6 @@ export interface User {
   };
   Roles: Role[];  // Reflects the many-to-many relationship with roles
   isActive: boolean; // Add this line
+  CollegeCampusID: number;
 }
 

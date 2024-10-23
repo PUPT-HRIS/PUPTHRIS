@@ -33,8 +33,9 @@ export class UserManagementService {
     return this.http.put(`${this.apiUrl}/roles`, body, { headers: this.getHeaders() });
   }
 
-  getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}/users`, { headers: this.getHeaders() });
+  getAllUsers(campusId: number): Observable<User[]> {
+    console.log('Fetching users for campus ID:', campusId);
+    return this.http.get<User[]>(`${this.apiUrl}/users?campusId=${campusId}`);
   }
 
   getAllRoles(): Observable<Role[]> {

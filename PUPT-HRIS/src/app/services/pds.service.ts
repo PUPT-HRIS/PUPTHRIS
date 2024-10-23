@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { timeout, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -21,16 +22,36 @@ export class PdsService {
     return this.http.get(`${this.apiUrl}/download-pds`, {
       headers,
       responseType: 'blob',
-    });
+    }).pipe(
+      timeout(30000), // 30 seconds timeout
+      catchError(error => {
+        console.error('PDS download error:', error);
+        return throwError(() => new Error('PDS download failed. Please try again.'));
+      })
+    );
   }
 
-  downloadPDSForUser(userId: number): Observable<Blob> {
+  downloadPDSForUser(userId: number): Observable<Blob | { message: string }> {
     const headers = this.getHeaders();
     const url = `${this.apiUrl}/download-pds/${userId}`;
-    console.log('Sending request to:', url);  // Log the constructed URL to verify it's correct
     return this.http.get(url, {
       headers,
       responseType: 'blob',
-    });
+    }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400 && error.error instanceof Blob) {
+          return new Observable<{ message: string }>(observer => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const errorMessage = JSON.parse(reader.result as string);
+              observer.next({ message: errorMessage.message });
+              observer.complete();
+            };
+            reader.readAsText(error.error);
+          });
+        }
+        return throwError(() => new Error('PDS download failed. Please try again.'));
+      })
+    );
   }   
 }

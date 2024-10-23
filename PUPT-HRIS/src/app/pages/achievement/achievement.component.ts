@@ -184,7 +184,20 @@ export class AchievementAwardComponent implements OnInit {
     if (confirm('Are you sure you want to delete this record?')) {
       this.achievementAwardService.deleteAchievement(id).subscribe(
         (response) => {
+          // Remove the deleted item from the main array
           this.achievementAwards = this.achievementAwards.filter(award => award.AchievementID !== id);
+          
+          // Recalculate total pages
+          this.totalPages = Math.ceil(this.achievementAwards.length / this.itemsPerPage);
+          
+          // Adjust current page if necessary
+          if (this.currentPage > this.totalPages) {
+            this.currentPage = this.totalPages || 1;
+          }
+          
+          // Update paginated data
+          this.updatePaginatedData();
+          
           this.showToastNotification('Achievement award deleted successfully.', 'success');
         },
         (error) => {

@@ -1,5 +1,15 @@
 <div class="dashboard-content">
-  <div *ngIf="userRole === 'admin' || userRole === 'superadmin'; else userView">
+  <div *ngIf="userRole === 'admin' || userRole === 'superadmin'" class="flex justify-between items-center mb-4">
+    <div class="form-control">
+      <label class="label cursor-pointer">
+        <span class="label-text mr-2">{{ isAdminView ? 'Admin View' : 'Personal View' }}</span> 
+        <input type="checkbox" class="toggle toggle-primary" [checked]="isAdminView" (change)="toggleDashboardView()">
+      </label>
+    </div>
+  </div>
+
+  <ng-container *ngIf="(userRole === 'admin' || userRole === 'superadmin') && isAdminView; else personalView">
+    <!-- Admin Dashboard Content -->
     <div class="flex-1 mb-2">
       <a class="text-lg font-normal">You are currently viewing the Dashboard (Active Users Only).</a>
     </div>
@@ -7,22 +17,18 @@
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Female</h3>
         <p class="text-6xl font-extrabold">{{ totalFemale }}</p>
-        <button class="view-btn">View</button>
       </div>
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Male</h3>
         <p class="text-6xl font-extrabold">{{ totalMale }}</p>
-        <button class="view-btn">View</button>
       </div>
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Faculty</h3>
         <p class="text-6xl font-extrabold">{{ faculty }}</p>
-        <button class="view-btn">View</button>
       </div>
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Staff</h3>
         <p class="text-6xl font-extrabold">{{ staff }}</p>
-        <button class="view-btn">View</button>
       </div>
     </div>
 
@@ -83,10 +89,10 @@
         </canvas>
       </div>
     </div>
+  </ng-container>
 
-  </div>
-
-  <ng-template #userView>
+  <ng-template #personalView>
+    <!-- Personal Dashboard Content -->
     <div class="flex-1 mb-2">
       <a class="text-lg font-normal">Welcome to your Personal Dashboard</a>
     </div>
@@ -96,16 +102,12 @@
         <p class="text-2xl font-extrabold">{{ userDepartment }}</p>
       </div>
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-        <h3 class="text-2xl font-bold">Position</h3>
+        <h3 class="text-2xl font-bold">Academic Rank</h3>
         <p class="text-2xl font-extrabold">{{ userPosition }}</p>
       </div>
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Employment Type</h3>
         <p class="text-2xl font-extrabold">{{ userEmploymentType }}</p>
-      </div>
-      <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
-        <h3 class="text-2xl font-bold">Years of Service</h3>
-        <p class="text-2xl font-extrabold">{{ userYearsOfService }}</p>
       </div>
     </div>
 
@@ -163,4 +165,4 @@
       </table>
     </div>
   </ng-template>
-</div>
+

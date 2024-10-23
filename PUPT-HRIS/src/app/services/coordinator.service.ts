@@ -18,8 +18,8 @@ export class CoordinatorService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  assignCoordinator(departmentId: number, userId: number): Observable<Coordinator> {
-    return this.http.post<Coordinator>(`${this.apiUrl}/assign`, { departmentId, userId }, { headers: this.getHeaders() })
+  assignCoordinator(departmentId: number, userId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/assign`, { departmentId, userId }, { headers: this.getHeaders() })
       .pipe(
         tap(response => console.log('Assign coordinator response:', response)),
         catchError(this.handleError)
@@ -42,9 +42,14 @@ export class CoordinatorService {
       .pipe(catchError(this.handleError));
   }
 
-  getAllDepartmentsWithCoordinators(): Observable<Department[]> {
-    return this.http.get<Department[]>(`${this.apiUrl}/departments-with-coordinators`, { headers: this.getHeaders() }).pipe(
-      tap(departments => console.log('Departments received in service:', departments)),
+  getAllDepartmentsWithCoordinators(campusId?: number): Observable<Department[]> {
+    let url = `${this.apiUrl}/departments-with-coordinators`;
+    if (campusId) {
+      url += `?campusId=${campusId}`;
+    }
+    console.log('Requesting URL:', url);
+    return this.http.get<Department[]>(url, { headers: this.getHeaders() }).pipe(
+      tap(departments => console.log('Raw response from backend:', JSON.stringify(departments, null, 2))),
       catchError(this.handleError)
     );
   }
