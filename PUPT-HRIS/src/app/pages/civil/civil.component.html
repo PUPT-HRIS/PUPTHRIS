@@ -6,50 +6,39 @@
   </div>
 
   <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="civilServiceData.length > 0" class="p-6 space-y-6">
-      <div class="overflow-x-auto">
-        <table class="table table-zebra w-full border-separate border-spacing-0">
-          <thead>
-            <tr class="bg-maroon text-white">
-              <th class="p-4">#</th>
-              <th class="p-4">Career Service</th>
-              <th class="p-4">Rating</th>
-              <th class="p-4">Date Of Examination</th>
-              <th class="p-4">Place Of Examination</th>
-              <th class="p-4">License Number</th>
-              <th class="p-4">License Validity Date</th>
-              <th class="p-4 w-36">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let eligibility of paginatedCivilServiceData; let i = index" class="hover:bg-gray-100">
-              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
-              <td class="p-4">{{ eligibility.CareerService }}</td>
-              <td class="p-4">{{ eligibility.Rating }}</td>
-              <td class="p-4">{{ eligibility.DateOfExamination | date }}</td>
-              <td class="p-4">{{ eligibility.PlaceOfExamination }}</td>
-              <td class="p-4">{{ eligibility.LicenseNumber }}</td>
-              <td class="p-4">{{ eligibility.LicenseValidityDate | date }}</td>
-              <td class="p-4">
-                <div class="btn-container">
-                  <button class="btn btn-edit btn-sm" (click)="editEligibility(eligibility.CivilServiceEligibilityID!)">Edit</button>
-                  <button class="btn btn-delete btn-sm" (click)="deleteEligibility(eligibility.CivilServiceEligibilityID!)">Delete</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="mt-4">
-        <button class="btn btn-add-info bg-black text-white w-full" (click)="addNewEligibility()">Add New</button>
-      </div>
-      <!-- Pagination -->
-      <div class="pagination-controls">
-        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
-        <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
-          {{ page }}
-        </button>
-        <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+    <!-- Display mode -->
+    <div *ngIf="civilServiceData.length > 0" class="p-6">
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Career Service</th>
+            <th>Rating</th>
+            <th>Date of Examination</th>
+            <th>Place of Examination</th>
+            <th>License Number</th>
+            <th>License Validity Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let eligibility of civilServiceData; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ eligibility.CareerService || 'N/A' }}</td>
+            <td>{{ eligibility.Rating || 'N/A' }}</td>
+            <td>{{ eligibility.DateOfExamination | date:'mediumDate' || 'N/A' }}</td>
+            <td>{{ eligibility.PlaceOfExamination || 'N/A' }}</td>
+            <td>{{ eligibility.LicenseNumber || 'N/A' }}</td>
+            <td>{{ eligibility.LicenseValidityDate | date:'mediumDate' || 'N/A' }}</td>
+            <td>
+              <button class="btn btn-edit btn-sm mr-2" (click)="editEligibility(eligibility.CivilServiceEligibilityID!)">EDIT</button>
+              <button class="btn btn-delete btn-sm" (click)="deleteEligibility(eligibility.CivilServiceEligibilityID!)">DELETE</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="flex justify-end mt-4">
+        <button class="btn btn-add-info bg-maroon text-white hover:bg-maroon-dark transition duration-300 ease-in-out" (click)="addNewEligibility()">Add Eligibility</button>
       </div>
     </div>
 
@@ -58,42 +47,46 @@
         <p class="text-lg">No civil service eligibility information available.</p>
       </div>
       <div class="flex justify-end">
-        <button class="btn btn-add-info bg-black text-white" (click)="addNewEligibility()">Add Info</button>
+        <button class="btn btn-add-info bg-maroon text-white hover:bg-maroon-dark transition duration-300 ease-in-out" (click)="addNewEligibility()">Add Eligibility</button>
       </div>
     </div>
   </ng-container>
 
   <ng-template #editForm>
-    <div class="p-6">
-      <form [formGroup]="civilServiceForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <div class="grid grid-cols-2 gap-6">
-          <div class="form-control w-full">
-            <label for="CareerService" class="label-text font-bold text-lg">Career Service</label>
-            <input id="CareerService" formControlName="CareerService" class="input input-bordered w-full" placeholder="Enter your career service (e.g., Professional, Subprofessional)">
+    <div class="p-6 space-y-8">
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+        <p class="font-bold">Note: You are currently editing your Civil Service Eligibility Details.</p>
+      </div>
+      <form [formGroup]="civilServiceForm" (ngSubmit)="onSubmit()" class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-maroon">{{ currentEligibilityId ? 'Edit' : 'Add' }} Civil Service Eligibility</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="form-control">
+            <label class="label-text">Career Service <span class="text-red-500">*</span></label>
+            <input formControlName="CareerService" class="input input-bordered w-full" type="text" placeholder="Enter career service">
           </div>
-          <div class="form-control w-full">
-            <label for="Rating" class="label-text font-bold text-lg">Rating</label>
-            <input id="Rating" formControlName="Rating" class="input input-bordered w-full" placeholder="Enter your rating">
+          <div class="form-control">
+            <label class="label-text">Rating <span class="text-red-500">*</span></label>
+            <input formControlName="Rating" class="input input-bordered w-full" type="text" placeholder="Enter rating">
           </div>
-          <div class="form-control w-full">
-            <label for="DateOfExamination" class="label-text font-bold text-lg">Date Of Examination</label>
-            <input id="DateOfExamination" formControlName="DateOfExamination" class="input input-bordered w-full" type="date">
+          <div class="form-control">
+            <label class="label-text">Date of Examination</label>
+            <input formControlName="DateOfExamination" class="input input-bordered w-full" type="date">
           </div>
-          <div class="form-control w-full">
-            <label for="PlaceOfExamination" class="label-text font-bold text-lg">Place Of Examination</label>
-            <input id="PlaceOfExamination" formControlName="PlaceOfExamination" class="input input-bordered w-full" placeholder="Enter the place of examination">
+          <div class="form-control">
+            <label class="label-text">Place of Examination</label>
+            <input formControlName="PlaceOfExamination" class="input input-bordered w-full" type="text" placeholder="Enter place of examination">
           </div>
-          <div class="form-control w-full">
-            <label for="LicenseNumber" class="label-text font-bold text-lg">License Number</label>
-            <input id="LicenseNumber" formControlName="LicenseNumber" class="input input-bordered w-full" placeholder="Enter your license number">
+          <div class="form-control">
+            <label class="label-text">License Number</label>
+            <input formControlName="LicenseNumber" class="input input-bordered w-full" type="text" placeholder="Enter license number">
           </div>
-          <div class="form-control w-full">
-            <label for="LicenseValidityDate" class="label-text font-bold text-lg">License Validity Date</label>
-            <input id="LicenseValidityDate" formControlName="LicenseValidityDate" class="input input-bordered w-full" type="date">
+          <div class="form-control">
+            <label class="label-text">License Validity Date</label>
+            <input formControlName="LicenseValidityDate" class="input input-bordered w-full" type="date">
           </div>
         </div>
         <div class="flex justify-end mt-6">
-          <button type="submit" class="btn btn-save mr-4">{{ currentEligibilityId ? 'Update' : 'Add' }}</button>
+          <button type="submit" class="btn btn-save mr-4">{{ currentEligibilityId ? 'Update' : 'Save' }}</button>
           <button type="button" class="btn btn-cancel" (click)="resetForm()">Cancel</button>
         </div>
       </form>
