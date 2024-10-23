@@ -6,42 +6,41 @@
   </div>
 
   <ng-container *ngIf="!isEditing; else editForm">
-    <div *ngIf="referenceData.length > 0" class="p-6 space-y-6">
-      <div class="overflow-x-auto px-10">
-        <div class="flex-1 mb-2">
-          <a class="text-lg font-normal">You are currently viewing the list/s of Character References.</a>
-        </div>
-        <table class="table table-zebra w-full border-separate border-spacing-0">
-          <thead>
-            <tr class="bg-maroon text-white">
-              <th class="p-4">#</th>
-              <th class="p-4">Name</th>
-              <th class="p-4">Address</th>
-              <th class="p-4">Telephone Number</th>
-              <th class="p-4 w-36">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let reference of paginatedReferenceData; let i = index" class="hover:bg-gray-100">
-              <th class="p-4">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</th>
-              <td class="p-4">{{ reference.Name }}</td>
-              <td class="p-4">{{ reference.Address }}</td>
-              <td class="p-4">{{ reference.TelephoneNumber }}</td>
-              <td class="p-4">
-                <div class="btn-container">
-                  <button class="btn btn-edit btn-sm" (click)="edit(reference.ReferenceID!)">Edit</button>
-                  <button class="btn btn-delete btn-sm" (click)="delete(reference.ReferenceID!)">Delete</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div *ngIf="referenceData.length > 0" class="p-6">
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Telephone Number</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reference of paginatedReferenceData; let i = index">
+            <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
+            <td>
+              <ng-container *ngIf="reference.Name; else noInfo">{{ reference.Name }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="reference.Address; else noInfo">{{ reference.Address }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="reference.TelephoneNumber; else noInfo">{{ reference.TelephoneNumber }}</ng-container>
+            </td>
+            <td>
+              <button class="btn btn-edit btn-sm" (click)="edit(reference.ReferenceID!)">EDIT</button>
+              <button class="btn btn-delete btn-sm" (click)="delete(reference.ReferenceID!)">DELETE</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="flex justify-end mt-4">
+        <button class="btn btn-add-info bg-maroon text-white hover:bg-maroon-dark transition duration-300 ease-in-out" (click)="toggleForm()">Add Character Reference</button>
       </div>
-      <!-- Add Info Button above Pagination -->
-      <div class="mt-4 px-10">
-        <button class="btn btn-add-info bg-black text-white w-full" (click)="toggleForm()">Add Info</button>
-      </div>
-      <!-- Pagination Controls -->
+
+      <!-- Pagination -->
       <div class="pagination-controls mt-4">
         <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
         <button *ngFor="let page of totalPagesArray" [class.active]="page === currentPage" (click)="goToPage(page)">
@@ -55,34 +54,40 @@
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <p class="text-lg">No character references available.</p>
       </div>
-      <div class="mt-4">
-        <button class="btn btn-add-info bg-black text-white w-full" (click)="toggleForm()">Add Info</button>
+      <div class="flex justify-end">
+        <button class="btn btn-add-info bg-maroon text-white hover:bg-maroon-dark transition duration-300 ease-in-out" (click)="toggleForm()">Add Character Reference</button>
       </div>
     </div>
   </ng-container>
 
   <ng-template #editForm>
-    <div class="p-6">
-      <form [formGroup]="referenceForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <div class="grid grid-cols-2 gap-6">
-          <div class="form-control w-full">
-            <label for="Name" class="label-text font-bold text-lg">Name</label>
-            <input id="Name" formControlName="Name" class="input input-bordered w-full" placeholder="Enter the full name of the reference person">
+    <div class="edit-container">
+      <div class="edit-note">
+        <p class="font-bold">Note: You are currently editing your Character Reference Details.</p>
+      </div>
+      <div class="edit-form">
+        <form [formGroup]="referenceForm" (ngSubmit)="onSubmit()">
+          <h2 class="text-xl font-semibold mb-4 text-maroon">{{ currentReferenceId ? 'Edit' : 'Add' }} Character Reference</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="form-control">
+              <label class="label-text">Name <span class="text-red-500">*</span></label>
+              <input formControlName="Name" class="input input-bordered w-full" type="text" placeholder="Enter the full name of the reference person">
+            </div>
+            <div class="form-control">
+              <label class="label-text">Address <span class="text-red-500">*</span></label>
+              <input formControlName="Address" class="input input-bordered w-full" type="text" placeholder="Enter the complete address of the reference person">
+            </div>
+            <div class="form-control">
+              <label class="label-text">Telephone Number <span class="text-red-500">*</span></label>
+              <input formControlName="TelephoneNumber" class="input input-bordered w-full" type="text" placeholder="Enter a valid telephone number">
+            </div>
           </div>
-          <div class="form-control w-full">
-            <label for="Address" class="label-text font-bold text-lg">Address</label>
-            <input id="Address" formControlName="Address" class="input input-bordered w-full" placeholder="Enter the complete address of the reference person">
+          <div class="flex justify-end mt-6">
+            <button type="submit" class="btn btn-save mr-4">{{ currentReferenceId ? 'Update' : 'Save' }}</button>
+            <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
           </div>
-          <div class="form-control w-full">
-            <label for="TelephoneNumber" class="label-text font-bold text-lg">Telephone Number</label>
-            <input id="TelephoneNumber" formControlName="TelephoneNumber" class="input input-bordered w-full" placeholder="Enter a valid telephone number">
-          </div>
-        </div>
-        <div class="flex justify-end mt-6">
-          <button type="submit" class="btn btn-save mr-4">{{ currentReferenceId ? 'Update' : 'Add' }}</button>
-          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </ng-template>
 </div>
@@ -99,3 +104,7 @@
     <span>{{ toastMessage }}</span>
   </div>
 </div>
+
+<ng-template #noInfo>
+  <span class="no-info">No information entered</span>
+</ng-template>

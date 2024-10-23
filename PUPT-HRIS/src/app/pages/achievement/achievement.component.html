@@ -30,25 +30,30 @@
           <tbody>
             <tr *ngFor="let award of paginatedAchievementAwards; let i = index">
               <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
-              <td [ngClass]="{'null-value': !award.NatureOfAchievement}">{{ award.NatureOfAchievement || 'null' }}</td>
-              <td [ngClass]="{'null-value': !award.Classification}">{{ award.Classification || 'null' }}</td>
-              <td [ngClass]="{'null-value': !award.Level}">{{ award.Level || 'null' }}</td>
-              <td [ngClass]="{'null-value': !award.AwardingBody}">{{ award.AwardingBody || 'null' }}</td>
-              <td [ngClass]="{'null-value': !award.InclusiveDates}">{{ award.InclusiveDates || 'null' }}</td>
               <td>
-                <ng-container *ngIf="award.Proof; else noProof">
+                <ng-container *ngIf="award.NatureOfAchievement; else noInfo">{{ award.NatureOfAchievement }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="award.Classification; else noInfo">{{ award.Classification }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="award.Level; else noInfo">{{ award.Level }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="award.AwardingBody; else noInfo">{{ award.AwardingBody }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="award.InclusiveDates; else noInfo">{{ award.InclusiveDates }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="award.Proof; else noInfo">
                   <button *ngIf="award.ProofType === 'file'" (click)="openProofModal(award.Proof, award.SupportingDocument)" class="btn btn-link">View File</button>
                   <a *ngIf="award.ProofType === 'link'" [href]="award.Proof" target="_blank" class="btn btn-link">View Link</a>
                 </ng-container>
-                <ng-template #noProof>
-                  <span class="null-value">null</span>
-                </ng-template>
               </td>
               <td>
-                <div class="btn-container">
-                  <button (click)="editAchievementAward(award.AchievementID!)" class="btn btn-edit btn-sm">EDIT</button>
-                  <button (click)="deleteAchievementAward(award.AchievementID!)" class="btn btn-delete btn-sm">DELETE</button>
-                </div>
+                <button class="btn btn-edit btn-sm" (click)="editAchievementAward(award.AchievementID!)">EDIT</button>
+                <button class="btn btn-delete btn-sm" (click)="deleteAchievementAward(award.AchievementID!)">DELETE</button>
               </td>
             </tr>
           </tbody>
@@ -199,3 +204,7 @@
     <span>{{ toastMessage }}</span>
   </div>
 </div>
+
+<ng-template #noInfo>
+  <span class="no-info">No information entered</span>
+</ng-template>

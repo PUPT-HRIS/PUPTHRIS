@@ -127,3 +127,8 @@
     outline: none;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
   }
+
+  /* Add this to your existing CSS */
+  .text-xl.font-semibold {
+    color: #800000; /* Maroon color */
+  }

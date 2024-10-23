@@ -2,98 +2,71 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* Pagination Controls */
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.pagination-controls button {
-  margin: 0 5px;
-  padding: 10px 15px;
-  background-color: maroon;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.pagination-controls button.active {
-  background-color: black;
-  color: white;
-}
-
-.pagination-controls button.active:hover {
-  background-color: #800000;
-}
-
-.pagination-controls button:disabled {
-  background-color: #ddd;
-  cursor: not-allowed;
-}
-
-.pagination-controls button:hover:not(:disabled) {
-  background-color: #a00000;
-}
-
 /* Container styling */
-.form-container {
-  background-color: #f9f9f9; /* Light background for contrast */
-  border-radius: 0.5rem; /* Rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  padding: 2rem;
-  max-width: 800px; /* Limit width */
-  margin: 2rem auto; /* Center horizontally with margin */
+.container {
+  background-color: #f3f4f6; /* Light gray background color */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  width: 95%;
+  max-width: 1400px;
+  margin: 2rem auto;
+  overflow-x: auto;
 }
 
 /* Heading */
 .bg-maroon {
-  background-color: #800000; /* Maroon background */
+  background-color: #800000;
 }
 
 .text-white {
-  color: #ffffff; /* White text */
+  color: #ffffff;
 }
 
-/* Form controls */
-.form-control {
-  margin-bottom: 1.5rem; /* Space between fields */
+/* Table styles */
+.table {
+  width: 100%;
+  min-width: 1000px;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background-color: #ffffff; /* Keep the table background white */
 }
 
-/* Label text */
-.label-text {
-  color: #555; /* Slightly darker text for labels */
-  font-weight: 500; /* Medium weight for labels */
+.table th,
+.table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-/* Input fields */
-.input-bordered {
-  border: 1px solid #ddd; /* Light border */
-  border-radius: 0.375rem; /* Slightly rounded corners */
-  padding: 0.75rem; /* Padding for better spacing */
-  transition: border-color 0.3s ease; /* Smooth border color transition */
+.table th {
+  background-color: #800000;
+  color: #ffffff;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
 }
 
-.input-bordered:focus {
-  border-color: #3b82f6; /* Change this to your desired color */
-  outline: none; /* Remove default outline */
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
+/* Zebra striping for table rows */
+.table tbody tr:nth-child(even) {
+  background-color: #ececec; /* Light gray background for even rows */
 }
 
-/* Select fields */
-.select-bordered {
-  border: 1px solid #ddd; /* Light border */
-  border-radius: 0.375rem; /* Slightly rounded corners */
-  padding: 0.75rem; /* Padding for better spacing */
-  transition: border-color 0.3s ease; /* Smooth border color transition */
+.table tbody tr:nth-child(odd) {
+  background-color: #ffffff; /* White background for odd rows */
 }
 
-.select-bordered:focus {
-  border-color: #3b82f6; /* Change this to your desired color */
-  outline: none; /* Remove default outline */
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Add custom highlight */
+/* Hover effect */
+.table tbody tr:hover {
+  background-color: #d4d4d4;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 /* Buttons */
@@ -108,89 +81,178 @@
   border: none;
   border-radius: 0.375rem;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-edit {
-  background-color: #3b82f6; /* Blue background */
-  color: #ffffff; /* White text */
+  background-color: #3b82f6;
+  color: #ffffff;
 }
 
 .btn-edit:hover {
-  background-color: #2563eb; /* Darker blue on hover */
-  transform: translateY(-1px); /* Slight lift effect */
+  background-color: #2563eb;
+  transform: translateY(-1px);
 }
 
 .btn-delete {
-  background-color: #ef4444; /* Red background */
-  color: #ffffff; /* White text */
+  background-color: #ef4444;
+  color: #ffffff;
 }
 
 .btn-delete:hover {
-  background-color: #dc2626; /* Darker red on hover */
-  transform: translateY(-1px); /* Slight lift effect */
+  background-color: #dc2626;
+  transform: translateY(-1px);
 }
 
 .btn-save {
-  background-color: #000; /* Black background */
-  border-color: #000; /* Black border */
-  color: #fff;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .btn-save:hover {
-  background-color: #222222; /* Slightly lighter black on hover */
-  transform: translateY(-1px); /* Slight lift effect */
+  background-color: #333333;
 }
 
 .btn-cancel {
-  background-color: #800000; /* Red background */
-  border-color: #800000; /* Red border */
-  color: #fff;
+  background-color: #800000;
+  color: #ffffff;
 }
 
 .btn-cancel:hover {
-  background-color: #9f0303; /* Slightly lighter red on hover */
-  transform: translateY(-1px); /* Slight lift effect */
+  background-color: #a00000;
 }
 
 .btn-add-info {
-  background-color: #000;
-  border-color: #000;
-  color: #fff;
+  background-color: #000000;
+  color: #ffffff;
   width: 100%;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-add-info:hover {
-  background-color: #333;
+  background-color: #333333;
   transform: translateY(-1px);
 }
 
-/* Flex container for buttons */
-.btn-container {
-  display: flex;
-  gap: 0.5rem;
+/* Form controls */
+.form-control {
+  margin-bottom: 1rem;
 }
 
-.btn-container .btn {
-  flex: 1;
+.label-text {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
 }
 
-.btn-sm {
-  padding: 0.375rem 0.75rem;
+.input-bordered,
+.select-bordered {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-/* Zebra striping for table rows */
-.table tbody tr:nth-child(odd) {
-  background-color: #ececec;
+.input-bordered:focus,
+.select-bordered:focus {
+  border-color: #3b82f6;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
 }
 
-.table tbody tr:nth-child(even) {
-  background-color: #ffffff;
-}
-
-/* Center pagination */
-.flex {
+/* Pagination Controls */
+.pagination-controls {
   display: flex;
   justify-content: center;
+  margin-top: 1rem;
+}
+
+.pagination-controls button {
+  margin: 0 0.25rem;
+  padding: 0.5rem 1rem;
+  background-color: #800000;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-controls button.active {
+  background-color: #000000;
+}
+
+.pagination-controls button:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #9f1239;
+}
+
+/* Edit note */
+.edit-note {
+  background-color: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #92400e;
+}
+
+.text-maroon {
+  color: #800000;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .container {
+    width: 98%;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .table {
+    font-size: 0.875rem;
+  }
+}
+
+.no-info {
+  font-weight: 300;
+  font-style: italic;
+  color: #888888;
+}
+
+/* Add this to your existing CSS */
+.btn-sm {
+  width: 70px; /* Set a fixed width for both buttons */
+  padding: 0.25rem 0; /* Adjust padding to make buttons more compact */
+  font-size: 0.75rem; /* Slightly reduce font size */
+}
+
+.btn-edit, .btn-delete {
+  margin-right: 0.25rem; /* Add a small margin between buttons */
+}
+
+/* Update the existing styles */
+.btn-edit, .btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* You may need to adjust the table cell padding to accommodate the buttons */
+.table td:last-child {
+  padding: 0.5rem 0.75rem; /* Adjust as needed */
+  white-space: nowrap; /* Prevent button wrapping */
 }
