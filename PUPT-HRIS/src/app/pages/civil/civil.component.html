@@ -24,12 +24,24 @@
         <tbody>
           <tr *ngFor="let eligibility of civilServiceData; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ eligibility.CareerService || 'N/A' }}</td>
-            <td>{{ eligibility.Rating || 'N/A' }}</td>
-            <td>{{ eligibility.DateOfExamination | date:'mediumDate' || 'N/A' }}</td>
-            <td>{{ eligibility.PlaceOfExamination || 'N/A' }}</td>
-            <td>{{ eligibility.LicenseNumber || 'N/A' }}</td>
-            <td>{{ eligibility.LicenseValidityDate | date:'mediumDate' || 'N/A' }}</td>
+            <td>
+              <ng-container *ngIf="eligibility.CareerService; else noInfo">{{ eligibility.CareerService }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="eligibility.Rating; else noInfo">{{ eligibility.Rating }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="eligibility.DateOfExamination; else noInfo">{{ eligibility.DateOfExamination | date:'mediumDate' }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="eligibility.PlaceOfExamination; else noInfo">{{ eligibility.PlaceOfExamination }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="eligibility.LicenseNumber; else noInfo">{{ eligibility.LicenseNumber }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="eligibility.LicenseValidityDate; else noInfo">{{ eligibility.LicenseValidityDate | date:'mediumDate' }}</ng-container>
+            </td>
             <td>
               <button class="btn btn-edit btn-sm mr-2" (click)="editEligibility(eligibility.CivilServiceEligibilityID!)">EDIT</button>
               <button class="btn btn-delete btn-sm" (click)="deleteEligibility(eligibility.CivilServiceEligibilityID!)">DELETE</button>
@@ -106,3 +118,7 @@
     <span>{{ toastMessage }}</span>
   </div>
 </div>
+
+<ng-template #noInfo>
+  <span class="no-info">No information entered</span>
+</ng-template>

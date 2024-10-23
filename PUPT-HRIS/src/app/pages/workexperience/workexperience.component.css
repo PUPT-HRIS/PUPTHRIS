@@ -4,7 +4,7 @@
 
 /* Container styling */
 .container {
-  background-color: #ffffff;
+  background-color: #f3f4f6; /* Light gray background color */
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 0;
@@ -33,6 +33,7 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background-color: #ffffff; /* Keep the table background white */
 }
 
 .table th,
@@ -51,12 +52,12 @@
 }
 
 /* Zebra striping for table rows */
-.table tbody tr:nth-child(odd) {
-  background-color: #ececec;
+.table tbody tr:nth-child(even) {
+  background-color: #ececec; /* Light gray background for even rows */
 }
 
-.table tbody tr:nth-child(even) {
-  background-color: #ffffff;
+.table tbody tr:nth-child(odd) {
+  background-color: #ffffff; /* White background for odd rows */
 }
 
 /* Hover effect */

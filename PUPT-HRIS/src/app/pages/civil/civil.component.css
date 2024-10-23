@@ -165,7 +165,17 @@ h2 {
 }
 
 .btn-sm {
-  padding: 0.375rem 0.75rem;
+  width: 70px; /* Set a fixed width for both buttons */
+  padding: 0.25rem 0; /* Adjust padding to make buttons more compact */
+  font-size: 0.75rem; /* Slightly reduce font size */
+}
+
+.btn-edit {
+  margin-right: 0.1.5rem; /* Increase the right margin of the EDIT button */
+}
+
+.btn-delete {
+  margin-left: 0.1.5rem; /* Add a left margin to the DELETE button */
 }
 
 /* Table styles */
@@ -215,4 +225,15 @@ h2 {
 
 .text-maroon {
   color: #800000;
+}
+
+.no-info {
+  font-weight: 300;
+  font-style: italic;
+  color: #888888;
+}
+
+.table td:last-child {
+  padding: 0.5rem 0.75rem; /* Adjust as needed */
+  white-space: nowrap; /* Prevent button wrapping */
 }

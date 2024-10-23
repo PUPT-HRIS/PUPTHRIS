@@ -23,14 +23,24 @@
         <tbody>
           <tr *ngFor="let education of educationData; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ education.Level || 'N/A' }}</td>
-            <td>{{ education.NameOfSchool || 'N/A' }}</td>
-            <td>{{ education.BasicEducationDegreeCourse || 'N/A' }}</td>
             <td>
-              {{ education.PeriodOfAttendanceFrom | date:'mediumDate' || 'N/A' }} - 
-              {{ education.PeriodOfAttendanceTo | date:'mediumDate' || 'N/A' }}
+              <ng-container *ngIf="education.Level; else noInfo">{{ education.Level }}</ng-container>
             </td>
-            <td>{{ education.YearGraduated || 'N/A' }}</td>
+            <td>
+              <ng-container *ngIf="education.NameOfSchool; else noInfo">{{ education.NameOfSchool }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="education.BasicEducationDegreeCourse; else noInfo">{{ education.BasicEducationDegreeCourse }}</ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="education.PeriodOfAttendanceFrom && education.PeriodOfAttendanceTo; else noInfo">
+                {{ education.PeriodOfAttendanceFrom | date:'mediumDate' }} - 
+                {{ education.PeriodOfAttendanceTo | date:'mediumDate' }}
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="education.YearGraduated; else noInfo">{{ education.YearGraduated }}</ng-container>
+            </td>
             <td>
               <button class="btn btn-edit btn-sm mr-2" (click)="toggleForm(education.EducationID!)">EDIT</button>
               <button class="btn btn-delete btn-sm" (click)="deleteEducation(education.EducationID!)">DELETE</button>
@@ -118,3 +128,8 @@
     <span>{{ toastMessage }}</span>
   </div>
 </div>
+
+<!-- Add this at the end of the file -->
+<ng-template #noInfo>
+  <span class="no-info">No information entered</span>
+</ng-template>
