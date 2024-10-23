@@ -7,7 +7,7 @@
 
   <div class="content">
     <div class="actions">
-      <button class="btn btn-primary" (click)="addNewTraining()">Add Training</button>
+      <button class="btn btn-primary" (click)="addNewTraining()">Add Training and Seminar</button>
       <label for="excelImport" class="btn btn-secondary">Import Excel Data</label>
       <input type="file" id="excelImport" (change)="importExcelData($event)" accept=".xlsx, .xls" class="hidden">
     </div>
@@ -31,20 +31,29 @@
           <tbody>
             <tr *ngFor="let training of paginatedTrainingData; let i = index">
               <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
-              <td>{{ training.Title }}</td>
-              <td>{{ training.Classification }}</td>
-              <td>{{ training.Nature }}</td>
-              <td>{{ training.DateFrom | date }}</td>
-              <td>{{ training.DateTo | date }}</td>
-              <td>{{ training.Organizer }}</td>
               <td>
-                <ng-container *ngIf="training.Proof; else noProof">
+                <ng-container *ngIf="formatValue(training.Title); else noInfo">{{ formatValue(training.Title) }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="formatValue(training.Classification); else noInfo">{{ formatValue(training.Classification) }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="formatValue(training.Nature); else noInfo">{{ formatValue(training.Nature) }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="formatValue(training.DateFrom); else noInfo">{{ formatValue(training.DateFrom) | date }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="formatValue(training.DateTo); else noInfo">{{ formatValue(training.DateTo) | date }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="formatValue(training.Organizer); else noInfo">{{ formatValue(training.Organizer) }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="training.Proof; else noInfo">
                   <button *ngIf="training.ProofType === 'file'" (click)="openProofModal(training.Proof, training.SupportingDocuments)" class="btn btn-link">View File</button>
                   <a *ngIf="training.ProofType === 'link'" [href]="training.Proof" target="_blank" class="btn btn-link">View Link</a>
                 </ng-container>
-                <ng-template #noProof>
-                  <span>No Proof</span>
-                </ng-template>
               </td>
               <td>
                 <div class="btn-container">
@@ -231,3 +240,8 @@
     <span>{{ toastMessage }}</span>
   </div>
 </div>
+
+<!-- Add this at the end of the file -->
+<ng-template #noInfo>
+  <span class="no-info">No information entered</span>
+</ng-template>

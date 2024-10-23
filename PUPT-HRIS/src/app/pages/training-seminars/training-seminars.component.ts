@@ -143,7 +143,8 @@ export class TrainingSeminarsComponent implements OnInit {
 
     const formData = new FormData();
     Object.keys(this.trainingForm.value).forEach(key => {
-      formData.append(key, this.trainingForm.get(key)?.value);
+      const value = this.trainingForm.get(key)?.value;
+      formData.append(key, value === '' ? null : value);
     });
     formData.append('UserID', this.userId.toString());
 
@@ -275,5 +276,9 @@ export class TrainingSeminarsComponent implements OnInit {
         }
       );
     }
+  }
+
+  formatValue(value: any): string {
+    return value === null || value === 'null' || value === '' ? '' : value;
   }
 }

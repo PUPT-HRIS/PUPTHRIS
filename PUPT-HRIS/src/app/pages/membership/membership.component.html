@@ -31,12 +31,24 @@
           <tbody>
             <tr *ngFor="let membership of paginatedMemberships; let i = index">
               <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
-              <td>{{ membership.OrganizationName }}</td>
-              <td>{{ membership.Position }}</td>
-              <td>{{ membership.Level }}</td>
-              <td>{{ membership.Classification }}</td>
-              <td>{{ membership.InclusiveDatesFrom | date }}</td>
-              <td>{{ membership.InclusiveDatesTo | date }}</td>
+              <td>
+                <ng-container *ngIf="membership.OrganizationName; else noInfo">{{ membership.OrganizationName }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="membership.Position; else noInfo">{{ membership.Position }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="membership.Level; else noInfo">{{ membership.Level }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="membership.Classification; else noInfo">{{ membership.Classification }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="membership.InclusiveDatesFrom; else noInfo">{{ membership.InclusiveDatesFrom | date }}</ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="membership.InclusiveDatesTo; else noInfo">{{ membership.InclusiveDatesTo | date }}</ng-container>
+              </td>
               <td>
                 <ng-container *ngIf="membership.Proof; else noProof">
                   <button *ngIf="membership.ProofType === 'file'" (click)="openProofModal(membership.Proof, membership.SupportingDocument)" class="btn btn-link">View File</button>
@@ -191,3 +203,7 @@
     <span>{{ toastMessage }}</span>
   </div>
 </div>
+
+<ng-template #noInfo>
+  <span class="no-info">No information entered</span>
+</ng-template>
