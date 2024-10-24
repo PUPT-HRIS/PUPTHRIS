@@ -27,13 +27,14 @@ import { CommonModule } from '@angular/common';
 import { RoleName, Role } from '../../model/role.model';
 import { CampusContextService } from '../../services/campus-context.service';
 import { Subscription } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-employee',
   templateUrl: './employees.component.html',
   styleUrls: ['./employees.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule]
 })
 export class EmployeeComponent implements OnInit, OnDestroy {
   users: User[] = [];
@@ -58,6 +59,8 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   itemsPerPage: number = 10; // Set the number of users per page to 10
   totalPages: number = 0;
   private campusSubscription: Subscription | undefined;
+  searchTerm: string = '';
+  filteredUsers: User[] = [];
 
   constructor(
     private campusContextService: CampusContextService,
@@ -101,6 +104,7 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     this.userService.getUsers(this.campusId).subscribe(
       (data) => {
         this.users = data;
+        this.filteredUsers = data; // Initialize filteredUsers
         this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
         this.paginateUsers();
       },
@@ -125,7 +129,7 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   paginateUsers(): void {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
-    this.paginatedUsers = this.users.slice(start, end);
+    this.paginatedUsers = this.filteredUsers.slice(start, end);
   }
 
   // Method to go to the next page
@@ -342,5 +346,21 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     this.workExperiences = null;
     this.voluntaryWorks = null;
     this.characterReferences = null;
+  }
+
+  onSearch(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredUsers = this.users;
+    } else {
+      this.filteredUsers = this.users.filter(user => 
+        `${user.FirstName} ${user.MiddleName} ${user.Surname} ${user.NameExtension}`
+          .toLowerCase()
+          .includes(this.searchTerm.toLowerCase()) ||
+        user.Fcode.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+    this.currentPage = 1;
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+    this.paginateUsers();
   }
 }
