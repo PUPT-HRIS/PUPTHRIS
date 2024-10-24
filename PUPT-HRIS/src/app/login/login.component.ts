@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-login',
@@ -11,8 +12,19 @@ import { RouterModule } from '@angular/router';
   imports: [ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('500ms', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('500ms', style({ opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   errorMessage: string | null = null;
   showPassword: boolean = false;
@@ -24,6 +36,7 @@ export class LoginComponent implements OnInit {
     { src: 'assets/Paranaque.svg', alt: 'PUP Paranaque Campus' },
   ];
   currentImageIndex = 0;
+  private autoScrollInterval: any;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
@@ -33,7 +46,23 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Any initialization logic can go here
+    this.startAutoScroll();
+  }
+
+  ngOnDestroy() {
+    this.stopAutoScroll();
+  }
+
+  startAutoScroll() {
+    this.autoScrollInterval = setInterval(() => {
+      this.nextImage();
+    }, 2000); // 2000ms = 2 seconds
+  }
+
+  stopAutoScroll() {
+    if (this.autoScrollInterval) {
+      clearInterval(this.autoScrollInterval);
+    }
   }
 
   hasPreviousImage(): boolean {
@@ -45,15 +74,15 @@ export class LoginComponent implements OnInit {
   }
 
   nextImage() {
-    if (this.hasNextImage()) {
-      this.currentImageIndex++;
-    }
+    this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
   }
 
   prevImage() {
+    this.stopAutoScroll();
     if (this.hasPreviousImage()) {
       this.currentImageIndex--;
     }
+    this.startAutoScroll();
   }
 
   login() {
@@ -78,6 +107,8 @@ export class LoginComponent implements OnInit {
   }
 
   setCurrentImage(index: number) {
+    this.stopAutoScroll();
     this.currentImageIndex = index;
+    this.startAutoScroll();
   }
 }
