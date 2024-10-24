@@ -63,6 +63,16 @@ export class DashboardService {
     );
   }
 
+  // New method to get profile completion percentage
+  getProfileCompletion(userId: number): Observable<{ completionPercentage: number; incompleteSections: string[] }> {
+    return this.http.get<{ completionPercentage: number; incompleteSections: string[] }>(
+      `${this.apiUrl}/profile-completion/${userId}`,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('An error occurred:', error);
     return throwError(() => error.message || 'Server error');

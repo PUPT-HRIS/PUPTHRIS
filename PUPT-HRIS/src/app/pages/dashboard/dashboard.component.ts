@@ -9,6 +9,10 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { UserDashboardData } from '../../services/dashboard.service';
 import { UpcomingBirthday } from '../../services/dashboard.service';
+import { NgxGaugeModule} from 'ngx-gauge';
+import { Router } from '@angular/router';
+
+type NgxGaugeType = 'full' | 'semi' | 'arch';
 
 interface TrainingSeminar {
   title: string;
@@ -26,7 +30,7 @@ interface Employee {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   standalone: true,
-  imports: [NgChartsModule, CommonModule]
+  imports: [NgChartsModule, CommonModule, NgxGaugeModule]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
@@ -161,6 +165,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private userID: number;
 
+  public profileCompletionPercentage: number = 0;
+
   public upcomingBirthdays: UpcomingBirthday[] = [];
 
   public ageGroupChartData: ChartData<'bar'> = {
@@ -181,7 +187,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private dashboardService: DashboardService,
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
-    private campusContextService: CampusContextService
+    private campusContextService: CampusContextService,
+    private router: Router
   ) {
     this.campusSubscription = new Subscription();
     const decodedToken = this.authService.getDecodedToken();
@@ -217,6 +224,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         console.error('Campus ID is not available');
       }
     });
+    this.loadProfileCompletion();
   }
 
   ngOnDestroy(): void {
@@ -380,5 +388,84 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // Handle the error, maybe set default data
       }
     });
+  }
+
+  public gaugeType: NgxGaugeType = 'arch'; // or 'semi', 'full'
+  public gaugeValue: number = 0; // Example value
+  public gaugeAppendText: string = '%';
+  public gaugeThick: number = 20; // Thickness of the gauge
+  public gaugeSize: number = 200; // Size of the gauge
+  public incompleteTasks: string[] = [];
+  public showAllTasks: boolean = false;
+
+  loadProfileCompletion(): void {
+    this.dashboardService.getProfileCompletion(this.userID).subscribe({
+      next: (data) => {
+        this.profileCompletionPercentage = data.completionPercentage;
+        this.gaugeValue = Math.round(this.profileCompletionPercentage);
+        this.incompleteTasks = data.incompleteSections; // Store incomplete tasks
+        console.log('Profile Completion:', this.gaugeValue);
+      },
+      error: (error) => {
+        console.error('Error loading profile completion:', error);
+      }
+    });
+  }
+
+  toggleTasksView(): void {
+    this.showAllTasks = !this.showAllTasks;
+  }
+
+  getProfileMessage(): { title: string, description: string } {
+    if (this.gaugeValue === 0) {
+      return {
+        title: "Let's Get Started!",
+        description: "Begin building your professional profile today."
+      };
+    } else if (this.gaugeValue === 100) {
+      return {
+        title: "Profile Complete!",
+        description: "Thank you for keeping your information up to date."
+      };
+    } else if (this.gaugeValue >= 50) {
+      return {
+        title: "Making Great Progress!",
+        description: "You're more than halfway there. Keep going!"
+      };
+    } else {
+      return {
+        title: "Profile In Progress",
+        description: "Take a few moments to complete your profile information."
+      };
+    }
+  }
+
+  // Map task descriptions to their corresponding routes
+  private taskRoutes: { [key: string]: string } = {
+    'Add your work experience': '/work-experience',
+    'Add your contact details': '/contact-details',
+    'Add your family background': '/family-background',
+    'Add your profile image': '/basic-details',
+    'Add your special skills': '/other-information',
+    'Add your voluntary work': '/voluntary-works',
+    'Add your character references': '/character-reference',
+    'Add your basic details': '/basic-details',
+    'Add your personal details': '/personal-details',
+    'Add your education details': '/educational-background',
+    'Add your children details': '/children',
+    'Add your signature': '/signature',
+    'Add your academic rank': '/academic-rank',
+    'Add your memberships': '/officer-membership',
+    'Add your civil service eligibility': '/civil-service-eligibility',
+    'Answer additional questions': '/additional-question',
+    'Add your learning and development': '/learning-development',
+    'Add your achievement awards': '/outstanding-achievement'
+  };
+
+  navigateToTask(task: string): void {
+    const route = this.taskRoutes[task];
+    if (route) {
+      this.router.navigate([route]);
+    }
   }
 }

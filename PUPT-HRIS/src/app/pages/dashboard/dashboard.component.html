@@ -106,6 +106,9 @@
       <div class="divider divider-neutral divider-end">Your Information</div>
     </div>
 
+    <!-- Profile Completion Section -->
+
+
     <!-- User-specific charts or information -->
     <div class="charts-container grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
       <div>
@@ -117,14 +120,44 @@
         </canvas>
       </div>
 
-      <div>
-        <h2 class="text-2xl font-bold">Attendance Overview</h2>
-        <canvas baseChart
-                [data]="userAttendanceChartData"
-                [options]="userAttendanceChartOptions"
-                [legend]="userAttendanceChartLegend"
-                [type]="'pie'">
-        </canvas>
+      <div class="profile-completion-container p-4">
+        <h2 class="text-2xl font-bold mb-4">Profile Completion</h2>
+        <div class="flex items-center">
+          <ngx-gauge
+            [type]="gaugeType"
+            [value]="gaugeValue"
+            [append]="gaugeAppendText"
+            [thick]="gaugeThick"
+            cap="round"
+            [size]="gaugeSize"
+            foregroundColor="#e74c3c"
+            [label]="''">
+          </ngx-gauge>
+          <div class="ml-4">
+            <p class="font-bold text-lg">{{ getProfileMessage().title }}</p>
+            <p class="text-sm text-gray-600">{{ getProfileMessage().description }}</p>
+            <!-- Add PDS warning message -->
+            <p *ngIf="gaugeValue < 100" class="mt-2 text-sm text-red-600 font-medium">
+              Please complete your profile to generate PDS
+            </p>
+          </div>
+        </div>
+        <div class="tasks mt-4">
+          <!-- First 3 Tasks (Always Visible) -->
+          <div *ngFor="let task of (showAllTasks ? incompleteTasks : incompleteTasks.slice(0, 3))" 
+               class="task-item flex items-center justify-between p-3 bg-white rounded-lg shadow-sm mb-2 hover:bg-gray-50 cursor-pointer"
+               (click)="navigateToTask(task)">
+            <span class="text-gray-700">{{ task }}</span>
+            <span class="text-blue-500">→</span>
+          </div>
+
+          <!-- View All Button -->
+          <button *ngIf="incompleteTasks.length > 3" 
+                   class="view-all-button text-blue-500 hover:text-blue-700 mt-3"
+                   (click)="toggleTasksView()">
+            {{ showAllTasks ? 'Show less' : 'View all (' + incompleteTasks.length + ')' }}
+          </button>
+        </div>
       </div>
     </div>
 

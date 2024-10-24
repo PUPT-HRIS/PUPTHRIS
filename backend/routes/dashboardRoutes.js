@@ -7,5 +7,6 @@ router.get('/dashboard-data', dashboardController.getDashboardData);
 router.get('/user-dashboard-data/:userId', dashboardController.getUserDashboardData);
 router.get('/upcoming-birthdays', dashboardController.getUpcomingBirthdays);
 router.get('/age-group-data', dashboardController.getAgeGroupData);
+router.get('/profile-completion/:userId', dashboardController.getProfileCompletion);
 
 module.exports = router;
