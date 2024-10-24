@@ -26,7 +26,7 @@ interface Employee {
   standalone: true,
   imports: [NgChartsModule, CommonModule]
 })
-export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy {
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
@@ -191,11 +191,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
-
-  ngAfterViewInit(): void {
-    this.updateEmploymentTypeChart();
-  }
-
   ngOnDestroy(): void {
     if (this.campusSubscription) {
       this.campusSubscription.unsubscribe();
@@ -281,17 +276,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 0);
   }
 
-  updateEmploymentTypeChart(): void {
-    this.employmentTypeChartData.datasets[0].data = [
-      this.fullTimeEmployees.length,
-      this.partTimeEmployees.length
-    ];
-    this.updateCharts();
-  }
 
-  toggleEmploymentTypeView(): void {
-    this.isFullTimeView = !this.isFullTimeView;
-  }
 
   toggleDashboardView(): void {
     this.isAdminView = !this.isAdminView;
