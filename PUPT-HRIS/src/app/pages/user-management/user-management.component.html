@@ -3,74 +3,122 @@
     <h1 class="text-2xl font-bold">User Management</h1>
   </div>
 
-  <div class="p-6 space-y-6">
-    <div *ngIf="users.length > 0" class="overflow-x-auto px-10">
-      <table class="table table-zebra w-full border-separate border-spacing-0">
-        <thead>
-          <tr class="bg-maroon text-white">
-            <th class="p-4">#</th>
-            <th class="p-4">Name</th>
-            <th class="p-4">Status</th>
-            <th class="p-4">Employment Type</th>
-            <th class="p-4">Roles</th>
-            <th class="p-4 w-36">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let user of users; let i = index" class="hover:bg-gray-100">
-            <td class="p-4 text-center">{{ i + 1 }}</td>
-            <td class="p-4">{{ user.FirstName }} {{ user.Surname }}</td>
-            <td class="p-4 text-center">
-              <span [class]="user.isActive ? 'text-green-600' : 'text-red-600'">
-                {{ user.isActive ? 'Active' : 'Inactive' }}
-              </span>
-            </td>
-            <td class="p-4">
-              <select class="select select-bordered select-sm w-full max-w-xs" [(ngModel)]="user.EmploymentType">
-                <option value="fulltime">Fulltime</option>
-                <option value="parttime">Part-time</option>
-                <option value="temporary">Temporary</option>
-                <option value="designee">Designee</option>
-              </select>
-            </td>
-            <td class="p-4">
-              <div class="flex flex-col">
-                <div class="mb-2">
-                  <div *ngFor="let role of getAdminRoles()">
-                    <label class="cursor-pointer">
-                      <input type="checkbox" class="checkbox checkbox-primary" [checked]="isUserRoleSelected(user, role.RoleID)" (change)="toggleUserRole(user, role.RoleID)" />
-                      <span class="ml-2 uppercase font-bold">{{ role.RoleName }}</span>
-                    </label>
-                  </div>
-                </div>
-                <div class="border-t border-gray-300 my-2"></div>
-                <div>
-                  <div *ngFor="let role of getNonAdminRoles()">
-                    <label class="cursor-pointer">
-                      <input type="checkbox" class="checkbox checkbox-primary" [checked]="isUserRoleSelected(user, role.RoleID)" (change)="toggleUserRole(user, role.RoleID)" />
-                      <span class="ml-2 uppercase font-bold">{{ role.RoleName }}</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td class="p-4 flex justify-center space-x-2">
-              <button class="btn btn-save btn-sm" (click)="saveUserDetails(user)">Save</button>
-              <button class="btn btn-sm" 
-                      [ngClass]="{'btn-error': user.isActive, 'btn-success': !user.isActive}"
-                      (click)="toggleUserActiveStatus(user)">
-                {{ user.isActive ? 'Deactivate' : 'Activate' }}
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="p-6">
+    <!-- Wrap the content in a new div with custom class -->
+    <div class="user-management-content">
+      <!-- Search bar -->
+      <div class="mb-4">
+        <div class="relative">
+          <input type="text" 
+                 [(ngModel)]="searchTerm" 
+                 (input)="onSearch()"
+                 placeholder="Search employee by their name..." 
+                 class="w-full py-2 pl-8 pr-4 text-sm rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          >
+          <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
+            <i class="fas fa-search text-gray-400"></i>
+          </span>
+        </div>
+      </div>
 
-    <div *ngIf="users.length === 0" class="p-6 space-y-6">
-      <div class="p-6 bg-white rounded-lg shadow-lg">
+      <!-- Table -->
+      <div *ngIf="filteredUsers.length > 0" class="overflow-x-auto">
+        <table class="table table-zebra w-full border-separate border-spacing-0">
+          <thead>
+            <tr class="bg-maroon text-white">
+              <th class="p-4">#</th>
+              <th class="p-4">Name</th>
+              <th class="p-4">Status</th>
+              <th class="p-4">Employment Type</th>
+              <th class="p-4">Roles</th>
+              <th class="p-4 w-36">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of displayedUsers; let i = index" class="hover:bg-gray-100">
+              <td class="p-4 text-center">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
+              <td class="p-4">{{ user.FirstName }} {{ user.Surname }}</td>
+              <td class="p-4 text-center">
+                <span [class]="user.isActive ? 'text-green-600' : 'text-red-600'">
+                  {{ user.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td class="p-4">
+                <select class="select select-bordered select-sm w-full max-w-xs" [(ngModel)]="user.EmploymentType">
+                  <option value="fulltime">Fulltime</option>
+                  <option value="parttime">Part-time</option>
+                  <option value="temporary">Temporary</option>
+                  <option value="designee">Designee</option>
+                </select>
+              </td>
+              <td class="p-4">
+                <div class="flex flex-col">
+                  <div class="mb-2">
+                    <div *ngFor="let role of getAdminRoles()">
+                      <label class="cursor-pointer">
+                        <input type="checkbox" class="checkbox checkbox-primary" [checked]="isUserRoleSelected(user, role.RoleID)" (change)="toggleUserRole(user, role.RoleID)" />
+                        <span class="ml-2 uppercase font-bold">{{ role.RoleName }}</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="border-t border-gray-300 my-2"></div>
+                  <div>
+                    <div *ngFor="let role of getNonAdminRoles()">
+                      <label class="cursor-pointer">
+                        <input type="checkbox" class="checkbox checkbox-primary" [checked]="isUserRoleSelected(user, role.RoleID)" (change)="toggleUserRole(user, role.RoleID)" />
+                        <span class="ml-2 uppercase font-bold">{{ role.RoleName }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="p-4 flex justify-center space-x-2">
+                <button class="btn btn-save btn-sm" (click)="saveUserDetails(user)">Save</button>
+                <button class="btn btn-sm" 
+                        [ngClass]="{'btn-error': user.isActive, 'btn-success': !user.isActive}"
+                        (click)="toggleUserActiveStatus(user)">
+                  {{ user.isActive ? 'Deactivate' : 'Activate' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- No users found message -->
+      <div *ngIf="filteredUsers.length === 0" class="p-6 bg-white rounded-lg shadow-lg">
         <p class="text-lg">No users found for the selected campus.</p>
       </div>
+    </div>
+  </div>
+
+  <!-- Replace the existing pagination controls with this -->
+  <div class="pagination-wrapper">
+    <div class="flex justify-center mt-2 mb-4">
+      <button 
+        [disabled]="currentPage === 1" 
+        (click)="previousPage()" 
+        class="btn btn-sm pagination-btn"
+        [ngClass]="{'disabled': currentPage === 1}"
+      >
+        Previous
+      </button>
+      <button 
+        *ngFor="let page of totalPagesArray" 
+        (click)="goToPage(page)" 
+        class="btn btn-sm mx-1 pagination-btn" 
+        [ngClass]="{'active': page === currentPage, 'inactive': page !== currentPage}"
+      >
+        {{ page }}
+      </button>
+      <button 
+        [disabled]="currentPage === totalPages" 
+        (click)="nextPage()" 
+        class="btn btn-sm pagination-btn"
+        [ngClass]="{'disabled': currentPage === totalPages}"
+      >
+        Next
+      </button>
     </div>
   </div>
 </div>
