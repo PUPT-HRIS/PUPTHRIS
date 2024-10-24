@@ -57,38 +57,29 @@
                 [type]="'pie'">
         </canvas>
       </div>
+      <!-- <div *ngIf="ageGroupChartData && ageGroupChartData.labels && ageGroupChartData.labels.length > 0">
+        <canvas baseChart
+                [data]="ageGroupChartData"
+                [options]="ageGroupChartOptions"
+                [type]="'bar'">
+        </canvas>
+      </div> -->
     </div>
-
-    <div class="flex w-full flex-col mt-8">
-      <div class="divider divider-neutral divider-end">Employment Type Summary</div>
-    </div>
-
-    <div class="employment-type-summary grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-      <div>
-        <h2 class="text-2xl font-bold mb-4">{{ isFullTimeView ? 'Full-Time' : 'Part-Time' }} Employees</h2>
-        <p class="text-lg mb-2">Total: {{ isFullTimeView ? fullTimeEmployees.length : partTimeEmployees.length }}</p>
-        <button (click)="toggleEmploymentTypeView()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Switch to {{ isFullTimeView ? 'Part-Time' : 'Full-Time' }}
-        </button>
-        <div class="mt-4 max-h-60 overflow-y-auto">
-          <h3 class="text-xl font-semibold mb-2">Employee List:</h3>
-          <ul class="list-disc list-inside">
-            <li *ngFor="let employee of isFullTimeView ? fullTimeEmployees : partTimeEmployees">
-              {{ employee.name }}
+        <!-- Upcoming Birthdays Section -->
+        <!--
+        <div class="flex w-full flex-col mt-8">
+          <div class="divider divider-neutral divider-end">Upcoming Birthdays</div>
+        </div>
+    
+        <div class="upcoming-birthdays-container mt-4">
+          <h2 class="text-2xl font-bold mb-4">Upcoming Birthdays</h2>
+          <ul>
+            <li *ngFor="let birthday of upcomingBirthdays">
+              {{ birthday.FirstName }} {{ birthday.LastName }} - {{ birthday.DateOfBirth | date:'mediumDate' }}
             </li>
           </ul>
         </div>
-      </div>
-
-      <div>
-        <h2 class="text-2xl font-bold mb-4">Employment Type Distribution</h2>
-        <canvas baseChart
-                [data]="employmentTypeChartData"
-                [options]="employmentTypeChartOptions"
-                [type]="'pie'">
-        </canvas>
-      </div>
-    </div>
+        -->
   </ng-container>
 
   <ng-template #personalView>
@@ -96,14 +87,14 @@
     <div class="flex-1 mb-2">
       <a class="text-lg font-normal">Welcome to your Personal Dashboard</a>
     </div>
-    <div class="cards-container grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="cards-container grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Department</h3>
         <p class="text-2xl font-extrabold">{{ userDepartment }}</p>
       </div>
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Academic Rank</h3>
-        <p class="text-2xl font-extrabold">{{ userPosition }}</p>
+        <p class="text-2xl font-extrabold">{{ userAcademicRank }}</p>
       </div>
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Employment Type</h3>
@@ -115,30 +106,63 @@
       <div class="divider divider-neutral divider-end">Your Information</div>
     </div>
 
+    <!-- Profile Completion Section -->
+
+
     <!-- User-specific charts or information -->
     <div class="charts-container grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
       <div>
-        <h2 class="text-2xl font-bold">Attendance Overview</h2>
+        <h2 class="text-2xl font-bold">Your Activities</h2>
         <canvas baseChart
-                [data]="userAttendanceChartData"
-                [options]="userAttendanceChartOptions"
-                [legend]="userAttendanceChartLegend"
-                [type]="'pie'">
+                [data]="userActivityChartData"
+                [options]="userActivityChartOptions"
+                [type]="'bar'">
         </canvas>
       </div>
 
-      <div>
-        <h2 class="text-2xl font-bold">Performance Metrics</h2>
-        <canvas baseChart
-                [data]="userPerformanceChartData"
-                [options]="userPerformanceChartOptions"
-                [legend]="userPerformanceChartLegend"
-                [type]="'bar'">
-        </canvas>
+      <div class="profile-completion-container p-4">
+        <h2 class="text-2xl font-bold mb-4">Profile Completion</h2>
+        <div class="flex items-center">
+          <ngx-gauge
+            [type]="gaugeType"
+            [value]="gaugeValue"
+            [append]="gaugeAppendText"
+            [thick]="gaugeThick"
+            cap="round"
+            [size]="gaugeSize"
+            foregroundColor="#e74c3c"
+            [label]="''">
+          </ngx-gauge>
+          <div class="ml-4">
+            <p class="font-bold text-lg">{{ getProfileMessage().title }}</p>
+            <p class="text-sm text-gray-600">{{ getProfileMessage().description }}</p>
+            <!-- Add PDS warning message -->
+            <p *ngIf="gaugeValue < 100" class="mt-2 text-sm text-red-600 font-medium">
+              Please complete your profile to generate PDS
+            </p>
+          </div>
+        </div>
+        <div class="tasks mt-4">
+          <!-- First 3 Tasks (Always Visible) -->
+          <div *ngFor="let task of (showAllTasks ? incompleteTasks : incompleteTasks.slice(0, 3))" 
+               class="task-item flex items-center justify-between p-3 bg-white rounded-lg shadow-sm mb-2 hover:bg-gray-50 cursor-pointer"
+               (click)="navigateToTask(task)">
+            <span class="text-gray-700">{{ task }}</span>
+            <span class="text-blue-500">→</span>
+          </div>
+
+          <!-- View All Button -->
+          <button *ngIf="incompleteTasks.length > 3" 
+                   class="view-all-button text-blue-500 hover:text-blue-700 mt-3"
+                   (click)="toggleTasksView()">
+            {{ showAllTasks ? 'Show less' : 'View all (' + incompleteTasks.length + ')' }}
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Trainings and Seminars Section -->
+    <!--
     <div class="flex w-full flex-col mt-8">
       <div class="divider divider-neutral divider-end">Trainings and Seminars</div>
     </div>
@@ -164,5 +188,6 @@
         </tbody>
       </table>
     </div>
+    -->
   </ng-template>
 

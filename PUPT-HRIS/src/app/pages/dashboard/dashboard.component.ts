@@ -7,6 +7,12 @@ import { AuthService } from '../../services/auth.service';
 import { CampusContextService } from '../../services/campus-context.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { UserDashboardData } from '../../services/dashboard.service';
+import { UpcomingBirthday } from '../../services/dashboard.service';
+import { NgxGaugeModule} from 'ngx-gauge';
+import { Router } from '@angular/router';
+
+type NgxGaugeType = 'full' | 'semi' | 'arch';
 
 interface TrainingSeminar {
   title: string;
@@ -24,9 +30,9 @@ interface Employee {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   standalone: true,
-  imports: [NgChartsModule, CommonModule]
+  imports: [NgChartsModule, CommonModule, NgxGaugeModule]
 })
-export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy {
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
@@ -83,9 +89,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // User-specific properties
   public userDepartment: string = '';
-  public userPosition: string = '';
+  public userAcademicRank: string = '';
   public userEmploymentType: string = '';
-  public userYearsOfService: number = 0;
 
   // User attendance chart
   public userAttendanceChartOptions: ChartOptions<'pie'> = {
@@ -158,13 +163,36 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public isAdminView: boolean = false; // Set default to false
 
+  private userID: number;
+
+  public profileCompletionPercentage: number = 0;
+
+  public upcomingBirthdays: UpcomingBirthday[] = [];
+
+  public ageGroupChartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{ data: [], backgroundColor: [] }]
+  };
+
+  public ageGroupChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Age Distribution' }
+    }
+  };
+
   constructor(
     private dashboardService: DashboardService,
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
-    private campusContextService: CampusContextService
+    private campusContextService: CampusContextService,
+    private router: Router
   ) {
     this.campusSubscription = new Subscription();
+    const decodedToken = this.authService.getDecodedToken();
+    this.userID = decodedToken?.userId || 0;
   }
 
   ngOnInit(): void {
@@ -181,22 +209,37 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       if (campusId !== null && (this.userRole === 'admin' || this.userRole === 'superadmin')) {
         this.loadAdminDashboardData(campusId);
         this.loadUserDashboardData();
-        this.isAdminView = true; // Set to true for admin/superadmin
+        this.isAdminView = true;
       } else {
         this.loadUserDashboardData();
-        this.isAdminView = false; // Ensure it's false for other roles
+        this.isAdminView = false;
       }
     });
-  }
 
-  ngAfterViewInit(): void {
-    this.updateEmploymentTypeChart();
+    this.loadUpcomingBirthdays();
+    this.campusSubscription = this.campusContextService.getCampusId().subscribe(campusId => {
+      if (campusId !== null) {
+        this.loadAgeGroupData(campusId);
+      } else {
+        console.error('Campus ID is not available');
+      }
+    });
+    this.loadProfileCompletion();
   }
 
   ngOnDestroy(): void {
     if (this.campusSubscription) {
       this.campusSubscription.unsubscribe();
     }
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      if (this.chart && this.chart.chart) {
+        this.chart.chart.update();
+      }
+      this.cdr.detectChanges();
+    }, 0);
   }
 
   loadAdminDashboardData(campusId: number): void {
@@ -245,24 +288,26 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadUserDashboardData(): void {
-    this.dashboardService.getUserDashboardData().subscribe(data => {
-      this.userDepartment = data.department;
-      this.userPosition = data.position;
-      this.userEmploymentType = data.employmentType;
-      this.userYearsOfService = data.yearsOfService;
-
-      this.userAttendanceChartData.datasets[0].data = [
-        data.attendancePresent,
-        data.attendanceAbsent,
-        data.attendanceLate
-      ];
-
-      this.userPerformanceChartData.datasets[0].data = data.performanceMetrics;
-
-      // Add trainings and seminars data
-      this.trainingsAndSeminars = data.trainingsAndSeminars || [];
-
-      this.updateCharts();
+    this.dashboardService.getUserDashboardData(this.userID).subscribe({
+      next: (data: UserDashboardData) => {
+        this.userDepartment = data.department;
+        this.userAcademicRank = data.academicRank;
+        this.userEmploymentType = data.employmentType;
+        
+        // Update the user activity chart data
+        this.userActivityChartData.datasets[0].data = [
+          data.activityCounts.trainings,
+          data.activityCounts.awards,
+          data.activityCounts.voluntaryActivities,
+          data.activityCounts.officershipMemberships
+        ];
+        
+        this.updateCharts();
+      },
+      error: (error) => {
+        console.error('Error loading user dashboard data:', error);
+        // Handle the error, e.g., show a notification to the user
+      }
     });
   }
 
@@ -276,19 +321,151 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 0);
   }
 
-  updateEmploymentTypeChart(): void {
-    this.employmentTypeChartData.datasets[0].data = [
-      this.fullTimeEmployees.length,
-      this.partTimeEmployees.length
-    ];
-    this.updateCharts();
-  }
-
-  toggleEmploymentTypeView(): void {
-    this.isFullTimeView = !this.isFullTimeView;
+  loadUpcomingBirthdays(): void {
+    this.dashboardService.getUpcomingBirthdays().subscribe({
+      next: (birthdays: UpcomingBirthday[]) => {
+        console.log('Upcoming birthdays:', birthdays);
+        this.upcomingBirthdays = birthdays;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading upcoming birthdays:', error);
+      }
+    });
   }
 
   toggleDashboardView(): void {
     this.isAdminView = !this.isAdminView;
+  }
+
+  // New property for user activity chart
+  public userActivityChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: 'Your Activities'
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
+        }
+      }
+    }
+  };
+  public userActivityChartData: ChartData<'bar'> = {
+    labels: ['Trainings', 'Awards', 'Voluntary Activities', 'Officership Memberships'],
+    datasets: [
+      {
+        data: [0, 0, 0, 0],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+      }
+    ]
+  };
+
+  loadAgeGroupData(campusId: number): void {
+    this.dashboardService.getAgeGroupData(campusId).subscribe({
+      next: (data) => {
+        this.ageGroupChartData = {
+          labels: data.map(item => item.ageGroup),
+          datasets: [{
+            data: data.map(item => item.count),
+            backgroundColor: [
+              '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+            ]
+          }]
+        };
+        this.cdr.detectChanges(); // Trigger change detection
+      },
+      error: (error) => {
+        console.error('Error loading age group data:', error);
+        // Handle the error, maybe set default data
+      }
+    });
+  }
+
+  public gaugeType: NgxGaugeType = 'arch'; // or 'semi', 'full'
+  public gaugeValue: number = 0; // Example value
+  public gaugeAppendText: string = '%';
+  public gaugeThick: number = 20; // Thickness of the gauge
+  public gaugeSize: number = 200; // Size of the gauge
+  public incompleteTasks: string[] = [];
+  public showAllTasks: boolean = false;
+
+  loadProfileCompletion(): void {
+    this.dashboardService.getProfileCompletion(this.userID).subscribe({
+      next: (data) => {
+        this.profileCompletionPercentage = data.completionPercentage;
+        this.gaugeValue = Math.round(this.profileCompletionPercentage);
+        this.incompleteTasks = data.incompleteSections; // Store incomplete tasks
+        console.log('Profile Completion:', this.gaugeValue);
+      },
+      error: (error) => {
+        console.error('Error loading profile completion:', error);
+      }
+    });
+  }
+
+  toggleTasksView(): void {
+    this.showAllTasks = !this.showAllTasks;
+  }
+
+  getProfileMessage(): { title: string, description: string } {
+    if (this.gaugeValue === 0) {
+      return {
+        title: "Let's Get Started!",
+        description: "Begin building your professional profile today."
+      };
+    } else if (this.gaugeValue === 100) {
+      return {
+        title: "Profile Complete!",
+        description: "Thank you for keeping your information up to date."
+      };
+    } else if (this.gaugeValue >= 50) {
+      return {
+        title: "Making Great Progress!",
+        description: "You're more than halfway there. Keep going!"
+      };
+    } else {
+      return {
+        title: "Profile In Progress",
+        description: "Take a few moments to complete your profile information."
+      };
+    }
+  }
+
+  // Map task descriptions to their corresponding routes
+  private taskRoutes: { [key: string]: string } = {
+    'Add your work experience': '/work-experience',
+    'Add your contact details': '/contact-details',
+    'Add your family background': '/family-background',
+    'Add your profile image': '/basic-details',
+    'Add your special skills': '/other-information',
+    'Add your voluntary work': '/voluntary-works',
+    'Add your character references': '/character-reference',
+    'Add your basic details': '/basic-details',
+    'Add your personal details': '/personal-details',
+    'Add your education details': '/educational-background',
+    'Add your children details': '/children',
+    'Add your signature': '/signature',
+    'Add your academic rank': '/academic-rank',
+    'Add your memberships': '/officer-membership',
+    'Add your civil service eligibility': '/civil-service-eligibility',
+    'Answer additional questions': '/additional-question',
+    'Add your learning and development': '/learning-development',
+    'Add your achievement awards': '/outstanding-achievement'
+  };
+
+  navigateToTask(task: string): void {
+    const route = this.taskRoutes[task];
+    if (route) {
+      this.router.navigate([route]);
+    }
   }
 }

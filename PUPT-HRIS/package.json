@@ -20,7 +20,9 @@
     "@angular/router": "^17.3.0",
     "chart.js": "^4.4.4",
     "jwt-decode": "^4.0.0",
+    "ng-circle-progress": "^1.7.1",
     "ng2-charts": "^3.0.0",
+    "ngx-gauge": "^9.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

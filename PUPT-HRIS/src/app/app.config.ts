@@ -8,13 +8,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './services/auth.guard';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth-interceptor.service';
+import { NgxGaugeModule } from 'ngx-gauge';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()), // Ensure interceptors are used
     provideAnimations(),
-    importProvidersFrom(ReactiveFormsModule),
+    importProvidersFrom(ReactiveFormsModule,NgxGaugeModule),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthGuard
   ]

@@ -4,6 +4,24 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
+export interface UserDashboardData {
+  department: string;
+  academicRank: string;
+  employmentType: string;
+  activityCounts: {
+    trainings: number;
+    awards: number;
+    voluntaryActivities: number;
+    officershipMemberships: number;
+  };
+}
+
+export interface UpcomingBirthday {
+  FirstName: string;
+  LastName: string;
+  DateOfBirth: Date;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,8 +41,34 @@ export class DashboardService {
     );
   }
 
-  getUserDashboardData(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/user-dashboard-data`, { headers: this.getHeaders() }).pipe(
+  getUserDashboardData(userId: number): Observable<UserDashboardData> {
+    const headers = this.getHeaders();
+    return this.http.get<UserDashboardData>(`${this.apiUrl}/user-dashboard-data/${userId}`, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getUpcomingBirthdays(): Observable<UpcomingBirthday[]> {
+    return this.http.get<UpcomingBirthday[]>(`${this.apiUrl}/upcoming-birthdays`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getAgeGroupData(campusId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/age-group-data`, {
+      params: { campusId: campusId.toString() },
+      headers: this.getHeaders()
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // New method to get profile completion percentage
+  getProfileCompletion(userId: number): Observable<{ completionPercentage: number; incompleteSections: string[] }> {
+    return this.http.get<{ completionPercentage: number; incompleteSections: string[] }>(
+      `${this.apiUrl}/profile-completion/${userId}`,
+      { headers: this.getHeaders() }
+    ).pipe(
       catchError(this.handleError)
     );
   }
