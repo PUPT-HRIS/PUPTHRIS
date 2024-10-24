@@ -31,6 +31,8 @@
     border-collapse: separate;
     border-spacing: 0;
     background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
   }
   
   .table thead {
@@ -40,28 +42,30 @@
   
   .table th,
   .table td {
-    padding: 16px;
+    padding: 12px 16px;
     text-align: left;
-  }
-  
-  .table tbody tr:hover {
-    background-color: #f9f9f9;
   }
   
   .table tbody tr:nth-child(even) {
     background-color: #f3f4f6;
   }
   
+  .table tbody tr:hover {
+    background-color: #e5e7eb;
+  }
+  
   .btn {
     padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font-size: 0.875rem;
     border-radius: 0.375rem;
     cursor: pointer;
+    transition: background-color 0.3s;
   }
   
   .btn-sm {
     padding: 0.25rem 0.75rem;
     font-size: 0.875rem;
+    line-height: 1.25rem;
     border-radius: 0.25rem;
   }
   
@@ -70,21 +74,26 @@
     color: white;
   }
   
-  .btn-inactive {
-    background-color: #ff0000;
-    color: white;
-  }
-  
-  .btn:hover {
-    transform: translateY(-1px);
-  }
-  
   .btn-save:hover {
     background-color: #2563eb;
   }
   
-  .btn-inactive:hover {
-    background-color: #990000;
+  .btn-error {
+    background-color: #ef4444;
+    color: white;
+  }
+  
+  .btn-error:hover {
+    background-color: #dc2626;
+  }
+  
+  .btn-success {
+    background-color: #10b981;
+    color: white;
+  }
+  
+  .btn-success:hover {
+    background-color: #059669;
   }
   
   .btn-container {
@@ -115,4 +124,125 @@
 
   .alert-warning {
     background-color: #F59E0B;
+  }
+
+  .relative {
+    position: relative;
+    width: 100%;
+  }
+
+  input[type="text"] {
+    padding-left: 30px;
+    font-size: 14px;
+    height: 36px;
+    width: 100%;
+  }
+
+  .fas.fa-search {
+    font-size: 14px;
+  }
+
+  .mb-4 {
+    width: 100%;
+  }
+
+  /* Add this new style for the content wrapper */
+  .user-management-content {
+    max-width: 95%;
+    margin: 0 auto;
+  }
+
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pagination-controls button {
+    margin: 0 0.125rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #374151;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .pagination-controls button:hover:not(:disabled) {
+    background-color: #000000;
+    color: white;
+  }
+
+  .pagination-controls button.active {
+    background-color: #800000;
+    color: white;
+  }
+
+  .pagination-controls button:disabled {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+  }
+
+  /* Add this new style for better spacing */
+  .pagination-wrapper {
+    background-color: #f3f4f6;
+    padding: 0.5rem 0.5rem 1rem 0.5rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: -1rem;
+  }
+
+  .bg-gray-200 {
+    background-color: #e5e7eb;
+  }
+
+  .text-gray-700 {
+    color: #374151;
+  }
+
+  .hover\:bg-gray-300:hover {
+    background-color: #d1d5db;
+  }
+
+  /* Update the pagination styles */
+  .pagination-wrapper {
+    background-color: #f3f4f6;
+    padding: 0.5rem 0.5rem 1rem 0.5rem;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .pagination-btn {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: 0.25rem;
+    background-color: #800000; /* Maroon */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .pagination-btn:hover:not(.disabled) {
+    background-color: #600000; /* Darker shade of maroon */
+  }
+
+  .pagination-btn.active {
+    background-color: #000000; /* Black */
+  }
+
+  .pagination-btn.active:hover {
+    background-color: #600000; /* Darker shade of maroon */
+  }
+
+  .pagination-btn.disabled {
+    background-color: #d1d5db; /* Light gray */
+    color: #9ca3af;
+    cursor: not-allowed;
+  }
+
+  .pagination-btn.disabled:hover {
+    background-color: #d1d5db; /* Light gray */
   }

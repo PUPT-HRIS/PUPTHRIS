@@ -8,13 +8,16 @@ import { User } from '../../model/user.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CampusContextService } from '../../services/campus-context.service';
 import { timeout, catchError, retry } from 'rxjs/operators';
+import { FormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-pds',
   templateUrl: './pds.component.html',
   styleUrls: ['./pds.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule]
 })
 export class PdsComponent implements OnInit {
   userId: number | null = null;
@@ -41,6 +44,11 @@ export class PdsComponent implements OnInit {
 
   missingDetailsMessage: string | null = null;
 
+  searchTerm: string = '';
+  filteredUsers: User[] = [];
+
+  private searchSubject = new Subject<string>();
+
   constructor(
     private pdsService: PdsService, 
     private userService: UserService, 
@@ -63,6 +71,13 @@ export class PdsComponent implements OnInit {
         this.fetchAllUsers();
       }
     });
+
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.searchUsers();
+    });
   }
 
   fetchAllUsers(): void {
@@ -73,6 +88,7 @@ export class PdsComponent implements OnInit {
     this.userService.getUsers(this.campusId).subscribe({
       next: (users) => {
         this.users = users;
+        this.filteredUsers = users; // Initialize filteredUsers with all users
         this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
         this.updatePaginatedUsers();
       },
@@ -86,7 +102,7 @@ export class PdsComponent implements OnInit {
   updatePaginatedUsers(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedUsers = this.users.slice(startIndex, endIndex);
+    this.paginatedUsers = this.filteredUsers.slice(startIndex, endIndex);
   }
 
   previousPage(): void {
@@ -201,5 +217,41 @@ export class PdsComponent implements OnInit {
 
   get totalPagesArray(): number[] {
     return Array(this.totalPages).fill(0).map((_, i) => i + 1);
+  }
+
+  onSearchChange(): void {
+    this.searchSubject.next(this.searchTerm);
+  }
+
+  searchUsers(): void {
+    if (this.searchTerm.trim() === '') {
+      this.filteredUsers = this.users;
+    } else {
+      const searchTermLower = this.searchTerm.toLowerCase();
+      this.filteredUsers = this.users.filter(user =>
+        user.FirstName.toLowerCase().includes(searchTermLower) ||
+        user.Surname.toLowerCase().includes(searchTermLower) ||
+        user.Fcode.toLowerCase().includes(searchTermLower)
+      );
+    }
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+    this.currentPage = 1;
+    this.updatePaginatedUsers();
+  }
+
+  onSearch(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredUsers = this.users;
+    } else {
+      this.filteredUsers = this.users.filter(user => 
+        `${user.FirstName} ${user.MiddleName} ${user.Surname} ${user.NameExtension}`
+          .toLowerCase()
+          .includes(this.searchTerm.toLowerCase()) ||
+        user.Fcode.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+    this.currentPage = 1;
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+    this.updatePaginatedUsers();
   }
 }
