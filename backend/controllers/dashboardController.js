@@ -3,7 +3,8 @@ const User = require('../models/userModel');
 const BasicDetails = require('../models/basicDetailsModel');
 const Department = require('../models/departmentModel');
 const Role = require('../models/roleModel'); // New Role model
-const UserRole = require('../models/userRoleModel'); // New UserRole model
+const UserRole = require('../models/userRoleModel');
+const AcademicRank = require('../models/academicRanksModel');
 
 exports.getDashboardData = async (req, res) => {
   try {
@@ -95,5 +96,45 @@ exports.getDashboardData = async (req, res) => {
   } catch (error) {
     console.error('Error fetching dashboard data:', error);
     res.status(500).json({ message: 'Error fetching dashboard data', error: error.message });
+  }
+};
+
+exports.getUserDashboardData = async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId);
+    if (isNaN(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    const userData = await User.findOne({
+      where: { UserID: userId },
+      attributes: ['EmploymentType'],
+      include: [
+        {
+          model: Department,
+          as: 'Department',
+          attributes: ['DepartmentName'],
+        },
+        {
+          model: AcademicRank,
+          attributes: ['Rank'],
+        }
+      ]
+    });
+
+    if (!userData) {
+      return res.status(404).json({ message: 'User data not found' });
+    }
+
+    const userDashboardData = {
+      department: userData.Department ? userData.Department.DepartmentName : 'N/A',
+      academicRank: userData.AcademicRank ? userData.AcademicRank.Rank : 'N/A',
+      employmentType: userData.EmploymentType || 'N/A',
+    };
+
+    res.status(200).json(userDashboardData);
+  } catch (error) {
+    console.error('Error fetching user dashboard data:', error);
+    res.status(500).json({ message: 'Error fetching user dashboard data', error: error.message });
   }
 };

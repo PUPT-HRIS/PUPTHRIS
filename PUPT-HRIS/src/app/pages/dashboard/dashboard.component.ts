@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { CampusContextService } from '../../services/campus-context.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { UserDashboardData } from '../../services/dashboard.service';
 
 interface TrainingSeminar {
   title: string;
@@ -83,9 +84,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // User-specific properties
   public userDepartment: string = '';
-  public userPosition: string = '';
+  public userAcademicRank: string = '';
   public userEmploymentType: string = '';
-  public userYearsOfService: number = 0;
 
   // User attendance chart
   public userAttendanceChartOptions: ChartOptions<'pie'> = {
@@ -158,6 +158,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public isAdminView: boolean = false; // Set default to false
 
+  private userID: number;
+
   constructor(
     private dashboardService: DashboardService,
     private cdr: ChangeDetectorRef,
@@ -165,6 +167,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private campusContextService: CampusContextService
   ) {
     this.campusSubscription = new Subscription();
+    const decodedToken = this.authService.getDecodedToken();
+    this.userID = decodedToken?.userId || 0;
   }
 
   ngOnInit(): void {
@@ -181,10 +185,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       if (campusId !== null && (this.userRole === 'admin' || this.userRole === 'superadmin')) {
         this.loadAdminDashboardData(campusId);
         this.loadUserDashboardData();
-        this.isAdminView = true; // Set to true for admin/superadmin
+        this.isAdminView = true;
       } else {
         this.loadUserDashboardData();
-        this.isAdminView = false; // Ensure it's false for other roles
+        this.isAdminView = false;
       }
     });
   }
@@ -245,24 +249,17 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadUserDashboardData(): void {
-    this.dashboardService.getUserDashboardData().subscribe(data => {
-      this.userDepartment = data.department;
-      this.userPosition = data.position;
-      this.userEmploymentType = data.employmentType;
-      this.userYearsOfService = data.yearsOfService;
-
-      this.userAttendanceChartData.datasets[0].data = [
-        data.attendancePresent,
-        data.attendanceAbsent,
-        data.attendanceLate
-      ];
-
-      this.userPerformanceChartData.datasets[0].data = data.performanceMetrics;
-
-      // Add trainings and seminars data
-      this.trainingsAndSeminars = data.trainingsAndSeminars || [];
-
-      this.updateCharts();
+    this.dashboardService.getUserDashboardData(this.userID).subscribe({
+      next: (data: UserDashboardData) => {
+        this.userDepartment = data.department;
+        this.userAcademicRank = data.academicRank;
+        this.userEmploymentType = data.employmentType;
+        this.updateCharts();
+      },
+      error: (error) => {
+        console.error('Error loading user dashboard data:', error);
+        // Handle the error, e.g., show a notification to the user
+      }
     });
   }
 

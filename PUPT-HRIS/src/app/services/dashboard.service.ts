@@ -4,6 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
+export interface UserDashboardData {
+  department: string;
+  academicRank: string;
+  employmentType: string;
+  // Add more properties as needed
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,8 +30,9 @@ export class DashboardService {
     );
   }
 
-  getUserDashboardData(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/user-dashboard-data`, { headers: this.getHeaders() }).pipe(
+  getUserDashboardData(userId: number): Observable<UserDashboardData> {
+    const headers = this.getHeaders();
+    return this.http.get<UserDashboardData>(`${this.apiUrl}/user-dashboard-data/${userId}`, { headers }).pipe(
       catchError(this.handleError)
     );
   }

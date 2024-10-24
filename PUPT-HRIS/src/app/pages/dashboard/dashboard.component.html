@@ -79,15 +79,6 @@
           </ul>
         </div>
       </div>
-
-      <div>
-        <h2 class="text-2xl font-bold mb-4">Employment Type Distribution</h2>
-        <canvas baseChart
-                [data]="employmentTypeChartData"
-                [options]="employmentTypeChartOptions"
-                [type]="'pie'">
-        </canvas>
-      </div>
     </div>
   </ng-container>
 
@@ -96,14 +87,14 @@
     <div class="flex-1 mb-2">
       <a class="text-lg font-normal">Welcome to your Personal Dashboard</a>
     </div>
-    <div class="cards-container grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="cards-container grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Department</h3>
         <p class="text-2xl font-extrabold">{{ userDepartment }}</p>
       </div>
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Academic Rank</h3>
-        <p class="text-2xl font-extrabold">{{ userPosition }}</p>
+        <p class="text-2xl font-extrabold">{{ userAcademicRank }}</p>
       </div>
       <div class="card bg-gradient-to-r from-orange-400 to-red-600 text-white p-6 rounded-lg shadow-lg">
         <h3 class="text-2xl font-bold">Employment Type</h3>
