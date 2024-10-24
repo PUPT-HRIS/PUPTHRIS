@@ -5,6 +5,10 @@ const Department = require('../models/departmentModel');
 const Role = require('../models/roleModel'); // New Role model
 const UserRole = require('../models/userRoleModel');
 const AcademicRank = require('../models/academicRanksModel');
+const Training = require('../models/trainingsModel');
+const AchievementAward = require('../models/achievementAwardsModel');
+const VoluntaryWork = require('../models/voluntaryworkModel');
+const OfficerMembership = require('../models/officerMembershipModel');
 
 exports.getDashboardData = async (req, res) => {
   try {
@@ -126,10 +130,22 @@ exports.getUserDashboardData = async (req, res) => {
       return res.status(404).json({ message: 'User data not found' });
     }
 
+    // Fetch counts for each category
+    const trainingCount = await Training.count({ where: { UserID: userId } });
+    const awardCount = await AchievementAward.count({ where: { UserID: userId } });
+    const voluntaryWorkCount = await VoluntaryWork.count({ where: { userID: userId } });
+    const membershipCount = await OfficerMembership.count({ where: { userID: userId } });
+
     const userDashboardData = {
       department: userData.Department ? userData.Department.DepartmentName : 'N/A',
       academicRank: userData.AcademicRank ? userData.AcademicRank.Rank : 'N/A',
       employmentType: userData.EmploymentType || 'N/A',
+      activityCounts: {
+        trainings: trainingCount,
+        awards: awardCount,
+        voluntaryActivities: voluntaryWorkCount,
+        professionalMemberships: membershipCount
+      }
     };
 
     res.status(200).json(userDashboardData);

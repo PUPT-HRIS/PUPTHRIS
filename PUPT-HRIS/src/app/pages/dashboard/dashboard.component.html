@@ -109,22 +109,21 @@
     <!-- User-specific charts or information -->
     <div class="charts-container grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
       <div>
+        <h2 class="text-2xl font-bold">Your Activities</h2>
+        <canvas baseChart
+                [data]="userActivityChartData"
+                [options]="userActivityChartOptions"
+                [type]="'bar'">
+        </canvas>
+      </div>
+
+      <div>
         <h2 class="text-2xl font-bold">Attendance Overview</h2>
         <canvas baseChart
                 [data]="userAttendanceChartData"
                 [options]="userAttendanceChartOptions"
                 [legend]="userAttendanceChartLegend"
                 [type]="'pie'">
-        </canvas>
-      </div>
-
-      <div>
-        <h2 class="text-2xl font-bold">Performance Metrics</h2>
-        <canvas baseChart
-                [data]="userPerformanceChartData"
-                [options]="userPerformanceChartOptions"
-                [legend]="userPerformanceChartLegend"
-                [type]="'bar'">
         </canvas>
       </div>
     </div>

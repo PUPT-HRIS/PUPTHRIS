@@ -8,7 +8,12 @@ export interface UserDashboardData {
   department: string;
   academicRank: string;
   employmentType: string;
-  // Add more properties as needed
+  activityCounts: {
+    trainings: number;
+    awards: number;
+    voluntaryActivities: number;
+    officershipMemberships: number;
+  };
 }
 
 @Injectable({

@@ -1,13 +1,12 @@
 import { Component, AfterViewInit, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService, UserDashboardData } from '../../services/dashboard.service';
 import { DepartmentCount } from '../../model/departmentCount.model';
 import { AuthService } from '../../services/auth.service';
 import { CampusContextService } from '../../services/campus-context.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { UserDashboardData } from '../../services/dashboard.service';
 
 interface TrainingSeminar {
   title: string;
@@ -254,6 +253,15 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userDepartment = data.department;
         this.userAcademicRank = data.academicRank;
         this.userEmploymentType = data.employmentType;
+        
+        // Update the user activity chart data
+        this.userActivityChartData.datasets[0].data = [
+          data.activityCounts.trainings,
+          data.activityCounts.awards,
+          data.activityCounts.voluntaryActivities,
+          data.activityCounts.officershipMemberships
+        ];
+        
         this.updateCharts();
       },
       error: (error) => {
@@ -288,4 +296,35 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   toggleDashboardView(): void {
     this.isAdminView = !this.isAdminView;
   }
+
+  // New property for user activity chart
+  public userActivityChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: 'Your Activities'
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
+        }
+      }
+    }
+  };
+  public userActivityChartData: ChartData<'bar'> = {
+    labels: ['Trainings', 'Awards', 'Voluntary Activities', 'Officership Memberships'],
+    datasets: [
+      {
+        data: [0, 0, 0, 0],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+      }
+    ]
+  };
 }
