@@ -16,6 +16,8 @@ import { Subscription } from 'rxjs';
 })
 export class UserManagementComponent implements OnInit, OnDestroy {
   users: User[] = [];
+  filteredUsers: User[] = [];
+  searchTerm: string = '';
   availableRoles: Role[] = [];
   employmentTypes: string[] = ['fulltime', 'parttime', 'temporary', 'designee'];
   campusId: number | null = null;
@@ -24,6 +26,14 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   showToast: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'warning' = 'success';
+
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
+
+  visiblePages: number = 5; // Number of page buttons to show
+
+  displayedUsers: User[] = [];
 
   constructor(
     private userManagementService: UserManagementService,
@@ -48,6 +58,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     );
     this.fetchAvailableRoles();
     this.logEmploymentTypes();
+    this.updatePaginatedData();
   }
 
   ngOnDestroy(): void {
@@ -67,6 +78,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
         console.log('Received users:', users);
         console.log('Number of users received:', users.length);
         this.users = users.filter(user => user.CollegeCampusID === this.campusId);
+        this.filteredUsers = this.users;
+        this.updatePaginatedData(); // Add this line
         console.log('Number of users after filtering:', this.users.length);
       },
       error: (error) => {
@@ -187,5 +200,62 @@ export class UserManagementComponent implements OnInit, OnDestroy {
         this.showToastNotification('Error updating user status: ' + error.message, 'error');
       },
     });
+  }
+
+  updatePaginatedData(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.displayedUsers = this.filteredUsers.slice(startIndex, endIndex);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedData();
+    }
+  }
+
+  get totalPagesArray(): number[] {
+    const totalPages = Math.ceil(this.users.length / this.itemsPerPage);
+    if (totalPages <= this.visiblePages) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    let start = Math.max(this.currentPage - Math.floor(this.visiblePages / 2), 1);
+    let end = start + this.visiblePages - 1;
+
+    if (end > totalPages) {
+      end = totalPages;
+      start = Math.max(end - this.visiblePages + 1, 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }
+
+  onSearch(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredUsers = this.users;
+    } else {
+      this.filteredUsers = this.users.filter(user => 
+        `${user.FirstName} ${user.Surname}`.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+    this.currentPage = 1;
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+    this.updatePaginatedData();
   }
 }
