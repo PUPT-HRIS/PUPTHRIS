@@ -72,6 +72,8 @@
 .modal-footer {
   padding: 15px 20px;
   border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end; /* This will align the content to the right */
 }
 
 /* Animations */
@@ -256,6 +258,11 @@
 .modal-footer .btn {
   background-color: #000000;
   color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .modal-footer .btn:hover {
@@ -266,4 +273,15 @@
 .modal-sidebar .tab:hover {
   background-color: #000000;
   color: #ffffff;
+}
+
+.btn-maroon {
+  background-color: #800000;
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-maroon:hover {
+  background-color: #600000;
 }
