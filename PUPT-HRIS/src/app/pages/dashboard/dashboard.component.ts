@@ -1,12 +1,14 @@
 import { Component, AfterViewInit, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
-import { DashboardService, UserDashboardData } from '../../services/dashboard.service';
+import { DashboardService } from '../../services/dashboard.service';
 import { DepartmentCount } from '../../model/departmentCount.model';
 import { AuthService } from '../../services/auth.service';
 import { CampusContextService } from '../../services/campus-context.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { UserDashboardData } from '../../services/dashboard.service';
+import { UpcomingBirthday } from '../../services/dashboard.service';
 
 interface TrainingSeminar {
   title: string;
@@ -159,6 +161,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private userID: number;
 
+  public upcomingBirthdays: UpcomingBirthday[] = [];
+
+  public ageGroupChartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{ data: [], backgroundColor: [] }]
+  };
+
+  public ageGroupChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Age Distribution' }
+    }
+  };
+
   constructor(
     private dashboardService: DashboardService,
     private cdr: ChangeDetectorRef,
@@ -190,11 +208,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.isAdminView = false;
       }
     });
+
+    this.loadUpcomingBirthdays();
+    this.campusSubscription = this.campusContextService.getCampusId().subscribe(campusId => {
+      if (campusId !== null) {
+        this.loadAgeGroupData(campusId);
+      } else {
+        console.error('Campus ID is not available');
+      }
+    });
   }
+
   ngOnDestroy(): void {
     if (this.campusSubscription) {
       this.campusSubscription.unsubscribe();
     }
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      if (this.chart && this.chart.chart) {
+        this.chart.chart.update();
+      }
+      this.cdr.detectChanges();
+    }, 0);
   }
 
   loadAdminDashboardData(campusId: number): void {
@@ -276,7 +313,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
-
+  loadUpcomingBirthdays(): void {
+    this.dashboardService.getUpcomingBirthdays().subscribe({
+      next: (birthdays: UpcomingBirthday[]) => {
+        console.log('Upcoming birthdays:', birthdays);
+        this.upcomingBirthdays = birthdays;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading upcoming birthdays:', error);
+      }
+    });
+  }
 
   toggleDashboardView(): void {
     this.isAdminView = !this.isAdminView;
@@ -312,4 +360,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     ]
   };
+
+  loadAgeGroupData(campusId: number): void {
+    this.dashboardService.getAgeGroupData(campusId).subscribe({
+      next: (data) => {
+        this.ageGroupChartData = {
+          labels: data.map(item => item.ageGroup),
+          datasets: [{
+            data: data.map(item => item.count),
+            backgroundColor: [
+              '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+            ]
+          }]
+        };
+        this.cdr.detectChanges(); // Trigger change detection
+      },
+      error: (error) => {
+        console.error('Error loading age group data:', error);
+        // Handle the error, maybe set default data
+      }
+    });
+  }
 }

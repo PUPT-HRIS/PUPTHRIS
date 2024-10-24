@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const User = require('../models/userModel');
 const BasicDetails = require('../models/basicDetailsModel');
 const Department = require('../models/departmentModel');
@@ -9,6 +9,7 @@ const Training = require('../models/trainingsModel');
 const AchievementAward = require('../models/achievementAwardsModel');
 const VoluntaryWork = require('../models/voluntaryworkModel');
 const OfficerMembership = require('../models/officerMembershipModel');
+const moment = require('moment');
 
 exports.getDashboardData = async (req, res) => {
   try {
@@ -152,5 +153,82 @@ exports.getUserDashboardData = async (req, res) => {
   } catch (error) {
     console.error('Error fetching user dashboard data:', error);
     res.status(500).json({ message: 'Error fetching user dashboard data', error: error.message });
+  }
+};
+
+exports.getUpcomingBirthdays = async (req, res) => {
+  try {
+    const today = moment();
+    const start = today.startOf('day');
+    const end = today.clone().add(7, 'days').endOf('day');
+
+    console.log('Start Date:', start.format('YYYY-MM-DD'));
+    console.log('End Date:', end.format('YYYY-MM-DD'));
+
+    const upcomingBirthdays = await BasicDetails.findAll({
+      where: Sequelize.where(
+        Sequelize.fn('CONCAT',
+          Sequelize.fn('MONTH', Sequelize.col('DateOfBirth')),
+          '-',
+          Sequelize.fn('DAY', Sequelize.col('DateOfBirth'))
+        ),
+        {
+          [Op.between]: [
+            `${start.month() + 1}-${start.date()}`,
+            `${end.month() + 1}-${end.date()}`
+          ]
+        }
+      ),
+      include: [{
+        model: User,
+        where: { isActive: true },
+        attributes: ['UserID']
+      }],
+      attributes: ['FirstName', 'LastName', 'DateOfBirth'],
+      order: [['DateOfBirth', 'ASC']]
+    });
+
+    console.log('Upcoming Birthdays:', upcomingBirthdays);
+
+    res.status(200).json(upcomingBirthdays);
+  } catch (error) {
+    console.error('Error fetching upcoming birthdays:', error);
+    res.status(500).json({ message: 'Error fetching upcoming birthdays', error: error.message });
+  }
+};
+
+exports.getAgeGroupData = async (req, res) => {
+  try {
+    const { campusId } = req.query;
+
+    const ageGroups = await BasicDetails.findAll({
+      attributes: [
+        [Sequelize.literal(`
+          CASE
+            WHEN DATEDIFF(CURDATE(), DateOfBirth) / 365 < 25 THEN '18-24'
+            WHEN DATEDIFF(CURDATE(), DateOfBirth) / 365 BETWEEN 25 AND 34 THEN '25-34'
+            WHEN DATEDIFF(CURDATE(), DateOfBirth) / 365 BETWEEN 35 AND 44 THEN '35-44'
+            WHEN DATEDIFF(CURDATE(), DateOfBirth) / 365 BETWEEN 45 AND 54 THEN '45-54'
+            ELSE '55+'
+          END
+        `), 'ageGroup'],
+        [Sequelize.fn('COUNT', Sequelize.col('BasicDetailsID')), 'count']
+      ],
+      include: [{
+        model: User,
+        where: {
+          isActive: true,
+          ...(campusId && { CollegeCampusID: campusId })
+        },
+        attributes: []
+      }],
+      group: ['ageGroup'],
+      order: [[Sequelize.literal('ageGroup'), 'ASC']]
+    });
+
+    res.status(200).json(ageGroups);
+  } catch (error) {
+    console.error('Error fetching age group data:', error);
+    res.status(500).json({ message: 'Error fetching age group data', error: error.message });
   }
 };
